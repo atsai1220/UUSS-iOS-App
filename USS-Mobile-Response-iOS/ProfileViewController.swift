@@ -18,5 +18,8 @@ class ProfileViewController: UIViewController {
         // TODO: Implement completion function to save changes.
         self.dismiss(animated: true, completion: nil)
     }
+    @IBAction func cancelTapped(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
 }
