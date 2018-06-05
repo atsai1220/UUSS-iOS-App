@@ -22,7 +22,7 @@ class LoginViewController: UIViewController {
     private func navigateToMainInterface() {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
 
-        guard let mainContainerVC = mainStoryboard.instantiateViewController(withIdentifier: "MainContainerViewController") as? MainContainerViewController else {
+        guard let mainContainerVC = mainStoryboard.instantiateViewController(withIdentifier: "MainViewController") as? MainViewController else {
             return
         }
         
