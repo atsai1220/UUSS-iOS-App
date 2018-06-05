@@ -80,10 +80,10 @@
             </objects>
             <point key="canvasLocation" x="-1287" y="252"/>
         </scene>
-        <!--TEst-->
+        <!--Main Menu-->
         <scene sceneID="bFG-0g-Dcp">
             <objects>
-                <viewController storyboardIdentifier="MainViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="RG2-jr-dzM" customClass="MainViewController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainViewController" title="Main Menu" useStoryboardIdentifierAsRestorationIdentifier="YES" id="RG2-jr-dzM" customClass="MainViewController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VhY-03-LPd">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -101,8 +101,7 @@
                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="FcT-ah-gOl"/>
                     </view>
-                    <navigationItem key="navigationItem" title="TEst" id="XTt-fI-zuO">
-                        <barButtonItem key="backBarButtonItem" title="Back" id="0ae-g1-z5D"/>
+                    <navigationItem key="navigationItem" id="XTt-fI-zuO">
                         <barButtonItem key="leftBarButtonItem" systemItem="organize" id="sIF-LP-lC1">
                             <connections>
                                 <action selector="menuTapped:" destination="RG2-jr-dzM" id="gBJ-fg-Ae1"/>
