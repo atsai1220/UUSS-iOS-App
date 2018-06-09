@@ -7,12 +7,45 @@
 import Foundation
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var userNameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var serverField: UITextField!
+    
+    var pickerView = UIPickerView()
+    var plistController = PlistController()
+    var plistSource = [ResourceSpace]()
+    
+
+    // returns the number of 'columns' to display.
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+
+    // returns the # of rows in each component..
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return plistSource.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return plistSource[row].name
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        serverField.text = plistSource[row].name
+        serverField.resignFirstResponder()
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        serverField.inputView = pickerView
+        serverField.textAlignment = .center
+        serverField.placeholder = "Select Server"
+        plistSource = plistController.resources
     }
     
     @IBAction func loginTapped(_ sender: Any) {
@@ -98,8 +131,8 @@ class LoginViewController: UIViewController {
     }
     
     private func navigateToMainInterface() {
+        // Referencing storyboard to change the window's rootViewController
         let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-
         guard let mainNavigationController = mainStoryboard.instantiateViewController(withIdentifier: "MainNavigationController") as? MainNavigationController else {
             return
         }

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C043CA020CAA90E006A9D69 /* ServerList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C043C9F20CAA90E006A9D69 /* ServerList.plist */; };
+		1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */; };
+		1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA320CAD0BB006A9D69 /* PlistController.swift */; };
 		1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B020C1569700458079 /* MainNavigationController.swift */; };
 		1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B220C159AE00458079 /* LoginViewController.swift */; };
 		1C4D76B520C16ACC00458079 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B420C16ACC00458079 /* MainViewController.swift */; };
@@ -20,6 +23,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1C043C9F20CAA90E006A9D69 /* ServerList.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ServerList.plist; sourceTree = "<group>"; };
+		1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceSpaceModel.swift; sourceTree = "<group>"; };
+		1C043CA320CAD0BB006A9D69 /* PlistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistController.swift; sourceTree = "<group>"; };
 		1C4D76B020C1569700458079 /* MainNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationController.swift; sourceTree = "<group>"; };
 		1C4D76B220C159AE00458079 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1C4D76B420C16ACC00458079 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -45,6 +51,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C043CA520CBB5FB006A9D69 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1C043C9F20CAA90E006A9D69 /* ServerList.plist */,
+				1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		1C57E4F420BF8386004E1270 = {
 			isa = PBXGroup;
 			children = (
@@ -64,15 +79,13 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				1C043CA520CBB5FB006A9D69 /* Model */,
 				1C5B55E120C68924006FF1B4 /* Controllers */,
 				1C57E50020BF8387004E1270 /* AppDelegate.swift */,
 				1C57E50420BF8387004E1270 /* Main.storyboard */,
 				1C57E50720BF8388004E1270 /* Assets.xcassets */,
 				1C57E50920BF8388004E1270 /* LaunchScreen.storyboard */,
 				1C57E50C20BF8388004E1270 /* Info.plist */,
-				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
-				1C4D76BA20C1826200458079 /* ProfileViewController.swift */,
-				1C4D76BC20C1826F00458079 /* SettingsViewController.swift */,
 			);
 			path = "USS-Mobile-Response-iOS";
 			sourceTree = "<group>";
@@ -83,6 +96,10 @@
 				1C4D76B220C159AE00458079 /* LoginViewController.swift */,
 				1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */,
 				1C4D76B420C16ACC00458079 /* MainViewController.swift */,
+				1C4D76BA20C1826200458079 /* ProfileViewController.swift */,
+				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
+				1C4D76BC20C1826F00458079 /* SettingsViewController.swift */,
+				1C043CA320CAD0BB006A9D69 /* PlistController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -146,6 +163,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C57E50B20BF8388004E1270 /* LaunchScreen.storyboard in Resources */,
+				1C043CA020CAA90E006A9D69 /* ServerList.plist in Resources */,
 				1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */,
 				1C57E50620BF8387004E1270 /* Main.storyboard in Resources */,
 			);
@@ -158,9 +176,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
+				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainViewController.swift in Sources */,
 				1C4D76BD20C1826F00458079 /* SettingsViewController.swift in Sources */,
