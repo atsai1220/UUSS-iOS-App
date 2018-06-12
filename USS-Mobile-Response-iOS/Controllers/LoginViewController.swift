@@ -7,11 +7,29 @@
 import Foundation
 import UIKit
 
+extension String {
+    func truncated(length: Int) -> String {
+        if self.count > length {
+            return String(self.prefix(length)) + "..."
+        }
+        else {
+            return self
+        }
+    }
+}
+
 class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var userNameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var serverField: UITextField!
     
+    @IBOutlet weak var serverButton: UIButton!
+    
+    @IBAction func serverButtonTapped(_ sender: Any) {
+        serverField.becomeFirstResponder()
+    }
+    
+
     var pickerView = UIPickerView()
     var plistController = PlistController()
     var plistSource = [ResourceSpace]()
@@ -32,21 +50,31 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        serverField.text = plistSource[row].name
+        serverButton.setTitle(plistSource[row].name.truncated(length: 20), for: .normal)
+        if row == pickerView.numberOfRows(inComponent: 0) - 1 {
+            self.showAddNewServer()
+        }
         serverField.resignFirstResponder()
+//        serverButton.titleLabel?.text = plistSource[row].name.truncated(length: 20)
     }
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         pickerView.delegate = self
         pickerView.dataSource = self
-        pickerView.selectRow(0, inComponent: 0, animated: true)
+        pickerView.backgroundColor = UIColor(white: 1, alpha: 0)
         serverField.inputView = pickerView
         plistSource = plistController.resources
-        serverField.text = plistSource[0].name
+//        serverButton.titleLabel?.textAlignment = .center
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+//        pickerView.selectRow(0, inComponent: 0, animated: true)
+//        serverButton.titleLabel?.text = plistSource[0].name
+//        serverButton.setTitle(plistSource[0].name, for: .normal)
+//        serverField.text = plistSource[0].name
     }
     
     @IBAction func loginTapped(_ sender: Any) {
@@ -141,5 +169,9 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             return
         }
         UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromRight, animations: { window.rootViewController = mainNavigationController }, completion: nil)
+    }
+    
+    private func showAddNewServer() {
+        performSegue(withIdentifier: "AddServerSegue", sender: nil)
     }
 }

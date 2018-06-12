@@ -22,6 +22,7 @@ class SideMenuLauncher: NSObject {
         super.init()
     }
     
+    // TODO: Add menu options for collectionView.
     func showSideMenu() {
         if let window = UIApplication.shared.keyWindow {
             greyView.backgroundColor = UIColor(white: 0, alpha: 0.5)
