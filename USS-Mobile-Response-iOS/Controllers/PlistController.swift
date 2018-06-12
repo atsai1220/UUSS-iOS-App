@@ -12,7 +12,6 @@ class PlistController {
     let resources: [ResourceSpace]
     
     init() {
-//        let fileURL = Bundle.main.url(forResource: "ServerList", withExtension: "plist", subdirectory: "Model")!
         let fileURL = Bundle.main.url(forResource: "ServerList", withExtension: "plist")!
         let resourcePlists = NSArray(contentsOf: fileURL) as! [PlistDictionary]
         resources = resourcePlists.map(ResourceSpace.init)

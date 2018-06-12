@@ -37,15 +37,16 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
     
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         pickerView.delegate = self
         pickerView.dataSource = self
+        pickerView.selectRow(0, inComponent: 0, animated: true)
         serverField.inputView = pickerView
-        serverField.textAlignment = .center
-        serverField.placeholder = "Select Server"
         plistSource = plistController.resources
+        serverField.text = plistSource[0].name
     }
     
     @IBAction func loginTapped(_ sender: Any) {
