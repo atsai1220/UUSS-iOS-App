@@ -212,6 +212,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="YP9-yz-rOT"/>
                     </view>
+                    <connections>
+                        <outlet property="nameField" destination="k5a-cY-73T" id="5i7-fZ-55p"/>
+                        <outlet property="urlField" destination="G52-Nj-cO4" id="HxN-YJ-8ep"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XzZ-Ep-Fdf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

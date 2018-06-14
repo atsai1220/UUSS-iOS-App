@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias PlistDictionary = [String: AnyObject]
+typealias PlistDictionary = [String : AnyObject]
 protocol PlistKey: RawRepresentable {}
 protocol PlistValue {}
 
@@ -21,8 +21,8 @@ extension Dictionary: PlistValue {}
 extension Array: PlistValue {}
 
 struct ResourceSpace {
-    let name: String
-    let url: String
+    var name: String
+    var url: String
 }
 
 /*

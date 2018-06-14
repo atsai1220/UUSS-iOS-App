@@ -9,11 +9,24 @@
 import Foundation
 
 class PlistController {
-    let resources: [ResourceSpace]
+    var resources: [ResourceSpace]
+    let fileURL: URL
     
     init() {
-        let fileURL = Bundle.main.url(forResource: "ServerList", withExtension: "plist")!
-        let resourcePlists = NSArray(contentsOf: fileURL) as! [PlistDictionary]
-        resources = resourcePlists.map(ResourceSpace.init)
+        fileURL = Bundle.main.url(forResource: "ServerList", withExtension: "plist")!
+        let resourcePlist = NSArray(contentsOf: fileURL) as! [PlistDictionary]
+        resources = resourcePlist.map(ResourceSpace.init)
+    }
+    
+    func loadPlist() {
+        let resourcePlist = NSArray(contentsOf: fileURL) as! [PlistDictionary]
+        resources = resourcePlist.map(ResourceSpace.init)
+    }
+    
+    func updatePlist(with newDictionaryEntry: PlistDictionary) {
+        var resourcePlist = NSArray(contentsOf: fileURL) as! [PlistDictionary]
+        resourcePlist.insert(newDictionaryEntry, at: resourcePlist.count-1)
+        let plistData = try! PropertyListSerialization.data(fromPropertyList: resourcePlist, format: .xml, options: 0)
+        try! plistData.write(to: fileURL)
     }
 }

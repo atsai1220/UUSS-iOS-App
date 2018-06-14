@@ -55,7 +55,6 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             self.showAddNewServer()
         }
         serverField.resignFirstResponder()
-//        serverButton.titleLabel?.text = plistSource[row].name.truncated(length: 20)
     }
     
     
@@ -66,15 +65,15 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         pickerView.dataSource = self
         pickerView.backgroundColor = UIColor(white: 1, alpha: 0)
         serverField.inputView = pickerView
-        plistSource = plistController.resources
-//        serverButton.titleLabel?.textAlignment = .center
+        
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        pickerView.selectRow(0, inComponent: 0, animated: true)
-//        serverButton.titleLabel?.text = plistSource[0].name
-//        serverButton.setTitle(plistSource[0].name, for: .normal)
-//        serverField.text = plistSource[0].name
+        print("will appear")
+        plistController.loadPlist()
+        plistSource = plistController.resources
+        pickerView.reloadAllComponents()
     }
     
     @IBAction func loginTapped(_ sender: Any) {
@@ -169,6 +168,13 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             return
         }
         UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromRight, animations: { window.rootViewController = mainNavigationController }, completion: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "AddServerSegue" {
+            let addServerVC = segue.destination as! AddServerViewController
+            addServerVC.plistController = plistController
+        }
     }
     
     private func showAddNewServer() {
