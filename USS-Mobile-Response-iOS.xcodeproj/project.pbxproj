@@ -69,6 +69,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		1C403E3E20D27DB4000DB616 /* ModelControllers */ = {
+			isa = PBXGroup;
+			children = (
+				1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */,
+				1C043CA320CAD0BB006A9D69 /* PlistController.swift */,
+			);
+			path = ModelControllers;
+			sourceTree = "<group>";
+		};
 		1C57E4F420BF8386004E1270 = {
 			isa = PBXGroup;
 			children = (
@@ -88,10 +97,11 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				1C57E50020BF8387004E1270 /* AppDelegate.swift */,
+				1C403E3E20D27DB4000DB616 /* ModelControllers */,
 				1C403E3D20D275F6000DB616 /* Views */,
 				1C043CA520CBB5FB006A9D69 /* Model */,
-				1C5B55E120C68924006FF1B4 /* Controllers */,
-				1C57E50020BF8387004E1270 /* AppDelegate.swift */,
+				1C5B55E120C68924006FF1B4 /* ViewControllers */,
 				1C57E50420BF8387004E1270 /* Main.storyboard */,
 				1C57E50720BF8388004E1270 /* Assets.xcassets */,
 				1C57E50920BF8388004E1270 /* LaunchScreen.storyboard */,
@@ -100,19 +110,17 @@
 			path = "USS-Mobile-Response-iOS";
 			sourceTree = "<group>";
 		};
-		1C5B55E120C68924006FF1B4 /* Controllers */ = {
+		1C5B55E120C68924006FF1B4 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
 				1C4D76B220C159AE00458079 /* LoginViewController.swift */,
-				1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */,
 				1C4D76B420C16ACC00458079 /* MainViewController.swift */,
 				1C4D76BA20C1826200458079 /* ProfileViewController.swift */,
-				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
 				1C4D76BC20C1826F00458079 /* SettingsViewController.swift */,
-				1C043CA320CAD0BB006A9D69 /* PlistController.swift */,
 				1C403E3920D010A6000DB616 /* AddServerViewController.swift */,
 			);
-			path = Controllers;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

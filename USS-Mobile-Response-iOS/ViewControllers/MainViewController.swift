@@ -19,8 +19,6 @@ class MainViewController: UIViewController {
         
         // Cover and disable main view when hamburger button is tapped.
         sideMenuLauncher.showSideMenu()
-
-//        NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
     }
     
 }

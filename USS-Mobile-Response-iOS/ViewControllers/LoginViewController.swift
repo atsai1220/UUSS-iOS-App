@@ -7,6 +7,8 @@
 import Foundation
 import UIKit
 
+// Extension for String class to easily truncate string length
+// TODO: Find better implementation for tablet screen size.
 extension String {
     func truncated(length: Int) -> String {
         if self.count > length {
@@ -19,11 +21,17 @@ extension String {
 }
 
 class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    /*
+     IBOutlets
+     */
     @IBOutlet weak var userNameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var serverField: UITextField!
     @IBOutlet weak var serverButton: UIButton!
     
+    /*
+     IBActions
+     */
     @IBAction func serverButtonTapped(_ sender: Any) {
         serverField.becomeFirstResponder()
     }
@@ -31,11 +39,20 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         view.endEditing(true)
     }
     
-
+    @IBAction func loginTapped(_ sender: Any) {
+        loginToAPI()
+    }
+    
+    /*
+     Class variables
+     */
     var pickerView = UIPickerView()
     var plistController: PlistController!
     var plistSource = [ResourceSpace]()
     
+    /*
+     UIPickerView delegates
+     */
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -55,8 +72,6 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         }
         serverField.resignFirstResponder()
     }
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,7 +97,30 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         }
     }
     
-    @IBAction func loginTapped(_ sender: Any) {
+
+    
+    private func displayErrorMessage(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let dismissAction = UIAlertAction(title: "Okay", style: .default, handler: {
+            (action) in alert.dismiss(animated: true, completion: nil)
+        })
+        alert.addAction(dismissAction)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func navigateToMainInterface() {
+        // Referencing storyboard to change the window's rootViewController
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        guard let mainNavigationController = mainStoryboard.instantiateViewController(withIdentifier: "MainNavigationController") as? MainNavigationController else {
+            return
+        }
+        guard let window = UIApplication.shared.keyWindow else {
+            return
+        }
+        UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromRight, animations: { window.rootViewController = mainNavigationController }, completion: nil)
+    }
+    
+    private func loginToAPI() {
         // Read values from text fields
         let userName = userNameField.text
         let userPassword = passwordField.text
@@ -117,62 +155,40 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             displayErrorMessage(title: "Something went wrong...", message: "An error occurred while parsing login information.")
             return
         }
-        
-//        let task = URLSession.shared.dataTask(with: request) {
-//            (data: Data?, response: URLResponse?, error: Error?) in
-//
-//            // Stop activity indicator
-//            // TODO: Animate activity indicator indicator
-//            DispatchQueue.main.async {
-//                activityIndicator.stopAnimating()
-//                activityIndicator.removeFromSuperview()
-//                activityBackground.removeFromSuperview()
-//            }
-//
-//            if error != nil {
-//                self.displayErrorMessage(title: "Request error.", message: "An error occurred with the server. Please try again later.")
-//                return
-//            }
-//
-//            // Convert server response to NSDictionary object.
-//            do {
-//                let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary
-//                // Test if json is empty and read.
-//                if let parseJSON = json {
-//
-//                } else {
-//                    self.displayErrorMessage(title: "Response error.", message: "Server response has error. JSON empty.")
-//                }
-//            } catch {
-//
-//            }
-//        }
-//        task.resume()
+        // TODO: Create 
+        //        let task = URLSession.shared.dataTask(with: request) {
+        //            (data: Data?, response: URLResponse?, error: Error?) in
+        //
+        //            // Stop activity indicator
+        //            // TODO: Animate activity indicator indicator
+        //            DispatchQueue.main.async {
+        //                activityIndicator.stopAnimating()
+        //                activityIndicator.removeFromSuperview()
+        //                activityBackground.removeFromSuperview()
+        //            }
+        //
+        //            if error != nil {
+        //                self.displayErrorMessage(title: "Request error.", message: "An error occurred with the server. Please try again later.")
+        //                return
+        //            }
+        //
+        //            // Convert server response to NSDictionary object.
+        //            do {
+        //                let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary
+        //                // Test if json is empty and read.
+        //                if let parseJSON = json {
+        //
+        //                } else {
+        //                    self.displayErrorMessage(title: "Response error.", message: "Server response has error. JSON empty.")
+        //                }
+        //            } catch {
+        //
+        //            }
+        //        }
+        //        task.resume()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: { self.navigateToMainInterface() })
-      
-        
     }
     
-    private func displayErrorMessage(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let dismissAction = UIAlertAction(title: "Okay", style: .default, handler: {
-            (action) in alert.dismiss(animated: true, completion: nil)
-        })
-        alert.addAction(dismissAction)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    private func navigateToMainInterface() {
-        // Referencing storyboard to change the window's rootViewController
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        guard let mainNavigationController = mainStoryboard.instantiateViewController(withIdentifier: "MainNavigationController") as? MainNavigationController else {
-            return
-        }
-        guard let window = UIApplication.shared.keyWindow else {
-            return
-        }
-        UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromRight, animations: { window.rootViewController = mainNavigationController }, completion: nil)
-    }
     
     // Passing plistController with dependency injection for sharing state.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
