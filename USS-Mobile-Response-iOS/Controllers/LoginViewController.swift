@@ -22,25 +22,24 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     @IBOutlet weak var userNameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var serverField: UITextField!
-    
     @IBOutlet weak var serverButton: UIButton!
     
     @IBAction func serverButtonTapped(_ sender: Any) {
         serverField.becomeFirstResponder()
     }
+    @IBAction func backgroundTapped(_ sender: Any) {
+        view.endEditing(true)
+    }
     
 
     var pickerView = UIPickerView()
-    var plistController = PlistController()
+    var plistController: PlistController!
     var plistSource = [ResourceSpace]()
     
-
-    // returns the number of 'columns' to display.
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
 
-    // returns the # of rows in each component..
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return plistSource.count
     }
@@ -50,7 +49,7 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        serverButton.setTitle(plistSource[row].name.truncated(length: 20), for: .normal)
+        serverButton.setTitle(plistSource[row].name.truncated(length: 19), for: .normal)
         if row == pickerView.numberOfRows(inComponent: 0) - 1 {
             self.showAddNewServer()
         }
@@ -64,24 +63,29 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         pickerView.delegate = self
         pickerView.dataSource = self
         pickerView.backgroundColor = UIColor(white: 1, alpha: 0)
+        serverButton.setTitle(plistController.resources.first?.name.truncated(length: 19), for: .normal)
         serverField.inputView = pickerView
-        
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("will appear")
+        let plistOldCount = plistController.resources.count
         plistController.loadPlist()
         plistSource = plistController.resources
         pickerView.reloadAllComponents()
+        if plistOldCount < plistSource.count {
+            pickerView.selectRow(plistSource.count-2, inComponent: 0, animated: true)
+            serverButton.setTitle(plistSource[plistSource.count-2].name.truncated(length: 19), for: .normal)
+        }
+        else {
+            pickerView.selectRow(0, inComponent: 0, animated: true)
+            serverButton.setTitle(plistSource.first?.name.truncated(length: 19), for: .normal)
+        }
     }
     
     @IBAction func loginTapped(_ sender: Any) {
-        
         // Read values from text fields
         let userName = userNameField.text
         let userPassword = passwordField.text
-        
         // Check if fields are empty
         if (userName?.isEmpty)! || (userPassword?.isEmpty)! {
             displayErrorMessage(title: "Empty fields.", message: "Please input user name and password.")
@@ -170,10 +174,12 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromRight, animations: { window.rootViewController = mainNavigationController }, completion: nil)
     }
     
+    // Passing plistController with dependency injection for sharing state.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddServerSegue" {
-            let addServerVC = segue.destination as! AddServerViewController
-            addServerVC.plistController = plistController
+            if let addServerVC = segue.destination as? AddServerViewController {
+                addServerVC.plistController = plistController
+            }
         }
     }
     

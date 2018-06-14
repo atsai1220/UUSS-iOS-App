@@ -62,6 +62,13 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		1C403E3D20D275F6000DB616 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		1C57E4F420BF8386004E1270 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +88,7 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				1C403E3D20D275F6000DB616 /* Views */,
 				1C043CA520CBB5FB006A9D69 /* Model */,
 				1C5B55E120C68924006FF1B4 /* Controllers */,
 				1C57E50020BF8387004E1270 /* AppDelegate.swift */,

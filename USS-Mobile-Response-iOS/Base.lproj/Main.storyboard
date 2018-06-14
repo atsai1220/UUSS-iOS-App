@@ -14,7 +14,7 @@
         <scene sceneID="uHk-c0-0bv">
             <objects>
                 <viewController storyboardIdentifier="LoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wqY-gt-h7Y" customClass="LoginViewController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="If2-2a-2bT">
+                    <view key="view" contentMode="scaleToFill" id="If2-2a-2bT" customClass="UIControl">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -114,6 +114,9 @@
                             <constraint firstItem="HUa-t2-WWn" firstAttribute="top" secondItem="1rS-yz-QN7" secondAttribute="bottom" constant="40" id="l7x-jT-B2G"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="VcA-JY-NBg"/>
+                        <connections>
+                            <action selector="backgroundTapped:" destination="wqY-gt-h7Y" eventType="touchDown" id="Wkc-ka-BCC"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="passwordField" destination="o0O-kp-5YQ" id="ASk-Oz-Ir5"/>
