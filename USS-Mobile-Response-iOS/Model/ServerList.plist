@@ -14,11 +14,5 @@
 		<key>url</key>
 		<string>https://ussc.utah.gov</string>
 	</dict>
-	<dict>
-		<key>name</key>
-		<string>Add new</string>
-		<key>url</key>
-		<string></string>
-	</dict>
 </array>
 </plist>

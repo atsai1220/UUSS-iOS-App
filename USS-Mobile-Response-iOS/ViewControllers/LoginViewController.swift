@@ -20,7 +20,7 @@ extension String {
     }
 }
 
-class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class LoginViewController: UIViewController {
     /*
      IBOutlets
      */
@@ -33,8 +33,9 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
      IBActions
      */
     @IBAction func serverButtonTapped(_ sender: Any) {
-        serverField.becomeFirstResponder()
+        showServerTableVC()
     }
+
     @IBAction func backgroundTapped(_ sender: Any) {
         view.endEditing(true)
     }
@@ -46,58 +47,27 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     /*
      Class variables
      */
-    var pickerView = UIPickerView()
     var plistController: PlistController!
     var plistSource = [ResourceSpace]()
     
-    /*
-     UIPickerView delegates
-     */
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return plistSource.count
-    }
     
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return plistSource[row].name
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        serverButton.setTitle(plistSource[row].name.truncated(length: 19), for: .normal)
-        if row == pickerView.numberOfRows(inComponent: 0) - 1 {
-            self.showAddNewServer()
-        }
-        serverField.resignFirstResponder()
-    }
+//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//        serverButton.setTitle(plistSource[row].name.truncated(length: 19), for: .normal)
+//        if row == pickerView.numberOfRows(inComponent: 0) - 1 {
+//            self.showServerTableVC()
+//        }
+//        serverField.resignFirstResponder()
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        pickerView.backgroundColor = UIColor(white: 1, alpha: 0)
         serverButton.setTitle(plistController.resources.first?.name.truncated(length: 19), for: .normal)
-        serverField.inputView = pickerView
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let plistOldCount = plistController.resources.count
         plistController.loadPlist()
         plistSource = plistController.resources
-        pickerView.reloadAllComponents()
-        if plistOldCount < plistSource.count {
-            pickerView.selectRow(plistSource.count-2, inComponent: 0, animated: true)
-            serverButton.setTitle(plistSource[plistSource.count-2].name.truncated(length: 19), for: .normal)
-        }
-        else {
-            pickerView.selectRow(0, inComponent: 0, animated: true)
-            serverButton.setTitle(plistSource.first?.name.truncated(length: 19), for: .normal)
-        }
     }
-    
-
     
     private func displayErrorMessage(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -192,14 +162,16 @@ class LoginViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     // Passing plistController with dependency injection for sharing state.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "AddServerSegue" {
-            if let addServerVC = segue.destination as? AddServerViewController {
-                addServerVC.plistController = plistController
+        if segue.identifier == "ServerTableSegue" {
+            if let serverTableNC = segue.destination as? ServerTableNavigationController {
+                if let serverTableVC = serverTableNC.topViewController as? ServerTableViewController {
+                    serverTableVC.plistController = plistController
+                }
             }
         }
     }
     
-    private func showAddNewServer() {
-        performSegue(withIdentifier: "AddServerSegue", sender: nil)
+    private func showServerTableVC() {
+        performSegue(withIdentifier: "ServerTableSegue", sender: nil)
     }
 }

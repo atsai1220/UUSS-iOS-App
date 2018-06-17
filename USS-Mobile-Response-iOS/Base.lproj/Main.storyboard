@@ -123,7 +123,7 @@
                         <outlet property="serverButton" destination="Pkt-gY-mHv" id="rbm-22-1KX"/>
                         <outlet property="serverField" destination="Zjo-9M-cnD" id="mdX-Wj-Ipp"/>
                         <outlet property="userNameField" destination="aQg-Zw-f9k" id="f7d-Pz-SXW"/>
-                        <segue destination="R51-4z-8JX" kind="presentation" identifier="AddServerSegue" id="EN3-6l-qVc"/>
+                        <segue destination="5bx-Uh-KJ3" kind="presentation" identifier="ServerTableSegue" id="7e1-5T-umX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5sE-eM-RAq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -193,13 +193,13 @@
                                 <items>
                                     <barButtonItem systemItem="cancel" id="wae-xe-daY">
                                         <connections>
-                                            <action selector="cancelTapped:" destination="R51-4z-8JX" id="1VB-9j-HXj"/>
+                                            <action selector="cancelTapped:" destination="R51-4z-8JX" id="fBI-BL-4F0"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="yXC-zB-VDJ"/>
                                     <barButtonItem systemItem="save" id="Bpv-dw-H9e">
                                         <connections>
-                                            <action selector="saveTapped:" destination="R51-4z-8JX" id="Uep-jD-AhJ"/>
+                                            <action selector="saveTapped:" destination="R51-4z-8JX" id="2nS-vS-ddy"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -216,13 +216,73 @@
                         <viewLayoutGuide key="safeArea" id="YP9-yz-rOT"/>
                     </view>
                     <connections>
-                        <outlet property="nameField" destination="k5a-cY-73T" id="5i7-fZ-55p"/>
-                        <outlet property="urlField" destination="G52-Nj-cO4" id="HxN-YJ-8ep"/>
+                        <outlet property="nameField" destination="k5a-cY-73T" id="Exp-Hy-hTg"/>
+                        <outlet property="urlField" destination="G52-Nj-cO4" id="gXr-mM-bHe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XzZ-Ep-Fdf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1288" y="1095"/>
+            <point key="canvasLocation" x="204" y="990"/>
+        </scene>
+        <!--Server List-->
+        <scene sceneID="qw5-oM-Tpq">
+            <objects>
+                <tableViewController id="Hp6-9q-6Xa" customClass="ServerTableViewController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="fj6-Nn-Opu">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="yG4-6w-tRg">
+                                <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yG4-6w-tRg" id="Bn5-bZ-pgf">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Hp6-9q-6Xa" id="R73-Wr-yBi"/>
+                            <outlet property="delegate" destination="Hp6-9q-6Xa" id="uRx-ZM-Foq"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Server List" id="VYh-zy-rCW">
+                        <barButtonItem key="backBarButtonItem" title="Cancel" id="seb-cp-ZHR"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="lq2-VW-PdY">
+                            <connections>
+                                <action selector="cancelTapped:" destination="Hp6-9q-6Xa" id="qbB-ny-Qeg"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="60N-9e-uYe">
+                            <connections>
+                                <action selector="addTapped:" destination="Hp6-9q-6Xa" id="EvO-l5-KKI"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="R51-4z-8JX" kind="presentation" identifier="AddServerSegue" id="REv-rU-Q1K"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BFC-QW-72M" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-565" y="990"/>
+        </scene>
+        <!--Server Table Navigation Controller-->
+        <scene sceneID="xTS-pT-BOF">
+            <objects>
+                <navigationController id="5bx-Uh-KJ3" customClass="ServerTableNavigationController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="wab-Gq-HZJ">
+                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Hp6-9q-6Xa" kind="relationship" relationship="rootViewController" id="wAr-kY-wDc"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9fu-Cn-5yq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1288" y="990"/>
         </scene>
         <!--Main Menu-->
         <scene sceneID="bFG-0g-Dcp">
@@ -281,17 +341,9 @@
                                     <constraint firstAttribute="height" constant="44" id="I2t-5q-8t4"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem systemItem="cancel" id="8mw-d4-hQF">
-                                        <connections>
-                                            <action selector="cancelTapped:" destination="y60-wn-HYQ" id="MGl-Rw-2Ql"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <barButtonItem systemItem="cancel" id="8mw-d4-hQF"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="D0f-ji-xed"/>
-                                    <barButtonItem systemItem="done" id="fJI-Ha-VPO">
-                                        <connections>
-                                            <action selector="doneTapped:" destination="y60-wn-HYQ" id="dyk-XZ-cJ9"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <barButtonItem systemItem="done" id="fJI-Ha-VPO"/>
                                 </items>
                             </toolbar>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pO7-NA-c2F">
