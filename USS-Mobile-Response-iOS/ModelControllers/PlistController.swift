@@ -26,6 +26,17 @@ class PlistController {
     func updatePlist(with newDictionaryEntry: PlistDictionary) {
         var resourcePlist = NSArray(contentsOf: fileURL) as! [PlistDictionary]
         resourcePlist.insert(newDictionaryEntry, at: resourcePlist.count)
+        write(with: resourcePlist)
+    }
+    
+    func remove(at index: Int) {
+        // TODO: Test for appropriate index
+        var resourcePlist = NSArray(contentsOf: fileURL) as! [PlistDictionary]
+        resourcePlist.remove(at: index)
+        write(with: resourcePlist)
+    }
+    
+    private func write(with resourcePlist: [PlistDictionary]) {
         let plistData = try! PropertyListSerialization.data(fromPropertyList: resourcePlist, format: .xml, options: 0)
         try! plistData.write(to: fileURL)
     }

@@ -50,6 +50,14 @@ class ServerTableViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            plistSource.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .left)
+            plistController.remove(at: indexPath.row)
+        }
+    }
+    
     // Passing plistController with dependency injection for sharing state.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddServerSegue" {
