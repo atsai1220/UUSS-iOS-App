@@ -91,7 +91,7 @@ class LoginViewController: UIViewController {
     }
     
     private func loginToAPI() {
-        // Read values from text fields
+        // Read values from text fields 
         let userName = userNameField.text
         let userPassword = passwordField.text
         // Check if fields are empty
