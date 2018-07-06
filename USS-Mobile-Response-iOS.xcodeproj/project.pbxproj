@@ -23,6 +23,12 @@
 		1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50720BF8388004E1270 /* Assets.xcassets */; };
 		1C57E50B20BF8388004E1270 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50920BF8388004E1270 /* LaunchScreen.storyboard */; };
 		1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */; };
+		9C5E159120EF597100BFD0F3 /* bin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158B20EF597100BFD0F3 /* bin.png */; };
+		9C5E159220EF597100BFD0F3 /* baggage.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158C20EF597100BFD0F3 /* baggage.png */; };
+		9C5E159320EF597100BFD0F3 /* baggage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158D20EF597100BFD0F3 /* baggage@3x.png */; };
+		9C5E159420EF597100BFD0F3 /* baggage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158E20EF597100BFD0F3 /* baggage@2x.png */; };
+		9C5E159520EF597100BFD0F3 /* bin@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158F20EF597100BFD0F3 /* bin@3x.png */; };
+		9C5E159620EF597100BFD0F3 /* bin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E159020EF597100BFD0F3 /* bin@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +50,12 @@
 		1C57E50A20BF8388004E1270 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C57E50C20BF8388004E1270 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuLauncher.swift; sourceTree = "<group>"; };
+		9C5E158B20EF597100BFD0F3 /* bin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bin.png; sourceTree = "<group>"; };
+		9C5E158C20EF597100BFD0F3 /* baggage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = baggage.png; sourceTree = "<group>"; };
+		9C5E158D20EF597100BFD0F3 /* baggage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baggage@3x.png"; sourceTree = "<group>"; };
+		9C5E158E20EF597100BFD0F3 /* baggage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baggage@2x.png"; sourceTree = "<group>"; };
+		9C5E158F20EF597100BFD0F3 /* bin@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bin@3x.png"; sourceTree = "<group>"; };
+		9C5E159020EF597100BFD0F3 /* bin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bin@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +113,7 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				9C5E158620EF57A900BFD0F3 /* Assets */,
 				1C57E50020BF8387004E1270 /* AppDelegate.swift */,
 				1C403E3E20D27DB4000DB616 /* ModelControllers */,
 				1C403E3D20D275F6000DB616 /* Views */,
@@ -127,6 +140,19 @@
 				1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		9C5E158620EF57A900BFD0F3 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				9C5E158C20EF597100BFD0F3 /* baggage.png */,
+				9C5E158E20EF597100BFD0F3 /* baggage@2x.png */,
+				9C5E158D20EF597100BFD0F3 /* baggage@3x.png */,
+				9C5E158B20EF597100BFD0F3 /* bin.png */,
+				9C5E159020EF597100BFD0F3 /* bin@2x.png */,
+				9C5E158F20EF597100BFD0F3 /* bin@3x.png */,
+			);
+			path = Assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,10 +213,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C5E159320EF597100BFD0F3 /* baggage@3x.png in Resources */,
+				9C5E159420EF597100BFD0F3 /* baggage@2x.png in Resources */,
+				9C5E159220EF597100BFD0F3 /* baggage.png in Resources */,
 				1C57E50B20BF8388004E1270 /* LaunchScreen.storyboard in Resources */,
 				1C043CA020CAA90E006A9D69 /* ServerList.plist in Resources */,
 				1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */,
 				1C57E50620BF8387004E1270 /* Main.storyboard in Resources */,
+				9C5E159120EF597100BFD0F3 /* bin.png in Resources */,
+				9C5E159620EF597100BFD0F3 /* bin@2x.png in Resources */,
+				9C5E159520EF597100BFD0F3 /* bin@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

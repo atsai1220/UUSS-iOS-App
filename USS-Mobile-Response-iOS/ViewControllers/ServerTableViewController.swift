@@ -36,6 +36,7 @@ class ServerTableViewController: UITableViewController {
         plistController.loadPlist()
         plistSource = plistController.resources
         tableView.reloadData()
+        print("test")
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

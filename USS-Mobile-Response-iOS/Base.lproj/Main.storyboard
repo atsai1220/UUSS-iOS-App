@@ -296,8 +296,9 @@
                                 <rect key="frame" x="0.0" y="687" width="414" height="49"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
-                                    <tabBarItem systemItem="favorites" id="bBW-Cc-gnw"/>
-                                    <tabBarItem systemItem="more" id="aMH-YE-you"/>
+                                    <tabBarItem systemItem="history" id="bBW-Cc-gnw"/>
+                                    <tabBarItem title="Local" image="baggage.png" landscapeImage="baggage.png" id="aMH-YE-you"/>
+                                    <tabBarItem title="Trash" image="bin.png" landscapeImage="bin.png" id="b6l-NB-xdm"/>
                                 </items>
                             </tabBar>
                         </subviews>
@@ -427,4 +428,8 @@
             <point key="canvasLocation" x="-652" y="252"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="baggage.png" width="25" height="25"/>
+        <image name="bin.png" width="25" height="25"/>
+    </resources>
 </document>
