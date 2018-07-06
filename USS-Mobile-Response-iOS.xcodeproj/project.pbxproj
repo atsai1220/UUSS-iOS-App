@@ -78,22 +78,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		1C403E3D20D275F6000DB616 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		1C403E3E20D27DB4000DB616 /* ModelControllers */ = {
-			isa = PBXGroup;
-			children = (
-				1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */,
-				1C043CA320CAD0BB006A9D69 /* PlistController.swift */,
-			);
-			path = ModelControllers;
-			sourceTree = "<group>";
-		};
 		1C57E4F420BF8386004E1270 = {
 			isa = PBXGroup;
 			children = (
@@ -113,12 +97,16 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				9C5E159720EF69BD00BFD0F3 /* Main Page */,
+				9C5E15AC20EF6B6E00BFD0F3 /* Profile */,
+				9C5E15AA20EF6B5F00BFD0F3 /* Settings */,
 				9C5E158620EF57A900BFD0F3 /* Assets */,
+				9C5E159A20EF69E000BFD0F3 /* New Server */,
+				9C5E159920EF69D400BFD0F3 /* Server List */,
+				9C5E159820EF69CD00BFD0F3 /* Login Page */,
 				1C57E50020BF8387004E1270 /* AppDelegate.swift */,
-				1C403E3E20D27DB4000DB616 /* ModelControllers */,
-				1C403E3D20D275F6000DB616 /* Views */,
 				1C043CA520CBB5FB006A9D69 /* Model */,
-				1C5B55E120C68924006FF1B4 /* ViewControllers */,
+				1C5B55E120C68924006FF1B4 /* Control */,
 				1C57E50420BF8387004E1270 /* Main.storyboard */,
 				1C57E50720BF8388004E1270 /* Assets.xcassets */,
 				1C57E50920BF8388004E1270 /* LaunchScreen.storyboard */,
@@ -127,19 +115,12 @@
 			path = "USS-Mobile-Response-iOS";
 			sourceTree = "<group>";
 		};
-		1C5B55E120C68924006FF1B4 /* ViewControllers */ = {
+		1C5B55E120C68924006FF1B4 /* Control */ = {
 			isa = PBXGroup;
 			children = (
-				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
-				1C4D76B220C159AE00458079 /* LoginViewController.swift */,
-				1C4D76B420C16ACC00458079 /* MainViewController.swift */,
-				1C4D76BA20C1826200458079 /* ProfileViewController.swift */,
-				1C4D76BC20C1826F00458079 /* SettingsViewController.swift */,
-				1C403E3920D010A6000DB616 /* AddServerViewController.swift */,
-				1C403E3F20D3A8EC000DB616 /* ServerTableViewController.swift */,
-				1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */,
+				1C043CA320CAD0BB006A9D69 /* PlistController.swift */,
 			);
-			path = ViewControllers;
+			path = Control;
 			sourceTree = "<group>";
 		};
 		9C5E158620EF57A900BFD0F3 /* Assets */ = {
@@ -153,6 +134,186 @@
 				9C5E158F20EF597100BFD0F3 /* bin@3x.png */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		9C5E159720EF69BD00BFD0F3 /* Main Page */ = {
+			isa = PBXGroup;
+			children = (
+				9C5E15A820EF6ADF00BFD0F3 /* Side Menu */,
+				9C5E159B20EF69EA00BFD0F3 /* Model */,
+				9C5E159C20EF69EE00BFD0F3 /* View */,
+				9C5E159D20EF69F200BFD0F3 /* Control */,
+			);
+			path = "Main Page";
+			sourceTree = "<group>";
+		};
+		9C5E159820EF69CD00BFD0F3 /* Login Page */ = {
+			isa = PBXGroup;
+			children = (
+				9C5E15A720EF6AC000BFD0F3 /* Model */,
+				9C5E15A620EF6ABA00BFD0F3 /* View */,
+				9C5E15A520EF6AB600BFD0F3 /* Control */,
+			);
+			path = "Login Page";
+			sourceTree = "<group>";
+		};
+		9C5E159920EF69D400BFD0F3 /* Server List */ = {
+			isa = PBXGroup;
+			children = (
+				9C5E15A320EF6A5E00BFD0F3 /* Model */,
+				9C5E15A220EF6A5B00BFD0F3 /* View */,
+				9C5E15A120EF6A5500BFD0F3 /* Control */,
+			);
+			path = "Server List";
+			sourceTree = "<group>";
+		};
+		9C5E159A20EF69E000BFD0F3 /* New Server */ = {
+			isa = PBXGroup;
+			children = (
+				9C5E15A020EF6A3B00BFD0F3 /* Model */,
+				9C5E159F20EF6A3900BFD0F3 /* View */,
+				9C5E159E20EF6A3400BFD0F3 /* Control */,
+			);
+			path = "New Server";
+			sourceTree = "<group>";
+		};
+		9C5E159B20EF69EA00BFD0F3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9C5E159C20EF69EE00BFD0F3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9C5E159D20EF69F200BFD0F3 /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
+				1C4D76B420C16ACC00458079 /* MainViewController.swift */,
+			);
+			path = Control;
+			sourceTree = "<group>";
+		};
+		9C5E159E20EF6A3400BFD0F3 /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				1C403E3920D010A6000DB616 /* AddServerViewController.swift */,
+			);
+			path = Control;
+			sourceTree = "<group>";
+		};
+		9C5E159F20EF6A3900BFD0F3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9C5E15A020EF6A3B00BFD0F3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			path = "New Group1";
+			sourceTree = "<group>";
+		};
+		9C5E15A120EF6A5500BFD0F3 /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				1C403E3F20D3A8EC000DB616 /* ServerTableViewController.swift */,
+				1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */,
+			);
+			path = Control;
+			sourceTree = "<group>";
+		};
+		9C5E15A220EF6A5B00BFD0F3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9C5E15A320EF6A5E00BFD0F3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9C5E15A520EF6AB600BFD0F3 /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				1C4D76B220C159AE00458079 /* LoginViewController.swift */,
+			);
+			path = Control;
+			sourceTree = "<group>";
+		};
+		9C5E15A620EF6ABA00BFD0F3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9C5E15A720EF6AC000BFD0F3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9C5E15A820EF6ADF00BFD0F3 /* Side Menu */ = {
+			isa = PBXGroup;
+			children = (
+				9C5E15A920EF6AE900BFD0F3 /* Control */,
+			);
+			path = "Side Menu";
+			sourceTree = "<group>";
+		};
+		9C5E15A920EF6AE900BFD0F3 /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */,
+			);
+			path = Control;
+			sourceTree = "<group>";
+		};
+		9C5E15AA20EF6B5F00BFD0F3 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				9C5E15AB20EF6B6600BFD0F3 /* Control */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		9C5E15AB20EF6B6600BFD0F3 /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				1C4D76BC20C1826F00458079 /* SettingsViewController.swift */,
+			);
+			path = Control;
+			sourceTree = "<group>";
+		};
+		9C5E15AC20EF6B6E00BFD0F3 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				9C5E15AD20EF6B7500BFD0F3 /* Control */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		9C5E15AD20EF6B7500BFD0F3 /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				1C4D76BA20C1826200458079 /* ProfileViewController.swift */,
+			);
+			path = Control;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

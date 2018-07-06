@@ -296,8 +296,8 @@
                                 <rect key="frame" x="0.0" y="687" width="414" height="49"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
-                                    <tabBarItem systemItem="history" id="bBW-Cc-gnw"/>
                                     <tabBarItem title="Local" image="baggage.png" landscapeImage="baggage.png" id="aMH-YE-you"/>
+                                    <tabBarItem systemItem="history" id="bBW-Cc-gnw"/>
                                     <tabBarItem title="Trash" image="bin.png" landscapeImage="bin.png" id="b6l-NB-xdm"/>
                                 </items>
                             </tabBar>
@@ -319,6 +319,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="ncG-Fy-08j"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="tabBar" destination="6aC-27-bnM" id="fgx-Sp-cgi"/>
                         <segue destination="y60-wn-HYQ" kind="presentation" identifier="ShowProfileSegue" id="t6z-Rh-VYk"/>
                         <segue destination="WDF-0S-4rp" kind="presentation" identifier="ShowSettingsSegue" id="3lV-gh-9RK"/>
                         <segue destination="wqY-gt-h7Y" kind="showDetail" identifier="ShowSignInSegue" id="qSl-nD-Aua"/>
