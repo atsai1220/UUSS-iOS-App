@@ -23,6 +23,7 @@
 		1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50720BF8388004E1270 /* Assets.xcassets */; };
 		1C57E50B20BF8388004E1270 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50920BF8388004E1270 /* LaunchScreen.storyboard */; };
 		1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */; };
+		9C59C70C20EF7DE3001E3B3E /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C59C70B20EF7DE3001E3B3E /* SideMenuView.swift */; };
 		9C5E159120EF597100BFD0F3 /* bin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158B20EF597100BFD0F3 /* bin.png */; };
 		9C5E159220EF597100BFD0F3 /* baggage.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158C20EF597100BFD0F3 /* baggage.png */; };
 		9C5E159320EF597100BFD0F3 /* baggage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158D20EF597100BFD0F3 /* baggage@3x.png */; };
@@ -50,6 +51,7 @@
 		1C57E50A20BF8388004E1270 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C57E50C20BF8388004E1270 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuLauncher.swift; sourceTree = "<group>"; };
+		9C59C70B20EF7DE3001E3B3E /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
 		9C5E158B20EF597100BFD0F3 /* bin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bin.png; sourceTree = "<group>"; };
 		9C5E158C20EF597100BFD0F3 /* baggage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = baggage.png; sourceTree = "<group>"; };
 		9C5E158D20EF597100BFD0F3 /* baggage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baggage@3x.png"; sourceTree = "<group>"; };
@@ -122,6 +124,15 @@
 				1C043CA320CAD0BB006A9D69 /* PlistController.swift */,
 			);
 			path = Control;
+			sourceTree = "<group>";
+		};
+		9C59C70D20EF7DF6001E3B3E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9C59C70B20EF7DE3001E3B3E /* SideMenuView.swift */,
+			);
+			name = View;
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 		9C5E158620EF57A900BFD0F3 /* Assets */ = {
@@ -271,6 +282,7 @@
 		9C5E15A820EF6ADF00BFD0F3 /* Side Menu */ = {
 			isa = PBXGroup;
 			children = (
+				9C59C70D20EF7DF6001E3B3E /* View */,
 				9C5E15A920EF6AE900BFD0F3 /* Control */,
 			);
 			path = "Side Menu";
@@ -397,6 +409,7 @@
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
+				9C59C70C20EF7DE3001E3B3E /* SideMenuView.swift in Sources */,
 				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,

@@ -48,4 +48,5 @@ class SideMenuLauncher: NSObject {
             self.collectionView.frame = CGRect(x: -self.collectionView.frame.width, y: 0, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
         })
     }
+    
 }
