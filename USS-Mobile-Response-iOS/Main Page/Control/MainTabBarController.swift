@@ -7,10 +7,8 @@
 import Foundation
 import UIKit
 
-class MainViewController: UIViewController {
-   
-
-    @IBOutlet weak var tabBar: UITabBar!
+class MainTabBarController: UITabBarController {
+    
     let sideMenuLauncher = SideMenuLauncher()
     
     @IBAction func menuTapped(_ sender: Any) {
@@ -20,9 +18,11 @@ class MainViewController: UIViewController {
         sideMenuLauncher.showSideMenu()
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        tabBar.selectedItem = tabBar.items?.first
+    
     }
+
     
 }
