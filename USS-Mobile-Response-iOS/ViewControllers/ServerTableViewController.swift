@@ -44,7 +44,6 @@ class ServerTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        cell.textLabel?.text = "SOMETHING"
         let name = plistSource[indexPath.row].name
         cell.textLabel?.text = name
         return cell
