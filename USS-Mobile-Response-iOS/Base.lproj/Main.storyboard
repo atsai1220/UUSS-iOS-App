@@ -307,7 +307,7 @@
                             <outlet property="delegate" destination="qpd-gj-uuI" id="QuN-RP-7Pb"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Local" image="baggage.png" id="6By-pO-ql5"/>
+                    <tabBarItem key="tabBarItem" title="Local" image="baggage" id="6By-pO-ql5"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PIF-FJ-3zm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -365,7 +365,7 @@
                             <outlet property="delegate" destination="Q46-83-LT1" id="4zf-lm-DCZ"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Trash" image="bin.png" id="xBL-7M-8hq"/>
+                    <tabBarItem key="tabBarItem" title="Trash" image="bin" id="xBL-7M-8hq"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uz4-fU-azf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -419,7 +419,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="baggage.png" width="25" height="25"/>
-        <image name="bin.png" width="25" height="25"/>
+        <image name="baggage" width="25" height="25"/>
+        <image name="bin" width="25" height="25"/>
     </resources>
 </document>

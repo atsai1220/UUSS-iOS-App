@@ -23,13 +23,8 @@
 		1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50720BF8388004E1270 /* Assets.xcassets */; };
 		1C57E50B20BF8388004E1270 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50920BF8388004E1270 /* LaunchScreen.storyboard */; };
 		1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */; };
-		9C59C70C20EF7DE3001E3B3E /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C59C70B20EF7DE3001E3B3E /* SideMenuView.swift */; };
-		9C5E159120EF597100BFD0F3 /* bin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158B20EF597100BFD0F3 /* bin.png */; };
-		9C5E159220EF597100BFD0F3 /* baggage.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158C20EF597100BFD0F3 /* baggage.png */; };
-		9C5E159320EF597100BFD0F3 /* baggage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158D20EF597100BFD0F3 /* baggage@3x.png */; };
-		9C5E159420EF597100BFD0F3 /* baggage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158E20EF597100BFD0F3 /* baggage@2x.png */; };
-		9C5E159520EF597100BFD0F3 /* bin@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E158F20EF597100BFD0F3 /* bin@3x.png */; };
-		9C5E159620EF597100BFD0F3 /* bin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C5E159020EF597100BFD0F3 /* bin@2x.png */; };
+		9C457A5320F0856B00720ACA /* SideMenuCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */; };
+		9C457A5520F08A0100720ACA /* LogoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C457A5420F08A0100720ACA /* LogoutCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,13 +46,8 @@
 		1C57E50A20BF8388004E1270 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C57E50C20BF8388004E1270 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuLauncher.swift; sourceTree = "<group>"; };
-		9C59C70B20EF7DE3001E3B3E /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
-		9C5E158B20EF597100BFD0F3 /* bin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bin.png; sourceTree = "<group>"; };
-		9C5E158C20EF597100BFD0F3 /* baggage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = baggage.png; sourceTree = "<group>"; };
-		9C5E158D20EF597100BFD0F3 /* baggage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baggage@3x.png"; sourceTree = "<group>"; };
-		9C5E158E20EF597100BFD0F3 /* baggage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baggage@2x.png"; sourceTree = "<group>"; };
-		9C5E158F20EF597100BFD0F3 /* bin@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bin@3x.png"; sourceTree = "<group>"; };
-		9C5E159020EF597100BFD0F3 /* bin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bin@2x.png"; sourceTree = "<group>"; };
+		9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCollectionViewController.swift; sourceTree = "<group>"; };
+		9C457A5420F08A0100720ACA /* LogoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LogoutCell.swift; path = "USS-Mobile-Response-iOS/Side Menu/View/LogoutCell.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +93,6 @@
 				9C5E15A820EF6ADF00BFD0F3 /* Side Menu */,
 				9C5E15AC20EF6B6E00BFD0F3 /* Profile */,
 				9C5E15AA20EF6B5F00BFD0F3 /* Settings */,
-				9C5E158620EF57A900BFD0F3 /* Assets */,
 				9C5E159A20EF69E000BFD0F3 /* New Server */,
 				9C5E159920EF69D400BFD0F3 /* Server List */,
 				9C5E159820EF69CD00BFD0F3 /* Login Page */,
@@ -129,23 +118,10 @@
 		9C59C70D20EF7DF6001E3B3E /* View */ = {
 			isa = PBXGroup;
 			children = (
-				9C59C70B20EF7DE3001E3B3E /* SideMenuView.swift */,
+				9C457A5420F08A0100720ACA /* LogoutCell.swift */,
 			);
 			name = View;
 			path = "New Group";
-			sourceTree = "<group>";
-		};
-		9C5E158620EF57A900BFD0F3 /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-				9C5E158C20EF597100BFD0F3 /* baggage.png */,
-				9C5E158E20EF597100BFD0F3 /* baggage@2x.png */,
-				9C5E158D20EF597100BFD0F3 /* baggage@3x.png */,
-				9C5E158B20EF597100BFD0F3 /* bin.png */,
-				9C5E159020EF597100BFD0F3 /* bin@2x.png */,
-				9C5E158F20EF597100BFD0F3 /* bin@3x.png */,
-			);
-			path = Assets;
 			sourceTree = "<group>";
 		};
 		9C5E159720EF69BD00BFD0F3 /* Main Page */ = {
@@ -292,6 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */,
+				9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */,
 			);
 			path = Control;
 			sourceTree = "<group>";
@@ -386,16 +363,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C5E159320EF597100BFD0F3 /* baggage@3x.png in Resources */,
-				9C5E159420EF597100BFD0F3 /* baggage@2x.png in Resources */,
-				9C5E159220EF597100BFD0F3 /* baggage.png in Resources */,
 				1C57E50B20BF8388004E1270 /* LaunchScreen.storyboard in Resources */,
 				1C043CA020CAA90E006A9D69 /* ServerList.plist in Resources */,
 				1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */,
 				1C57E50620BF8387004E1270 /* Main.storyboard in Resources */,
-				9C5E159120EF597100BFD0F3 /* bin.png in Resources */,
-				9C5E159620EF597100BFD0F3 /* bin@2x.png in Resources */,
-				9C5E159520EF597100BFD0F3 /* bin@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,10 +377,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C457A5320F0856B00720ACA /* SideMenuCollectionViewController.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
-				9C59C70C20EF7DE3001E3B3E /* SideMenuView.swift in Sources */,
 				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
@@ -418,6 +389,7 @@
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
 				1C4D76BD20C1826F00458079 /* SettingsViewController.swift in Sources */,
+				9C457A5520F08A0100720ACA /* LogoutCell.swift in Sources */,
 				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

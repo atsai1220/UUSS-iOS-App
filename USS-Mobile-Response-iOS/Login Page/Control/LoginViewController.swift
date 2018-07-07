@@ -51,14 +51,6 @@ class LoginViewController: UIViewController {
     var plistSource = [ResourceSpace]()
     
     
-//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-//        serverButton.setTitle(plistSource[row].name.truncated(length: 19), for: .normal)
-//        if row == pickerView.numberOfRows(inComponent: 0) - 1 {
-//            self.showServerTableVC()
-//        }
-//        serverField.resignFirstResponder()
-//    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         serverButton.setTitle(plistController.resources.first?.name.truncated(length: 19), for: .normal)
@@ -78,6 +70,10 @@ class LoginViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    fileprivate func isLoggedIn() -> Bool {
+        return UserDefaults.standard.bool(forKey: "isLoggedIn")
+    }
+    
     private func navigateToMainInterface() {
         // Referencing storyboard to change the window's rootViewController
         let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
@@ -87,6 +83,7 @@ class LoginViewController: UIViewController {
         guard let window = UIApplication.shared.keyWindow else {
             return
         }
+        
         UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromRight, animations: { window.rootViewController = mainNavigationController }, completion: nil)
     }
     

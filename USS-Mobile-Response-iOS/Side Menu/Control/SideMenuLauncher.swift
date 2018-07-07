@@ -8,28 +8,52 @@
 
 import UIKit
 
-class SideMenuLauncher: NSObject {
+class SideMenuLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
+    let cellId = "cellId"
     let greyView = UIView()
+    
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = UIColor.white
         return cv
     }()
+
     
     override init() {
         super.init()
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 3
+    }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        cell.backgroundColor = UIColor.blue
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width * 0.9, height: collectionView.frame.height * 0.1)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
     }
     
     // TODO: Add menu options for collectionView.
     func showSideMenu() {
         if let window = UIApplication.shared.keyWindow {
-            greyView.backgroundColor = UIColor(white: 0, alpha: 0.5)
-            greyView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
             window.addSubview(greyView)
             window.addSubview(collectionView)
             
+            greyView.backgroundColor = UIColor(white: 0, alpha: 0.5)
+            greyView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
+            
+            collectionView.contentInset = UIEdgeInsetsMake(100, 0, 0, 0)
             let cvWidth = 260
             collectionView.frame = CGRect(x: -cvWidth, y: 0, width: cvWidth, height: Int(window.frame.height))
             greyView.frame = window.frame
