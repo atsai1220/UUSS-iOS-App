@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+protocol PassSelectedServerBackwardsProtocol {
+    func setResultOfTableRowSelect(name: String, url: String)
+}
+
 class ServerTableViewController: UITableViewController {
     /*
      Class variables
@@ -16,6 +20,7 @@ class ServerTableViewController: UITableViewController {
     var plistController: PlistController!
     var plistSource = [ResourceSpace]()
     let cellId = "cellId"
+    var protocolDelegate: PassSelectedServerBackwardsProtocol?
     
     @IBAction func addTapped(_ sender: Any) {
         showAddNewServer()
@@ -36,7 +41,6 @@ class ServerTableViewController: UITableViewController {
         plistController.loadPlist()
         plistSource = plistController.resources
         tableView.reloadData()
-        print("test")
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -48,6 +52,13 @@ class ServerTableViewController: UITableViewController {
         let name = plistSource[indexPath.row].name
         cell.textLabel?.text = name
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let name = plistSource[indexPath.row].name
+        let url = plistSource[indexPath.row].url
+        protocolDelegate?.setResultOfTableRowSelect(name: name, url: url)
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {

@@ -20,7 +20,7 @@ extension String {
     }
 }
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol {
     /*
      IBOutlets
      */
@@ -28,6 +28,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var serverField: UITextField!
     @IBOutlet weak var serverButton: UIButton!
+    var selectedServerName: String?
+    var selectedServerURL: String?
     
     /*
      IBActions
@@ -53,12 +55,23 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        serverButton.setTitle(plistController.resources.first?.name.truncated(length: 19), for: .normal)
+        selectedServerName = plistController.resources.first?.name
+        selectedServerURL = plistController.resources.first?.url
+        serverButton.setTitle(selectedServerName!.truncated(length: 19), for: .normal)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         plistController.loadPlist()
         plistSource = plistController.resources
+        if let serverName = selectedServerName {
+            serverButton.setTitle(serverName.truncated(length: 19), for: .normal)
+        }
+        
+    }
+    
+    func setResultOfTableRowSelect(name: String, url: String) {
+        self.selectedServerName = name
+        self.selectedServerURL = url
     }
     
     private func displayErrorMessage(title: String, message: String) {
@@ -163,6 +176,7 @@ class LoginViewController: UIViewController {
             if let serverTableNC = segue.destination as? ServerTableNavigationController {
                 if let serverTableVC = serverTableNC.topViewController as? ServerTableViewController {
                     serverTableVC.plistController = plistController
+                    serverTableVC.protocolDelegate = self
                 }
             }
         }
