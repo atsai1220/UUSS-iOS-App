@@ -284,6 +284,38 @@
             </objects>
             <point key="canvasLocation" x="-1288" y="990"/>
         </scene>
+        <!--Test Image Picker View Controller-->
+        <scene sceneID="WFU-aX-AH6">
+            <objects>
+                <viewController storyboardIdentifier="TestImagePickerViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ZDq-7n-iXW" customClass="TestImagePickerViewController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lAA-uQ-scR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6TX-4f-CAl">
+                                <rect key="frame" x="20" y="304" width="374" height="227"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RYv-oJ-Uxn">
+                                <rect key="frame" x="184" y="606" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="chooseImageTapped:" destination="ZDq-7n-iXW" eventType="touchUpInside" id="fb9-WB-kEr"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="krK-tk-iQl"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="6TX-4f-CAl" id="G8B-M2-sDH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ye9-o5-hQY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-349.27536231884062" y="-1517.1195652173915"/>
+        </scene>
         <!--Local-->
         <scene sceneID="twa-P5-kEO">
             <objects>
@@ -381,7 +413,11 @@
                                 <action selector="menuTapped:" destination="Pgx-Pv-Tst" id="7tZ-Q6-wD0"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="qf0-1O-ZsH"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="qf0-1O-ZsH">
+                            <connections>
+                                <segue destination="ZDq-7n-iXW" kind="presentation" id="mYv-ee-xLH"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="nYh-GQ-xRU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>

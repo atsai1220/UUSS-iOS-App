@@ -23,6 +23,8 @@
 		1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50720BF8388004E1270 /* Assets.xcassets */; };
 		1C57E50B20BF8388004E1270 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50920BF8388004E1270 /* LaunchScreen.storyboard */; };
 		1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */; };
+		1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BA8210A6E7A00629D6F /* ApiResource.swift */; };
+		1C601BAC210A73F700629D6F /* TestImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BAB210A73F700629D6F /* TestImagePickerViewController.swift */; };
 		9C457A5320F0856B00720ACA /* SideMenuCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */; };
 		9C457A5520F08A0100720ACA /* LogoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C457A5420F08A0100720ACA /* LogoutCell.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +48,8 @@
 		1C57E50A20BF8388004E1270 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C57E50C20BF8388004E1270 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuLauncher.swift; sourceTree = "<group>"; };
+		1C601BA8210A6E7A00629D6F /* ApiResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResource.swift; sourceTree = "<group>"; };
+		1C601BAB210A73F700629D6F /* TestImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImagePickerViewController.swift; sourceTree = "<group>"; };
 		9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCollectionViewController.swift; sourceTree = "<group>"; };
 		9C457A5420F08A0100720ACA /* LogoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LogoutCell.swift; path = "USS-Mobile-Response-iOS/Side Menu/View/LogoutCell.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -66,6 +70,7 @@
 			children = (
 				1C043C9F20CAA90E006A9D69 /* ServerList.plist */,
 				1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */,
+				1C601BA8210A6E7A00629D6F /* ApiResource.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -89,6 +94,7 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				1C601BAA210A73D900629D6F /* TestImagePickerView */,
 				9C5E159720EF69BD00BFD0F3 /* Main Page */,
 				9C5E15A820EF6ADF00BFD0F3 /* Side Menu */,
 				9C5E15AC20EF6B6E00BFD0F3 /* Profile */,
@@ -113,6 +119,14 @@
 				1C043CA320CAD0BB006A9D69 /* PlistController.swift */,
 			);
 			path = Control;
+			sourceTree = "<group>";
+		};
+		1C601BAA210A73D900629D6F /* TestImagePickerView */ = {
+			isa = PBXGroup;
+			children = (
+				1C601BAB210A73F700629D6F /* TestImagePickerViewController.swift */,
+			);
+			path = TestImagePickerView;
 			sourceTree = "<group>";
 		};
 		9C59C70D20EF7DF6001E3B3E /* View */ = {
@@ -385,11 +399,13 @@
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
+				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
 				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
 				1C4D76BD20C1826F00458079 /* SettingsViewController.swift in Sources */,
 				9C457A5520F08A0100720ACA /* LogoutCell.swift in Sources */,
+				1C601BAC210A73F700629D6F /* TestImagePickerViewController.swift in Sources */,
 				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
