@@ -25,6 +25,7 @@
 		1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */; };
 		1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BA8210A6E7A00629D6F /* ApiResource.swift */; };
 		1C601BAC210A73F700629D6F /* TestImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BAB210A73F700629D6F /* TestImagePickerViewController.swift */; };
+		1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB1210BB86400629D6F /* CommonFunctions.swift */; };
 		9C457A5320F0856B00720ACA /* SideMenuCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */; };
 		9C457A5520F08A0100720ACA /* LogoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C457A5420F08A0100720ACA /* LogoutCell.swift */; };
 /* End PBXBuildFile section */
@@ -50,6 +51,8 @@
 		1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuLauncher.swift; sourceTree = "<group>"; };
 		1C601BA8210A6E7A00629D6F /* ApiResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResource.swift; sourceTree = "<group>"; };
 		1C601BAB210A73F700629D6F /* TestImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImagePickerViewController.swift; sourceTree = "<group>"; };
+		1C601BAE210BB4C000629D6F /* USS-Mobile-Response-iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "USS-Mobile-Response-iOS-Bridging-Header.h"; sourceTree = "<group>"; };
+		1C601BB1210BB86400629D6F /* CommonFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFunctions.swift; sourceTree = "<group>"; };
 		9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCollectionViewController.swift; sourceTree = "<group>"; };
 		9C457A5420F08A0100720ACA /* LogoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LogoutCell.swift; path = "USS-Mobile-Response-iOS/Side Menu/View/LogoutCell.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -109,6 +112,8 @@
 				1C57E50720BF8388004E1270 /* Assets.xcassets */,
 				1C57E50920BF8388004E1270 /* LaunchScreen.storyboard */,
 				1C57E50C20BF8388004E1270 /* Info.plist */,
+				1C601BAE210BB4C000629D6F /* USS-Mobile-Response-iOS-Bridging-Header.h */,
+				1C601BB1210BB86400629D6F /* CommonFunctions.swift */,
 			);
 			path = "USS-Mobile-Response-iOS";
 			sourceTree = "<group>";
@@ -351,6 +356,7 @@
 				TargetAttributes = {
 					1C57E4FC20BF8387004E1270 = {
 						CreatedOnToolsVersion = 9.3.1;
+						LastSwiftMigration = 0940;
 					};
 				};
 			};
@@ -392,6 +398,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C457A5320F0856B00720ACA /* SideMenuCollectionViewController.swift in Sources */,
+				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
@@ -550,14 +557,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5MA7674A5H;
 				INFOPLIST_FILE = "USS-Mobile-Response-iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "UUSS.USS-Mobile-Response-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "UUSS-Mobile-Response-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "USS-Mobile-Response-iOS/USS-Mobile-Response-iOS-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -567,14 +578,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5MA7674A5H;
 				INFOPLIST_FILE = "USS-Mobile-Response-iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "UUSS.USS-Mobile-Response-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "UUSS-Mobile-Response-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "USS-Mobile-Response-iOS/USS-Mobile-Response-iOS-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
