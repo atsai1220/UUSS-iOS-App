@@ -22,3 +22,25 @@ extension String {
         return shaHex
     }
 }
+
+struct Hazard: Codable {
+    let ref: String
+    let name: String
+    let user: String
+    let created: String
+    let publicKey: String?
+    let theme: String
+    let theme2: String
+    let theme3: String
+    let allow_changes: String
+    let cant_delete: String
+    let keywords: String
+    let savedsearch: String
+    let home_page_publish: String
+    let home_page_text: String
+    let home_page_image: String
+    let session_id: String
+    let propose_changes: String
+    let username: String
+    let fullname: String
+}

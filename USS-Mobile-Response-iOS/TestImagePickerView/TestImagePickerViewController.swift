@@ -54,6 +54,26 @@ class TestImagePickerViewController: UIViewController, UIImagePickerControllerDe
         let queryString = "user=atsai-uuss&function=search_public_collections&param1=&param2=theme&param3=DESC&param4=0&param5=0"
         let signature = "&sign=" + (privateKey + queryString).sha256()!
         let completeURL = urlString + queryString + signature
+        guard let url = URL(string: completeURL) else { return }
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }
+            guard let data = data else { return }
+            // JSON decodign and parsing
+            do {
+                // decode retrieved data with JSONDecoder
+                let resourceSpaceData = try JSONDecoder().decode([Hazard].self, from: data)
+                // return to main queue
+                DispatchQueue.main.async {
+                    print(resourceSpaceData)
+                    // reload tableview or something
+                }
+            } catch let jsonError {
+                print(jsonError)
+            }
+        }.resume()
+        
         print(completeURL)
     }
     
