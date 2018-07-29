@@ -25,9 +25,6 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         showServerTableVC()
     }
     
-    
-    
-
     @IBAction func backgroundTapped(_ sender: Any) {
         view.endEditing(true)
     }
@@ -55,26 +52,37 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     var plistController: PlistController!
     var plistSource = [ResourceSpace]()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+
+
         selectedServerName = plistController.resources.first?.name
         selectedServerURL = plistController.resources.first?.url
         serverButton.setTitle(selectedServerName!.truncated(length: 19), for: .normal)
     }
     
+    fileprivate func isLoggedIn() -> Bool {
+        return UserDefaults.standard.bool(forKey: "isLoggedIn")
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
+        
+        if isLoggedIn() {
+            DispatchQueue.main.asyncAfter(deadline: .now(), execute: { self.navigateToMainInterface() })
+        }
+        
         plistController.loadPlist()
         plistSource = plistController.resources
         if let serverName = selectedServerName {
             serverButton.setTitle(serverName.truncated(length: 19), for: .normal)
         }
-        
     }
     
     func setResultOfTableRowSelect(name: String, url: String) {
         self.selectedServerName = name
         self.selectedServerURL = url
+        UserDefaults.standard.set(self.selectedServerURL, forKey: "selectedURL")
+        UserDefaults.standard.synchronize()
     }
     
     private func displayErrorMessage(title: String, message: String) {
@@ -84,10 +92,6 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         })
         alert.addAction(dismissAction)
         present(alert, animated: true, completion: nil)
-    }
-    
-    fileprivate func isLoggedIn() -> Bool {
-        return UserDefaults.standard.bool(forKey: "isLoggedIn")
     }
     
     private func navigateToMainInterface() {
@@ -122,53 +126,11 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         
-        // Send request to API
-        // TODO: Configure POST for user authentication
-        let myURL = URL(string: "http://localhost:8080/authenticate")
-        var request = URLRequest(url: myURL!)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "content-type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        // UserDefaults to save logged in state
+        UserDefaults.standard.set(true, forKey: "isLoggedIn")
+        UserDefaults.standard.synchronize()
         
-        let postString = ["user": userName!, "password": userPassword!] as [String: String]
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: postString, options: .prettyPrinted)
-        } catch let error {
-            print(error.localizedDescription)
-            displayErrorMessage(title: "Something went wrong...", message: "An error occurred while parsing login information.")
-            return
-        }
-        // TODO: Create 
-        //        let task = URLSession.shared.dataTask(with: request) {
-        //            (data: Data?, response: URLResponse?, error: Error?) in
-        //
-        //            // Stop activity indicator
-        //            // TODO: Animate activity indicator indicator
-        //            DispatchQueue.main.async {
-        //                activityIndicator.stopAnimating()
-        //                activityIndicator.removeFromSuperview()
-        //                activityBackground.removeFromSuperview()
-        //            }
-        //
-        //            if error != nil {
-        //                self.displayErrorMessage(title: "Request error.", message: "An error occurred with the server. Please try again later.")
-        //                return
-        //            }
-        //
-        //            // Convert server response to NSDictionary object.
-        //            do {
-        //                let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary
-        //                // Test if json is empty and read.
-        //                if let parseJSON = json {
-        //
-        //                } else {
-        //                    self.displayErrorMessage(title: "Response error.", message: "Server response has error. JSON empty.")
-        //                }
-        //            } catch {
-        //
-        //            }
-        //        }
-        //        task.resume()
+        // Debugging delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: { self.navigateToMainInterface() })
     }
     

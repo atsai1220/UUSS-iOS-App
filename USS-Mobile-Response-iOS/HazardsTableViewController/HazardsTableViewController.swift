@@ -35,6 +35,7 @@ class HazardsTableViewController: UITableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         if hazards.count > 0 {
+            self.tableView.separatorStyle = .singleLine
             return 1
         }
         else {
@@ -45,7 +46,7 @@ class HazardsTableViewController: UITableViewController {
             messageLabel.sizeToFit()
             self.tableView.backgroundView = messageLabel
             self.tableView.separatorStyle = .none
-            return 0
+            return 1
         }
     }
 
@@ -88,7 +89,15 @@ class HazardsTableViewController: UITableViewController {
                         $0.theme == "Geologic Hazards"
                     })
                     self.hazards = self.hazards.sorted(by: { $0.name < $1.name })
+                    
+                    var indexPathsToReload = [IndexPath]()
+                    for index in self.hazards.indices {
+                        let indexPath = IndexPath(row: index, section: 0)
+                        indexPathsToReload.append(indexPath)
+                    }
                     self.tableView.reloadData()
+                    self.tableView.reloadRows(at: indexPathsToReload, with: .left)
+                    
                     if self.refreshControl?.isRefreshing == true {
                         self.refreshControl?.endRefreshing()
                     }
