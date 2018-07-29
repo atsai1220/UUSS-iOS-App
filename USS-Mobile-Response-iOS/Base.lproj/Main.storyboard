@@ -284,6 +284,34 @@
             </objects>
             <point key="canvasLocation" x="-1288" y="990"/>
         </scene>
+        <!--Hazards Table View Controller-->
+        <scene sceneID="1Qy-6F-u1R">
+            <objects>
+                <tableViewController storyboardIdentifier="HazardsTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FV7-AA-yFm" customClass="HazardsTableViewController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="HBR-QA-9HH">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="iJx-Vm-bbI">
+                                <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="iJx-Vm-bbI" id="Th8-zW-QcY">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="FV7-AA-yFm" id="S9J-ye-X8b"/>
+                            <outlet property="delegate" destination="FV7-AA-yFm" id="o09-Zy-dzx"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6PN-68-lOF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-372" y="-1609"/>
+        </scene>
         <!--Test Image Picker View Controller-->
         <scene sceneID="WFU-aX-AH6">
             <objects>
@@ -314,7 +342,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ye9-o5-hQY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-349.27536231884062" y="-1517.1195652173915"/>
+            <point key="canvasLocation" x="767" y="-1911"/>
         </scene>
         <!--Local-->
         <scene sceneID="twa-P5-kEO">
@@ -415,7 +443,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="qf0-1O-ZsH">
                             <connections>
-                                <segue destination="ZDq-7n-iXW" kind="show" id="mYv-ee-xLH"/>
+                                <segue destination="FV7-AA-yFm" kind="show" id="T2c-hS-tKU"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

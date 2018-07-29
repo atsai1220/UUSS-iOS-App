@@ -22,7 +22,8 @@ class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         selectedIndex = 0
-        
+        navigationItem.title = "Main"
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
 
     

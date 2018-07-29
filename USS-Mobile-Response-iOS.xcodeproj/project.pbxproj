@@ -26,6 +26,7 @@
 		1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BA8210A6E7A00629D6F /* ApiResource.swift */; };
 		1C601BAC210A73F700629D6F /* TestImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BAB210A73F700629D6F /* TestImagePickerViewController.swift */; };
 		1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB1210BB86400629D6F /* CommonFunctions.swift */; };
+		1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */; };
 		9C457A5320F0856B00720ACA /* SideMenuCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */; };
 		9C457A5520F08A0100720ACA /* LogoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C457A5420F08A0100720ACA /* LogoutCell.swift */; };
 /* End PBXBuildFile section */
@@ -53,6 +54,7 @@
 		1C601BAB210A73F700629D6F /* TestImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImagePickerViewController.swift; sourceTree = "<group>"; };
 		1C601BAE210BB4C000629D6F /* USS-Mobile-Response-iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "USS-Mobile-Response-iOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		1C601BB1210BB86400629D6F /* CommonFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFunctions.swift; sourceTree = "<group>"; };
+		1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardsTableViewController.swift; sourceTree = "<group>"; };
 		9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCollectionViewController.swift; sourceTree = "<group>"; };
 		9C457A5420F08A0100720ACA /* LogoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LogoutCell.swift; path = "USS-Mobile-Response-iOS/Side Menu/View/LogoutCell.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -97,6 +99,7 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				1C601BB3210D1EAD00629D6F /* HazardsTableViewController */,
 				1C601BAA210A73D900629D6F /* TestImagePickerView */,
 				9C5E159720EF69BD00BFD0F3 /* Main Page */,
 				9C5E15A820EF6ADF00BFD0F3 /* Side Menu */,
@@ -132,6 +135,14 @@
 				1C601BAB210A73F700629D6F /* TestImagePickerViewController.swift */,
 			);
 			path = TestImagePickerView;
+			sourceTree = "<group>";
+		};
+		1C601BB3210D1EAD00629D6F /* HazardsTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */,
+			);
+			path = HazardsTableViewController;
 			sourceTree = "<group>";
 		};
 		9C59C70D20EF7DF6001E3B3E /* View */ = {
@@ -401,6 +412,7 @@
 				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */,
+				1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
 				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,

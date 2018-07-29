@@ -12,6 +12,7 @@ class TestImagePickerViewController: UIViewController, UIImagePickerControllerDe
     
     @IBOutlet weak var imageView: UIImageView!
     
+    
     @IBAction func chooseImageTapped(_ sender: Any) {
 //        showActionSheet()
         testPublicSearch()
@@ -36,18 +37,6 @@ class TestImagePickerViewController: UIViewController, UIImagePickerControllerDe
         super.didReceiveMemoryWarning()
     }
     
-    func sha256(string: String) -> Data? {
-        guard let messageData = string.data(using:String.Encoding.utf8) else { return nil }
-        var digestData = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
-        
-        _ = digestData.withUnsafeMutableBytes {digestBytes in
-            messageData.withUnsafeBytes {messageBytes in
-                CC_SHA256(messageBytes, CC_LONG(messageData.count), digestBytes)
-            }
-        }
-        return digestData
-    }
-    
     func testPublicSearch() {
         let urlString = "https://geodata.geology.utah.gov/api/?"
         let privateKey = "7d510414a826c1af09d864e70c3656964839664786b8e774bafb7c10adc5fea1"
@@ -66,8 +55,13 @@ class TestImagePickerViewController: UIViewController, UIImagePickerControllerDe
                 let resourceSpaceData = try JSONDecoder().decode([Hazard].self, from: data)
                 // return to main queue
                 DispatchQueue.main.async {
-                    print(resourceSpaceData)
+                    
+                    print(type(of: resourceSpaceData[0]))
                     // reload tableview or something
+                    let hazards = resourceSpaceData.filter({
+                        $0.theme == "Geologic Hazards"
+                    })
+                    print(hazards)
                 }
             } catch let jsonError {
                 print(jsonError)
