@@ -20,8 +20,6 @@ class HazardsTableViewController: UITableViewController {
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
         self.refreshControl = UIRefreshControl()
-//        self.refreshControl?.backgroundColor = UIColor.blue
-//        self.refreshControl?.tintColor = UIColor.black
         self.refreshControl?.addTarget(self, action: #selector(loadHazardsFromApi), for: .valueChanged)
         
         loadHazardsFromApi()
@@ -47,8 +45,8 @@ class HazardsTableViewController: UITableViewController {
             messageLabel.sizeToFit()
             self.tableView.backgroundView = messageLabel
             self.tableView.separatorStyle = .none
+            return 0
         }
-        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

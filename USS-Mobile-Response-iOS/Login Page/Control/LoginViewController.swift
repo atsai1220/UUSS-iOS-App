@@ -7,19 +7,6 @@
 import Foundation
 import UIKit
 
-// Extension for String class to easily truncate string length
-// TODO: Find better implementation for tablet screen size.
-extension String {
-    func truncated(length: Int) -> String {
-        if self.count > length {
-            return String(self.prefix(length)) + "..."
-        }
-        else {
-            return self
-        }
-    }
-}
-
 class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol {
     /*
      IBOutlets
@@ -37,6 +24,9 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     @IBAction func serverButtonTapped(_ sender: Any) {
         showServerTableVC()
     }
+    
+    
+    
 
     @IBAction func backgroundTapped(_ sender: Any) {
         view.endEditing(true)
@@ -44,6 +34,19 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     
     @IBAction func loginTapped(_ sender: Any) {
         loginToAPI()
+    }
+    
+    @IBAction func publicTapped(_ sender: Any) {
+        // Create activity indicator
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
+        activityIndicator.center = view.center
+        let activityBackground = UIView(frame: view.frame)
+        activityBackground.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        view.addSubview(activityBackground)
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: { self.navigateToMainInterface() })
     }
     
     /*

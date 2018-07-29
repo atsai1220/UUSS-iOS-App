@@ -23,6 +23,19 @@ extension String {
     }
 }
 
+// Extension for String class to easily truncate string length
+// TODO: Find better implementation for tablet screen size.
+extension String {
+    func truncated(length: Int) -> String {
+        if self.count > length {
+            return String(self.prefix(length)) + "..."
+        }
+        else {
+            return self
+        }
+    }
+}
+
 struct Hazard: Codable {
     let ref: String
     let name: String
