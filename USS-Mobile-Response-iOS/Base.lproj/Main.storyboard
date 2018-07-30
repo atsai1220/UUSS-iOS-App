@@ -448,7 +448,7 @@
             <objects>
                 <tabBarController storyboardIdentifier="MainTabBarController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Pgx-Pv-Tst" customClass="MainTabBarController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="Mzp-tw-erQ">
-                        <barButtonItem key="leftBarButtonItem" systemItem="organize" id="jmW-eJ-zCB">
+                        <barButtonItem key="leftBarButtonItem" image="hamburger" id="jmW-eJ-zCB">
                             <connections>
                                 <action selector="menuTapped:" destination="Pgx-Pv-Tst" id="7tZ-Q6-wD0"/>
                             </connections>
@@ -497,5 +497,6 @@
     <resources>
         <image name="baggage" width="25" height="25"/>
         <image name="bin" width="25" height="25"/>
+        <image name="hamburger" width="25" height="25"/>
     </resources>
 </document>
