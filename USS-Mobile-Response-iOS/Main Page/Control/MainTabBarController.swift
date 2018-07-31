@@ -9,7 +9,11 @@ import UIKit
 
 class MainTabBarController: UITabBarController {
     
-    let sideMenuLauncher = SideMenuLauncher()
+    lazy var sideMenuLauncher: SideMenuLauncher = {
+        let launcher = SideMenuLauncher()
+        launcher.mainTabBarController = self
+        return launcher
+    }()
     
     @IBAction func menuTapped(_ sender: Any) {
         // TODO: Delegate vs Notification Center here?
@@ -20,6 +24,12 @@ class MainTabBarController: UITabBarController {
     
     @IBAction func newTapped(_ sender: Any) {
         performSegue(withIdentifier: "formSegue", sender: self)
+    }
+    
+    func showControllerFor(setting: Setting) {
+        let dummyViewController = UIViewController()
+        dummyViewController.navigationItem.title = setting.name
+        navigationController?.pushViewController(dummyViewController, animated: true)
     }
     
     

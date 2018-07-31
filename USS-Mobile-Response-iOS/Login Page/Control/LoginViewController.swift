@@ -54,8 +54,6 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-
         selectedServerName = plistController.resources.first?.name
         selectedServerURL = plistController.resources.first?.url
         serverButton.setTitle(selectedServerName!.truncated(length: 19), for: .normal)
@@ -66,11 +64,10 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        //
         if isLoggedIn() {
             DispatchQueue.main.asyncAfter(deadline: .now(), execute: { self.navigateToMainInterface() })
         }
-        
         plistController.loadPlist()
         plistSource = plistController.resources
         if let serverName = selectedServerName {

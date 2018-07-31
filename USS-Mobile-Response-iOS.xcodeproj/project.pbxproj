@@ -30,7 +30,6 @@
 		1C601BB7210F821700629D6F /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB6210F821700629D6F /* SettingCell.swift */; };
 		1C601BBB210FEA3C00629D6F /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB9210FEA3C00629D6F /* FormViewController.swift */; };
 		1C601BBC210FEA3C00629D6F /* Form.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BBA210FEA3C00629D6F /* Form.swift */; };
-		9C457A5320F0856B00720ACA /* SideMenuCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,7 +59,6 @@
 		1C601BB6210F821700629D6F /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
 		1C601BB9210FEA3C00629D6F /* FormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		1C601BBA210FEA3C00629D6F /* Form.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Form.swift; sourceTree = "<group>"; };
-		9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -302,7 +300,6 @@
 			isa = PBXGroup;
 			children = (
 				1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */,
-				9C457A5220F0856B00720ACA /* SideMenuCollectionViewController.swift */,
 				1C601BB6210F821700629D6F /* SettingCell.swift */,
 			);
 			path = Control;
@@ -413,7 +410,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C457A5320F0856B00720ACA /* SideMenuCollectionViewController.swift in Sources */,
 				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C601BBB210FEA3C00629D6F /* FormViewController.swift in Sources */,

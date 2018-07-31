@@ -23,6 +23,8 @@ class SideMenuLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
     let cellId = "cellId"
     let greyView = UIView()
     
+    var mainTabBarController: MainTabBarController?
+    
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -59,6 +61,42 @@ class SideMenuLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                self.greyView.alpha = 0
+                self.collectionView.frame = CGRect(x: -self.collectionView.frame.width, y: 0, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+        }) { (completed: Bool) in
+            let setting = self.settings[indexPath.item]
+            if setting.name != "Logout" {
+                self.mainTabBarController?.showControllerFor(setting: setting)
+            }
+            else {
+                // perform logout
+                UserDefaults.standard.set(false, forKey: "isLoggedIn")
+                UserDefaults.standard.synchronize()
+                // navigate to login page
+                DispatchQueue.main.asyncAfter(deadline: .now(), execute: { self.navigateToLoginInterface() })
+            }
+            
+        }
+        
+    }
+    
+    private func navigateToLoginInterface() {
+        // Referencing storyboard to change the window's rootViewController
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        guard let loginViewController =
+            mainStoryboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else {
+            return
+        }
+        guard let window = UIApplication.shared.keyWindow else {
+            return
+        }
+        loginViewController.plistController = PlistController()
+        UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromRight, animations: { window.rootViewController = loginViewController }, completion: nil)
     }
     
     // TODO: Add menu options for collectionView.
