@@ -19,6 +19,12 @@ class SettingCell: UICollectionViewCell {
         }
     }
     
+    override var isHighlighted: Bool {
+        didSet {
+            backgroundColor = isHighlighted ? UIColor.lightGray : UIColor.white
+        }
+    }
+    
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Setting"
