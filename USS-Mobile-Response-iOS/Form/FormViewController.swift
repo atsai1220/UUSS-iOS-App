@@ -27,7 +27,7 @@ class FormViewController: UIPageViewController, UIPageViewControllerDataSource, 
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
     
 //    var swipeDirection: String? = nil
@@ -35,7 +35,8 @@ class FormViewController: UIPageViewController, UIPageViewControllerDataSource, 
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
+        self.navigationItem.title = "New form"
+        self.navigationItem.largeTitleDisplayMode = .never
         self.delegate = self
         self.dataSource = self
 //        view1.delegate = self
@@ -60,7 +61,7 @@ class FormViewController: UIPageViewController, UIPageViewControllerDataSource, 
         //Setting the UIPageControl View
         pageControl = UIPageControl(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY))
         pageControl?.backgroundColor = UIColor.red
-        pageControl!.numberOfPages = 5
+        pageControl!.numberOfPages = 3
         pageControl!.currentPage = 0
         pageControl!.pageIndicatorTintColor = UIColor.lightGray
         pageControl!.currentPageIndicatorTintColor = UIColor.darkGray
@@ -68,9 +69,13 @@ class FormViewController: UIPageViewController, UIPageViewControllerDataSource, 
         
     }
     
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        
+    }
+    
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController?
     {
-        print("view swiped Left")
+        print("controller: view swiped Left")
         if let viewControllerIndex = self.viewControllersArray.index(of: viewController)
         {
             if viewControllerIndex == 0
@@ -87,7 +92,7 @@ class FormViewController: UIPageViewController, UIPageViewControllerDataSource, 
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController?
     {
-        print("view swiped Right")
+        print("controller: view swiped Right")
         if let viewControllerIndex = self.viewControllersArray.index(of: viewController) {
             if viewControllerIndex < self.viewControllersArray.count - 1 {
                 // go to next page in array

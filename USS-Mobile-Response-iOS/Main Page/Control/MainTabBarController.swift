@@ -18,6 +18,11 @@ class MainTabBarController: UITabBarController {
         sideMenuLauncher.showSideMenu()
     }
     
+    @IBAction func newTapped(_ sender: Any) {
+        performSegue(withIdentifier: "formSegue", sender: self)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         selectedIndex = 0

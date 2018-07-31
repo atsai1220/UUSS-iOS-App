@@ -28,16 +28,16 @@ class FormView: UIView
         page = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.height))
         
         //Create a gesture recognizer and add it to the view to recognize swiping left
-        swipeLeftGestureRecognizer = UISwipeGestureRecognizer()
-        swipeLeftGestureRecognizer!.direction = .left
-        swipeLeftGestureRecognizer!.addTarget(self, action: #selector(viewSwipedLeft))
-        self.addGestureRecognizer(swipeLeftGestureRecognizer!)
+//        swipeLeftGestureRecognizer = UISwipeGestureRecognizer()
+//        swipeLeftGestureRecognizer!.direction = .left
+//        swipeLeftGestureRecognizer!.addTarget(self, action: #selector(viewSwipedLeft))
+//        self.addGestureRecognizer(swipeLeftGestureRecognizer!)
         
         //Create a gesture recognizer and add it to the view to recognize swiping right
-        swipeRightGestureRecognizer = UISwipeGestureRecognizer()
-        swipeRightGestureRecognizer!.direction = .right
-        swipeRightGestureRecognizer!.addTarget(self, action: #selector(viewSwipedRight))
-        self.addGestureRecognizer(swipeRightGestureRecognizer!)
+//        swipeRightGestureRecognizer = UISwipeGestureRecognizer()
+//        swipeRightGestureRecognizer!.direction = .right
+//        swipeRightGestureRecognizer!.addTarget(self, action: #selector(viewSwipedRight))
+//        self.addGestureRecognizer(swipeRightGestureRecognizer!)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -64,7 +64,7 @@ class FormView: UIView
     
     @objc func viewSwipedRight()
     {
-        print("View Swiped Right!")
+        print("View Swiped Right!!")
 //        delegate?.viewSwiped(with: "Right")
     }
 }
