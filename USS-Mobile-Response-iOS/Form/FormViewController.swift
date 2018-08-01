@@ -11,6 +11,7 @@ import UIKit
 
 class FormViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate
 {
+    var selectedHazard: Hazard?
     var pageControl: UIPageControl? = UIPageControl()
     var viewControllersArray: [UIViewController] = [UIViewController]()
     var page1ViewController: UIViewController = UIViewController()
@@ -35,6 +36,9 @@ class FormViewController: UIPageViewController, UIPageViewControllerDataSource, 
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        if let existingHazard = self.selectedHazard {
+            print(existingHazard)
+        }
         self.navigationItem.title = "New form"
         self.navigationItem.largeTitleDisplayMode = .never
         self.delegate = self

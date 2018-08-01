@@ -23,7 +23,8 @@ class MainTabBarController: UITabBarController {
     }
     
     @IBAction func newTapped(_ sender: Any) {
-        performSegue(withIdentifier: "formSegue", sender: self)
+//        performSegue(withIdentifier: "formSegue", sender: self)
+        performSegue(withIdentifier: "hazardSegue", sender: self)
     }
     
     func showControllerFor(setting: Setting) {

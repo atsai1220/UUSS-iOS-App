@@ -12,6 +12,7 @@ class HazardsTableViewController: UITableViewController {
     
     var hazards: [Hazard] = []
     let cellId = "cellId"
+    var selectedHazard: Hazard?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,6 +63,25 @@ class HazardsTableViewController: UITableViewController {
             cell.textLabel?.text = name
         }
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let item = self.hazards[indexPath.row]
+        self.selectedHazard = item
+        performSegue(withIdentifier: "formSegue", sender: self)
+    }
+    
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+        if segue.identifier == "formSegue" {
+            if let formVC = segue.destination as? FormViewController {
+                formVC.selectedHazard = self.selectedHazard!
+            }
+        }
     }
     
     @objc
@@ -145,14 +165,8 @@ class HazardsTableViewController: UITableViewController {
     }
     */
 
-    /*
-    // MARK: - Navigation
+    
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+ 
 
 }

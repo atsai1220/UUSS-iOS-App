@@ -55,7 +55,7 @@ struct Hazard: Codable {
     let name: String
     let user: String
     let created: String
-    let publicKey: String?
+    let `public`: String?
     let theme: String
     let theme2: String
     let theme3: String
