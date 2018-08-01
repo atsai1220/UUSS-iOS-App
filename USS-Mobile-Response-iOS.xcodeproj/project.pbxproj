@@ -30,6 +30,7 @@
 		1C601BB7210F821700629D6F /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB6210F821700629D6F /* SettingCell.swift */; };
 		1C601BBB210FEA3C00629D6F /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB9210FEA3C00629D6F /* FormViewController.swift */; };
 		1C601BBC210FEA3C00629D6F /* Form.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BBA210FEA3C00629D6F /* Form.swift */; };
+		1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 		1C601BB6210F821700629D6F /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
 		1C601BB9210FEA3C00629D6F /* FormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		1C601BBA210FEA3C00629D6F /* Form.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Form.swift; sourceTree = "<group>"; };
+		1C76A8A021127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "USS-Mobile-Response-iOS.xcdatamodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				9C5E159920EF69D400BFD0F3 /* Server List */,
 				9C5E159820EF69CD00BFD0F3 /* Login Page */,
 				1C57E50020BF8387004E1270 /* AppDelegate.swift */,
+				1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */,
 				1C601BB8210FEA3C00629D6F /* Form */,
 				1C043CA520CBB5FB006A9D69 /* Model */,
 				1C5B55E120C68924006FF1B4 /* Control */,
@@ -426,6 +429,7 @@
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
 				1C4D76BD20C1826F00458079 /* SettingsViewController.swift in Sources */,
+				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,
 				1C601BBC210FEA3C00629D6F /* Form.swift in Sources */,
 				1C601BAC210A73F700629D6F /* TestImagePickerViewController.swift in Sources */,
 				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
@@ -631,6 +635,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				1C76A8A021127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodel */,
+			);
+			currentVersion = 1C76A8A021127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodel */;
+			name = "USS-Mobile-Response-iOS.xcdatamodeld";
+			path = "Model/USS-Mobile-Response-iOS.xcdatamodeld";
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 1C57E4F520BF8386004E1270 /* Project object */;
 }
