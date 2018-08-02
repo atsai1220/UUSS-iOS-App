@@ -26,7 +26,6 @@ class FormView: UIView
     {
         super.init(frame: frame)
         page = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.height))
-        
         //Create a gesture recognizer and add it to the view to recognize swiping left
 //        swipeLeftGestureRecognizer = UISwipeGestureRecognizer()
 //        swipeLeftGestureRecognizer!.direction = .left
@@ -47,13 +46,14 @@ class FormView: UIView
     override func draw(_ rect: CGRect)
     {
         super.draw(rect)
-        page?.backgroundColor = color
+//        page?.backgroundColor = color
         addSubview(page!)
     }
     
     func setColor(newColor: UIColor)
     {
         self.color = newColor
+        self.page?.backgroundColor = self.color
     }
     
     @objc func viewSwipedLeft()

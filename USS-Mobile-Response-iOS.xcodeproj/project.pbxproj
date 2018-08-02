@@ -31,6 +31,7 @@
 		1C601BBB210FEA3C00629D6F /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB9210FEA3C00629D6F /* FormViewController.swift */; };
 		1C601BBC210FEA3C00629D6F /* Form.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BBA210FEA3C00629D6F /* Form.swift */; };
 		1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */; };
+		1C76A8A32112BB9B00EE51A8 /* ResourceTypeForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A22112BB9B00EE51A8 /* ResourceTypeForm.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,7 @@
 		1C601BB9210FEA3C00629D6F /* FormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		1C601BBA210FEA3C00629D6F /* Form.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Form.swift; sourceTree = "<group>"; };
 		1C76A8A021127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "USS-Mobile-Response-iOS.xcdatamodel"; sourceTree = "<group>"; };
+		1C76A8A22112BB9B00EE51A8 /* ResourceTypeForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceTypeForm.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +158,7 @@
 			children = (
 				1C601BB9210FEA3C00629D6F /* FormViewController.swift */,
 				1C601BBA210FEA3C00629D6F /* Form.swift */,
+				1C76A8A22112BB9B00EE51A8 /* ResourceTypeForm.swift */,
 			);
 			path = Form;
 			sourceTree = "<group>";
@@ -426,6 +429,7 @@
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
 				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
 				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
+				1C76A8A32112BB9B00EE51A8 /* ResourceTypeForm.swift in Sources */,
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
 				1C4D76BD20C1826F00458079 /* SettingsViewController.swift in Sources */,

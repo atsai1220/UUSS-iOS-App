@@ -17,14 +17,29 @@ class FormViewController: UIPageViewController, UIPageViewControllerDataSource, 
     var page1ViewController: UIViewController = UIViewController()
     var page2ViewController: UIViewController = UIViewController()
     var page3ViewController: UIViewController = UIViewController()
-    var view1: FormView = FormView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY))
-    var view2: FormView = FormView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY))
-    var view3: FormView = FormView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY))
+
+    
+    lazy var view1: FormView = {
+        let view = FormView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        return view
+    }()
+    lazy var view2: FormView = {
+        let view = FormView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        return view
+    }()
+    lazy var view3: FormView = {
+        let view = FormView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        return view
+    }()
+//    var view1: FormView = FormView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY))
+//    var view2: FormView = FormView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY))
+//    var view3: FormView = FormView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY))
     
     
     override init(transitionStyle style: UIPageViewControllerTransitionStyle, navigationOrientation: UIPageViewControllerNavigationOrientation, options: [String : Any]? = nil)
     {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        
     }
     
     required init?(coder: NSCoder) {
@@ -51,6 +66,8 @@ class FormViewController: UIPageViewController, UIPageViewControllerDataSource, 
         view1.setColor(newColor: UIColor.blue)
         view2.setColor(newColor: UIColor.green)
         view3.setColor(newColor: UIColor.purple)
+        
+        view1.page = ResourceTypeForm(frame: view1.frame)
 //        
 //        page1ViewController.view.addSubview(view1)
 //        page2ViewController.view.addSubview(view2)
@@ -120,14 +137,13 @@ class FormViewController: UIPageViewController, UIPageViewControllerDataSource, 
         return nil
     }
     
-    
     override func viewDidLayoutSubviews()
     {
         var rect = CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY)
         
         (view1.page!.frame, rect) = rect.divided(atDistance: rect.height * 0.9, from: CGRectEdge.minYEdge)
-        view2.page!.frame = view1.page!.frame
-        view3.page!.frame = view1.page!.frame
+        view2.page?.frame = (view1.page?.frame)!
+        view3.page?.frame = (view1.page?.frame)!
 
         (pageControl!.frame, rect) = rect.divided(atDistance: rect.height, from: CGRectEdge.minYEdge)
     }
