@@ -28,8 +28,9 @@ class ResourceTypeForm: UIView {
     var photoButton: UIButton = {
         let button = UIButton()
         button.setTitle("Photo", for: .normal)
-        button.layer.borderColor = UIColor.black.cgColor
-        button.layer.backgroundColor = UIColor.lightGray.cgColor
+        button.layer.borderColor = UIColor.blue.cgColor
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 5
         return button
@@ -38,8 +39,9 @@ class ResourceTypeForm: UIView {
     var documentsButton: UIButton = {
         let button = UIButton()
         button.setTitle("Documents", for: .normal)
-        button.layer.borderColor = UIColor.black.cgColor
-        button.layer.backgroundColor = UIColor.lightGray.cgColor
+        button.layer.borderColor = UIColor.blue.cgColor
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 5
         return button
@@ -48,8 +50,9 @@ class ResourceTypeForm: UIView {
     var videoButton: UIButton = {
         let button = UIButton()
         button.setTitle("Video", for: .normal)
-        button.layer.borderColor = UIColor.black.cgColor
-        button.layer.backgroundColor = UIColor.lightGray.cgColor
+        button.layer.borderColor = UIColor.blue.cgColor
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 5
         return button
@@ -58,8 +61,9 @@ class ResourceTypeForm: UIView {
     var audioButton: UIButton = {
         let button = UIButton()
         button.setTitle("Audio", for: .normal)
-        button.layer.borderColor = UIColor.black.cgColor
-        button.layer.backgroundColor = UIColor.lightGray.cgColor
+        button.layer.borderColor = UIColor.blue.cgColor
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 5
         return button
@@ -90,7 +94,7 @@ class ResourceTypeForm: UIView {
         addConstraintsWithFormat(format: "H:|-[v0]-|", views: videoButton)
         addConstraintsWithFormat(format: "H:|-[v0]-|", views: audioButton)
         
-        addConstraintsWithFormat(format: "V:|-[v0(>=80)][v1(==v4)]-[v2(==v4)]-[v3(==v4)]-[v4(>=50)]-|", views: hintLabel, photoButton, documentsButton, videoButton, audioButton)
+        addConstraintsWithFormat(format: "V:|-[v0(<=80)]-[v1(==v4)]-[v2(==v4)]-[v3(==v4)]-[v4(>=50)]-|", views: hintLabel, photoButton, documentsButton, videoButton, audioButton)
         
         
         
