@@ -41,7 +41,8 @@ class HazardsTableViewController: UITableViewController {
         }
         else {
             let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
-            messageLabel.text = "Acquiring hazards from API. Pull down to refresh."
+            messageLabel.text = "Acquiring hazards from API.\n\nPull down to refresh."
+            messageLabel.numberOfLines = 0
             messageLabel.textColor = UIColor.black
             messageLabel.textAlignment = .center
             messageLabel.sizeToFit()
@@ -68,7 +69,10 @@ class HazardsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = self.hazards[indexPath.row]
         self.selectedHazard = item
-        performSegue(withIdentifier: "formSegue", sender: self)
+        let resourceTypeVC = ResourceTypeFormController()
+//        navigationController?.pushViewController(resourceTypeVC, animated: true)
+//        performSegue(withIdentifier: "formSegue", sender: self)
+        performSegue(withIdentifier: "resourceTypeSegue", sender: self)
     }
     
     // MARK: - Navigation

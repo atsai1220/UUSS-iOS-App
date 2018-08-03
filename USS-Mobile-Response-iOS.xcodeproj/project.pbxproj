@@ -32,6 +32,11 @@
 		1C601BBC210FEA3C00629D6F /* Form.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BBA210FEA3C00629D6F /* Form.swift */; };
 		1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */; };
 		1C76A8A32112BB9B00EE51A8 /* ResourceTypeForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A22112BB9B00EE51A8 /* ResourceTypeForm.swift */; };
+		1C76A8A52113B08000EE51A8 /* MainLocalTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */; };
+		1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */; };
+		1C76A8A92113B7E200EE51A8 /* ResourceTypeFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A82113B7E200EE51A8 /* ResourceTypeFormController.swift */; };
+		1C76A8AC2113C5A700EE51A8 /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */; };
+		1C76A8AE2113CC8300EE51A8 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +68,11 @@
 		1C601BBA210FEA3C00629D6F /* Form.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Form.swift; sourceTree = "<group>"; };
 		1C76A8A021127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "USS-Mobile-Response-iOS.xcdatamodel"; sourceTree = "<group>"; };
 		1C76A8A22112BB9B00EE51A8 /* ResourceTypeForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceTypeForm.swift; sourceTree = "<group>"; };
+		1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLocalTableViewController.swift; sourceTree = "<group>"; };
+		1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTrashTableViewController.swift; sourceTree = "<group>"; };
+		1C76A8A82113B7E200EE51A8 /* ResourceTypeFormController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceTypeFormController.swift; sourceTree = "<group>"; };
+		1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerViewController.swift; sourceTree = "<group>"; };
+		1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +115,7 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				1C76A8AA2113C58400EE51A8 /* Photo Picker */,
 				1C601BB3210D1EAD00629D6F /* HazardsTableViewController */,
 				1C601BAA210A73D900629D6F /* TestImagePickerView */,
 				9C5E159720EF69BD00BFD0F3 /* Main Page */,
@@ -159,15 +170,23 @@
 				1C601BB9210FEA3C00629D6F /* FormViewController.swift */,
 				1C601BBA210FEA3C00629D6F /* Form.swift */,
 				1C76A8A22112BB9B00EE51A8 /* ResourceTypeForm.swift */,
+				1C76A8A82113B7E200EE51A8 /* ResourceTypeFormController.swift */,
 			);
 			path = Form;
+			sourceTree = "<group>";
+		};
+		1C76A8AA2113C58400EE51A8 /* Photo Picker */ = {
+			isa = PBXGroup;
+			children = (
+				1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */,
+				1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */,
+			);
+			path = "Photo Picker";
 			sourceTree = "<group>";
 		};
 		9C5E159720EF69BD00BFD0F3 /* Main Page */ = {
 			isa = PBXGroup;
 			children = (
-				9C5E159B20EF69EA00BFD0F3 /* Model */,
-				9C5E159C20EF69EE00BFD0F3 /* View */,
 				9C5E159D20EF69F200BFD0F3 /* Control */,
 			);
 			path = "Main Page";
@@ -176,8 +195,6 @@
 		9C5E159820EF69CD00BFD0F3 /* Login Page */ = {
 			isa = PBXGroup;
 			children = (
-				9C5E15A720EF6AC000BFD0F3 /* Model */,
-				9C5E15A620EF6ABA00BFD0F3 /* View */,
 				9C5E15A520EF6AB600BFD0F3 /* Control */,
 			);
 			path = "Login Page";
@@ -203,25 +220,13 @@
 			path = "New Server";
 			sourceTree = "<group>";
 		};
-		9C5E159B20EF69EA00BFD0F3 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		9C5E159C20EF69EE00BFD0F3 /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
 		9C5E159D20EF69F200BFD0F3 /* Control */ = {
 			isa = PBXGroup;
 			children = (
 				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
 				1C4D76B420C16ACC00458079 /* MainTabBarController.swift */,
+				1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */,
+				1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */,
 			);
 			path = Control;
 			sourceTree = "<group>";
@@ -278,20 +283,6 @@
 				1C4D76B220C159AE00458079 /* LoginViewController.swift */,
 			);
 			path = Control;
-			sourceTree = "<group>";
-		};
-		9C5E15A620EF6ABA00BFD0F3 /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		9C5E15A720EF6AC000BFD0F3 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		9C5E15A820EF6ADF00BFD0F3 /* Side Menu */ = {
@@ -422,16 +413,21 @@
 				1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */,
 				1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
+				1C76A8AE2113CC8300EE51A8 /* PhotoCell.swift in Sources */,
 				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
+				1C76A8AC2113C5A700EE51A8 /* PhotoPickerViewController.swift in Sources */,
+				1C76A8A92113B7E200EE51A8 /* ResourceTypeFormController.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
 				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
 				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
 				1C76A8A32112BB9B00EE51A8 /* ResourceTypeForm.swift in Sources */,
+				1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */,
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
+				1C76A8A52113B08000EE51A8 /* MainLocalTableViewController.swift in Sources */,
 				1C4D76BD20C1826F00458079 /* SettingsViewController.swift in Sources */,
 				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,
 				1C601BBC210FEA3C00629D6F /* Form.swift in Sources */,

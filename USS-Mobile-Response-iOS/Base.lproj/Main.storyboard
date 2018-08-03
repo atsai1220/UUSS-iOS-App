@@ -313,7 +313,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="jEJ-Na-dkM" kind="show" identifier="formSegue" id="ChX-an-AMQ"/>
+                                    <segue destination="jBA-kC-qT0" kind="show" identifier="resourceTypeSegue" id="4t7-9s-ZQS"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -333,12 +333,27 @@
                 <pageViewController storyboardIdentifier="FormViewController" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="jEJ-Na-dkM" customClass="FormViewController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MBx-X0-BRB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="551" y="-1948"/>
+            <point key="canvasLocation" x="870" y="-2667"/>
+        </scene>
+        <!--Resource Type Form Controller-->
+        <scene sceneID="4Rg-5K-XS0">
+            <objects>
+                <viewController storyboardIdentifier="ResourceTypeFormController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="jBA-kC-qT0" customClass="ResourceTypeFormController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0a4-00-uXN">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="pvX-eo-hPH"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MF4-my-CNb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="870" y="-1948"/>
         </scene>
         <!--Local-->
         <scene sceneID="twa-P5-kEO">
             <objects>
-                <tableViewController id="qpd-gj-uuI" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MainLocalTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qpd-gj-uuI" customClass="MainLocalTableViewController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="8ch-uz-AO1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -364,39 +379,10 @@
             </objects>
             <point key="canvasLocation" x="871" y="-1183"/>
         </scene>
-        <!--Table View Controller-->
-        <scene sceneID="xBd-uV-wvf">
-            <objects>
-                <tableViewController id="rKE-uz-wfs" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="dCC-Av-Qng">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="IQ9-c8-bd4">
-                                <rect key="frame" x="0.0" y="28" width="414" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="IQ9-c8-bd4" id="0AQ-KH-ilN">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="rKE-uz-wfs" id="cw8-bw-3rW"/>
-                            <outlet property="delegate" destination="rKE-uz-wfs" id="wva-nz-5e4"/>
-                        </connections>
-                    </tableView>
-                    <tabBarItem key="tabBarItem" systemItem="history" id="oFu-Fu-oXG"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="IGF-Rp-whM" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="870" y="-497"/>
-        </scene>
         <!--Trash-->
         <scene sceneID="mLA-Z5-5F8">
             <objects>
-                <tableViewController id="Q46-83-LT1" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MainTrashTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Q46-83-LT1" customClass="MainTrashTableViewController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="6JU-0b-i2z">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -420,7 +406,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uz4-fU-azf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="870" y="210"/>
+            <point key="canvasLocation" x="870" y="-487"/>
         </scene>
         <!--Main Tab Bar Controller-->
         <scene sceneID="a4e-S9-tv8">
@@ -446,7 +432,6 @@
                     <connections>
                         <segue destination="wqY-gt-h7Y" kind="showDetail" identifier="LoginSegue" id="4mu-Z4-zH4"/>
                         <segue destination="qpd-gj-uuI" kind="relationship" relationship="viewControllers" id="Z5C-ZO-pkd"/>
-                        <segue destination="rKE-uz-wfs" kind="relationship" relationship="viewControllers" id="cY4-z9-3xX"/>
                         <segue destination="Q46-83-LT1" kind="relationship" relationship="viewControllers" id="Dnb-0j-5PB"/>
                         <segue destination="FV7-AA-yFm" kind="show" identifier="hazardSegue" id="hr8-Dv-guK"/>
                     </connections>

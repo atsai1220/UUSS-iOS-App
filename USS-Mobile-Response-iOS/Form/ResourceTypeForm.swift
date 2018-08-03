@@ -18,6 +18,8 @@ class ResourceTypeForm: UIView {
     }
     */
     
+    //  JPG, TIF, PDF, MOV, MP3, or MP4
+    
     var hintLabel: UILabel = {
        let label = UILabel()
         label.text = "Choose a resource type:"
@@ -27,7 +29,7 @@ class ResourceTypeForm: UIView {
     
     var photoButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Photo", for: .normal)
+        button.setTitle("Photo (.JPEG and .TIF)", for: .normal)
         button.layer.borderColor = UIColor.blue.cgColor
         button.setTitleColor(UIColor.black, for: .normal)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
@@ -38,7 +40,7 @@ class ResourceTypeForm: UIView {
     
     var documentsButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Documents", for: .normal)
+        button.setTitle("Documents (.PDF)", for: .normal)
         button.layer.borderColor = UIColor.blue.cgColor
         button.setTitleColor(UIColor.black, for: .normal)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
@@ -49,7 +51,7 @@ class ResourceTypeForm: UIView {
     
     var videoButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Video", for: .normal)
+        button.setTitle("Video (.MOV and .MP4)", for: .normal)
         button.layer.borderColor = UIColor.blue.cgColor
         button.setTitleColor(UIColor.black, for: .normal)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
@@ -60,7 +62,7 @@ class ResourceTypeForm: UIView {
     
     var audioButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Audio", for: .normal)
+        button.setTitle("Audio (.MP3)", for: .normal)
         button.layer.borderColor = UIColor.blue.cgColor
         button.setTitleColor(UIColor.black, for: .normal)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
@@ -71,7 +73,6 @@ class ResourceTypeForm: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setupViews()
         backgroundColor = UIColor.white
     }
@@ -82,6 +83,8 @@ class ResourceTypeForm: UIView {
     
     func setupViews() {
         
+//        frame = CGRect(origin: .zero, size: bounds.size)
+        frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY)
         addSubview(hintLabel)
         addSubview(photoButton)
         addSubview(documentsButton)
@@ -95,15 +98,5 @@ class ResourceTypeForm: UIView {
         addConstraintsWithFormat(format: "H:|-[v0]-|", views: audioButton)
         
         addConstraintsWithFormat(format: "V:|-[v0(<=80)]-[v1(==v4)]-[v2(==v4)]-[v3(==v4)]-[v4(>=50)]-|", views: hintLabel, photoButton, documentsButton, videoButton, audioButton)
-        
-        
-        
-//        addConstraintsWithFormat(format: "H:|-8-[v0(30)]-16-[v1]|", views: iconImageView, nameLabel)
-//        addConstraintsWithFormat(format: "V:|[v0]|", views: nameLabel)
-//        addConstraintsWithFormat(format: "V:[v0(30)]", views: iconImageView)
-        let photoButtonXConstraint = NSLayoutConstraint(item: photoButton, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)
-        photoButtonXConstraint.isActive = true
     }
-    
-
 }
