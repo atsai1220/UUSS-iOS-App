@@ -10,9 +10,11 @@ import UIKit
 
 class HazardsTableViewController: UITableViewController {
     
-    var hazards: [Hazard] = []
+    var allHazards: [Hazard] = []
+    var hazardsDictionary: [String: [Hazard]] = [:]
+    var filteredHazardsTitles: [String] = []
     let cellId = "cellId"
-    var selectedHazard: Hazard?
+    var selectedHazards: [Hazard] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +37,7 @@ class HazardsTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        if hazards.count > 0 {
+        if self.filteredHazardsTitles.count > 0 {
             self.tableView.separatorStyle = .singleLine
             return 1
         }
@@ -54,25 +56,29 @@ class HazardsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return hazards.count
+        return filteredHazardsTitles.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        if self.hazards.count > 0 {
-            let name = self.hazards[indexPath.row].name
+        if self.filteredHazardsTitles.count > 0 {
+            let name = self.filteredHazardsTitles[indexPath.row]
             cell.textLabel?.text = name
         }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = self.hazards[indexPath.row]
-        self.selectedHazard = item
-        let resourceTypeVC = ResourceTypeFormController()
+        let itemTitle = self.filteredHazardsTitles[indexPath.row]
+        
+        self.selectedHazards = self.hazardsDictionary[itemTitle]!
+        for hazard in self.selectedHazards {
+            print(hazard.theme3)
+        }
+//        let resourceTypeVC = ResourceTypeFormController()
 //        navigationController?.pushViewController(resourceTypeVC, animated: true)
 //        performSegue(withIdentifier: "formSegue", sender: self)
-        performSegue(withIdentifier: "resourceTypeSegue", sender: self)
+//        performSegue(withIdentifier: "resourceTypeSegue", sender: self)
     }
     
     // MARK: - Navigation
@@ -81,11 +87,11 @@ class HazardsTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        if segue.identifier == "formSegue" {
-            if let formVC = segue.destination as? FormViewController {
-                formVC.selectedHazard = self.selectedHazard!
-            }
-        }
+//        if segue.identifier == "formSegue" {
+//            if let formVC = segue.destination as? FormViewController {
+//                formVC.selectedHazard = self.selectedHazard!
+//            }
+//        }
     }
     
     @objc
@@ -95,6 +101,7 @@ class HazardsTableViewController: UITableViewController {
         let queryString = "user=atsai-uuss&function=search_public_collections&param1=&param2=theme&param3=DESC&param4=0&param5=0"
         let signature = "&sign=" + (privateKey + queryString).sha256()!
         let completeURL = urlString + queryString + signature
+        print(completeURL)
         guard let url = URL(string: completeURL) else { return }
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if error != nil {
@@ -107,15 +114,32 @@ class HazardsTableViewController: UITableViewController {
                 let resourceSpaceData = try JSONDecoder().decode([Hazard].self, from: data)
                 // return to main queue
                 DispatchQueue.main.async {
-            
                     // reload tableview or something
-                    self.hazards = resourceSpaceData.filter({
-                        $0.theme == "Geologic Hazards"
+                    self.allHazards = resourceSpaceData.filter({
+                        $0.theme == "Geologic Hazards" && $0.theme2 != ""
                     })
-                    self.hazards = self.hazards.sorted(by: { $0.name < $1.name })
+                    
+                    self.hazardsDictionary = self.allHazards.reduce([String: [Hazard]]()) {
+                        (dict, hazard) in
+                            var tempDict = dict
+                        if var array = tempDict[hazard.theme2] {
+                            array.append(hazard)
+                            tempDict.updateValue(array, forKey: hazard.theme2)
+                        }
+                        else {
+                            let newArray: [Hazard] = [hazard]
+                            tempDict[hazard.theme2] = newArray
+                        }
+                        return tempDict
+                    }
+                    
+                    for (key, _) in self.hazardsDictionary {
+                        self.filteredHazardsTitles.append(key)
+                    }
+                    self.filteredHazardsTitles = self.filteredHazardsTitles.sorted(by: { $0 < $1 })
                     
                     var indexPathsToReload = [IndexPath]()
-                    for index in self.hazards.indices {
+                    for index in self.filteredHazardsTitles.indices {
                         let indexPath = IndexPath(row: index, section: 0)
                         indexPathsToReload.append(indexPath)
                     }

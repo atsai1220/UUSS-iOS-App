@@ -58,6 +58,8 @@ struct Hazard: Codable {
     let theme: String
     let theme2: String
     let theme3: String
+    let theme4: String
+    let theme5: String
     let allow_changes: String
     let cant_delete: String
     let keywords: String
