@@ -72,9 +72,10 @@ class HazardsTableViewController: UITableViewController {
         let itemTitle = self.filteredHazardsTitles[indexPath.row]
         
         self.selectedHazards = self.hazardsDictionary[itemTitle]!
-        for hazard in self.selectedHazards {
-            print(hazard.theme3)
-        }
+        let hazardsDetailTableVC = HazardsDetailTableViewController()
+        hazardsDetailTableVC.navigationItem.title = itemTitle
+        hazardsDetailTableVC.selectedHazards = self.selectedHazards
+        navigationController?.pushViewController(hazardsDetailTableVC, animated: true)
 //        let resourceTypeVC = ResourceTypeFormController()
 //        navigationController?.pushViewController(resourceTypeVC, animated: true)
 //        performSegue(withIdentifier: "formSegue", sender: self)
@@ -92,6 +93,9 @@ class HazardsTableViewController: UITableViewController {
 //                formVC.selectedHazard = self.selectedHazard!
 //            }
 //        }
+        if segue.identifier == "hazardsSelectionSegue" {
+            
+        }
     }
     
     @objc
@@ -123,8 +127,15 @@ class HazardsTableViewController: UITableViewController {
                         (dict, hazard) in
                             var tempDict = dict
                         if var array = tempDict[hazard.theme2] {
-                            array.append(hazard)
-                            tempDict.updateValue(array, forKey: hazard.theme2)
+                            if array.contains(where: { (insideHazard: Hazard) -> Bool in
+                                insideHazard.name == hazard.name
+                            }) {
+                                
+                            }
+                            else {
+                                array.append(hazard)
+                                tempDict.updateValue(array, forKey: hazard.theme2)
+                            }
                         }
                         else {
                             let newArray: [Hazard] = [hazard]
@@ -134,7 +145,14 @@ class HazardsTableViewController: UITableViewController {
                     }
                     
                     for (key, _) in self.hazardsDictionary {
-                        self.filteredHazardsTitles.append(key)
+                        if self.filteredHazardsTitles.contains(where: { (insideName: String) -> Bool in
+                            insideName == key
+                        }) {
+                            
+                        }
+                        else {
+                            self.filteredHazardsTitles.append(key)
+                        }
                     }
                     self.filteredHazardsTitles = self.filteredHazardsTitles.sorted(by: { $0 < $1 })
                     

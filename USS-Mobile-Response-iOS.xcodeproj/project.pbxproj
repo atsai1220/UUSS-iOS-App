@@ -37,6 +37,7 @@
 		1C76A8A92113B7E200EE51A8 /* ResourceTypeFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A82113B7E200EE51A8 /* ResourceTypeFormController.swift */; };
 		1C76A8AC2113C5A700EE51A8 /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */; };
 		1C76A8AE2113CC8300EE51A8 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */; };
+		1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AF2114052000EE51A8 /* HazardsDetailTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		1C76A8A82113B7E200EE51A8 /* ResourceTypeFormController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceTypeFormController.swift; sourceTree = "<group>"; };
 		1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerViewController.swift; sourceTree = "<group>"; };
 		1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
+		1C76A8AF2114052000EE51A8 /* HazardsDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardsDetailTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */,
+				1C76A8AF2114052000EE51A8 /* HazardsDetailTableViewController.swift */,
 			);
 			path = HazardsTableViewController;
 			sourceTree = "<group>";
@@ -203,8 +206,6 @@
 		9C5E159920EF69D400BFD0F3 /* Server List */ = {
 			isa = PBXGroup;
 			children = (
-				9C5E15A320EF6A5E00BFD0F3 /* Model */,
-				9C5E15A220EF6A5B00BFD0F3 /* View */,
 				9C5E15A120EF6A5500BFD0F3 /* Control */,
 			);
 			path = "Server List";
@@ -213,8 +214,6 @@
 		9C5E159A20EF69E000BFD0F3 /* New Server */ = {
 			isa = PBXGroup;
 			children = (
-				9C5E15A020EF6A3B00BFD0F3 /* Model */,
-				9C5E159F20EF6A3900BFD0F3 /* View */,
 				9C5E159E20EF6A3400BFD0F3 /* Control */,
 			);
 			path = "New Server";
@@ -239,21 +238,6 @@
 			path = Control;
 			sourceTree = "<group>";
 		};
-		9C5E159F20EF6A3900BFD0F3 /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		9C5E15A020EF6A3B00BFD0F3 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Model;
-			path = "New Group1";
-			sourceTree = "<group>";
-		};
 		9C5E15A120EF6A5500BFD0F3 /* Control */ = {
 			isa = PBXGroup;
 			children = (
@@ -261,20 +245,6 @@
 				1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */,
 			);
 			path = Control;
-			sourceTree = "<group>";
-		};
-		9C5E15A220EF6A5B00BFD0F3 /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		9C5E15A320EF6A5E00BFD0F3 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		9C5E15A520EF6AB600BFD0F3 /* Control */ = {
@@ -410,6 +380,7 @@
 				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C601BBB210FEA3C00629D6F /* FormViewController.swift in Sources */,
+				1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */,
 				1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */,
 				1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
