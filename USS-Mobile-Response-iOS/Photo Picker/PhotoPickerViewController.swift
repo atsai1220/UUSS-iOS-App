@@ -75,6 +75,11 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
         let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath as IndexPath) as! PhotoCell
         if indexPath.section == 0 {
             let setting = mainPhoto
+            myCell.setting = setting
+            myCell.backgroundColor = UIColor.white
+            myCell.layer.borderWidth = 1
+            myCell.layer.borderColor = UIColor.black.cgColor
+            return myCell
         }
         else {
             let setting = altPhotos[indexPath.row]
@@ -84,7 +89,6 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
             myCell.layer.borderColor = UIColor.black.cgColor
             return myCell
         }
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
@@ -96,7 +100,7 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
         else {
             if indexPath.row == indexPath.last {
                 print("last")
-//                photoCells.append(PhotoObj(name: "new", imageName: "new"))
+                altPhotos.append(PhotoObj(name: "new", imageName: "new"))
                 photoCollectionView.insertItems(at: [indexPath])
             }
             else {
