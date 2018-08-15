@@ -79,7 +79,6 @@ class HazardsDetailTableViewController: UITableViewController {
         }
         else {
             if section == 0 {
-                print(filteredCategoryTitles)
                 return filteredCategoryTitles.count
             }
             else {

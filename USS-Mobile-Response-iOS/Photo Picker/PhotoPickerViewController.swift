@@ -10,22 +10,24 @@ import UIKit
 
 class PhotoObj: NSObject {
     let name: String
-    let imageName: String
+    var imageName: UIImage?
     
-    init(name: String, imageName: String) {
+    init(name: String) {
         self.name = name
-        self.imageName = imageName
     }
 }
 
 class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let cellId = "photoCell"
+    var selectedIndexPath: IndexPath?
+    var mainImageChosen: Bool = true
+    var imageURL: URL?
     
     lazy var collectionViewLayout: UICollectionViewLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
-        layout.itemSize = CGSize(width: 100, height: 100)
+        layout.itemSize = CGSize(width: 300, height: 300)
         return layout
     }()
     
@@ -39,19 +41,57 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
     }()
     
     var mainPhoto: PhotoObj = {
-        let item = PhotoObj(name: "main", imageName: "new")
+        let item = PhotoObj(name: "main")
         return item
     }()
     
     var altPhotos: [PhotoObj] = {
-        return [PhotoObj(name: "new", imageName: "new")]
+        return [PhotoObj(name: "new")]
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
     }
     
+    @objc
+    func saveAndUpload() {
+        print("save and uploading")
+        let urlString = "https://geodata.geology.utah.gov/api/?"
+        let privateKey = "7d510414a826c1af09d864e70c3656964839664786b8e774bafb7c10adc5fea1"
+        let imageURL = self.imageURL?.absoluteString
+        print("URL GOES HERE??")
+        print(imageURL!)
+        let queryString = "user=atsai-uuss&function=create_resource&param1=1&param2=0&param3=\(imageURL!)&param4=&param5=&param6=&param7="
+        let signature = "&sign=" + (privateKey + queryString).sha256()!
+        let completeURL = urlString + queryString + signature
+        print(completeURL)
+        guard let url = URL(string: completeURL) else { return }
+
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }
+            guard let data = data else { return }
+            // JSON decodign and parsing
+            do {
+                // decode retrieved data with JSONDecoder
+                let resourceSpaceData = try JSONDecoder().decode([Hazard].self, from: data)
+                // return to main queue
+                DispatchQueue.main.async {
+                    
+                    print(type(of: resourceSpaceData[0]))
+                    // reload tableview or something
+                
+                }
+            } catch let jsonError {
+                print(jsonError)
+            }
+            }.resume()
+        print("done...?")
+        print(completeURL)
+        
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.view.addSubview(self.photoCollectionView)
@@ -66,7 +106,8 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
             return 1
         }
         else {
-            return altPhotos.count
+//            return altPhotos.count
+            return 0
         }
         
     }
@@ -93,22 +134,62 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
-        // add new photo to select
+        // select new photo to main
         if indexPath.section == 0 {
-            print("main")
+            mainImageChosen = true
+
+            showActionSheet(indexPath: indexPath)
         }
         else {
-            if indexPath.row == indexPath.last {
-                print("last")
-                altPhotos.append(PhotoObj(name: "new", imageName: "new"))
+            // last item
+            mainImageChosen = false
+            if indexPath.item == altPhotos.count-1{
+                altPhotos.append(PhotoObj(name: "new"))
                 photoCollectionView.insertItems(at: [indexPath])
             }
+            // any other collectionview cell is alt
             else {
-                print("alt")
+                
             }
         }
-//        photoCollectionView.insert
-//        photoCollectionView.reloadData()
+    }
+    
+    func showActionSheet(indexPath: IndexPath) {
+        
+        self.selectedIndexPath = indexPath
+        
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        
+        // Create and modify an UIAlertController.actionSheet to allow option between Camera or Photo Library.
+        let actionSheet = UIAlertController(title: "Photo Source", message: "Please choose a source for image upload.", preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
+            
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                imagePickerController.sourceType = .camera
+                self.present(imagePickerController, animated: true, completion: nil)
+            }
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
+            imagePickerController.sourceType = .photoLibrary
+            self.present(imagePickerController, animated: true, completion: nil)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        if mainImageChosen {
+            mainPhoto.imageName = image
+            photoCollectionView.reloadData()
+            self.imageURL = info[UIImagePickerControllerImageURL] as? URL
+            picker.dismiss(animated: true, completion: nil)
+        }
+        else {
+            
+        }
     }
     
     

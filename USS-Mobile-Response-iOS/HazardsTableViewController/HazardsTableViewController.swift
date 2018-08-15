@@ -105,7 +105,6 @@ class HazardsTableViewController: UITableViewController {
         let queryString = "user=atsai-uuss&function=search_public_collections&param1=&param2=theme&param3=DESC&param4=0&param5=0"
         let signature = "&sign=" + (privateKey + queryString).sha256()!
         let completeURL = urlString + queryString + signature
-        print(completeURL)
         guard let url = URL(string: completeURL) else { return }
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if error != nil {
