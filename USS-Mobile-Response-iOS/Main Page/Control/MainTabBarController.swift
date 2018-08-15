@@ -7,9 +7,13 @@
 import Foundation
 import UIKit
 
-class MainTabBarController: UITabBarController {
+class MainTabBarController: UITabBarController, UITabBarControllerDelegate
+{
+    var mapView: MapView?
+    var mapTableViewController: MapTableViewController?
     
-    lazy var sideMenuLauncher: SideMenuLauncher = {
+    lazy var sideMenuLauncher: SideMenuLauncher =
+        {
         let launcher = SideMenuLauncher()
         launcher.mainTabBarController = self
         return launcher
@@ -34,15 +38,34 @@ class MainTabBarController: UITabBarController {
     }
     
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
+        self.delegate = self
         selectedIndex = 0
         navigationItem.title = "Main"
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+        let localViewCotnroller: MainLocalTableViewController = MainLocalTableViewController()
+        
+        let trashViewController: MainTrashTableViewController = MainTrashTableViewController()
+        
+        let mapsViewController: MapTableViewController = MapTableViewController()
+        mapsViewController.title = "Maps"
+        
+        localViewCotnroller.tabBarItem = UITabBarItem(title: "Local", image: UIImage(named: "baggage"), tag: 0)
+        mapsViewController.tabBarItem = UITabBarItem(title: "Maps", image: UIImage(named: "map"), tag: 1)
+        trashViewController.tabBarItem = UITabBarItem(title: "Trash", image: UIImage(named: "bin"), tag: 2)
+        
+        self.setViewControllers([localViewCotnroller, mapsViewController, trashViewController], animated: true)
+        
+        
     }
     
-    override func viewWillLayoutSubviews() {
-        if let window = UIApplication.shared.keyWindow {
+    override func viewWillLayoutSubviews()
+    {
+        if let window = UIApplication.shared.keyWindow
+        {
             let cvWidth = 260
             let oldRect = sideMenuLauncher.collectionView.frame
             sideMenuLauncher.collectionView.frame = CGRect(x: Int(oldRect.origin.x), y: Int(oldRect.origin.y), width: cvWidth, height: Int(window.frame.height))
