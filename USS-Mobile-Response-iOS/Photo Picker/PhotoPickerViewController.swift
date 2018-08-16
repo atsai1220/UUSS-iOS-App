@@ -69,13 +69,20 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     func createLocalEntry() {
-        var newEntry = LocalEntry()
-        newEntry.collectionRef = self.collectionReference
-        newEntry.localURL = self.imageURL?.absoluteString
-        // TODO: store newEntry into local storage
-        var oldEntries = getEntriesFromDisk()
-        oldEntries.append(newEntry)
-        saveEntriesToDisk(entries: oldEntries)
+        do {
+            var newEntry = LocalEntry()
+            let savedImagePath = saveImageAtDocumentDirectory(url: self.imageURL!)
+            newEntry.collectionRef = self.collectionReference
+            newEntry.localURL = savedImagePath.path
+            // TODO: store newEntry into local storage
+            var oldEntries = getEntriesFromDisk()
+            oldEntries.append(newEntry)
+            saveEntriesToDisk(entries: oldEntries)
+        }
+
+        catch {
+            
+        }
     }
     
     func httpUpload() {

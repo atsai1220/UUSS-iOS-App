@@ -100,8 +100,11 @@ func saveEntriesToDisk(entries: [LocalEntry]) {
     // create url for documents directory
     let url = getDocumentsURL().appendingPathComponent("entries.json")
     let encoder = JSONEncoder()
+    
     do {
+        
         let data = try encoder.encode(entries)
+        let object = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
         try data.write(to: url, options: [])
     } catch {
         fatalError(error.localizedDescription)
@@ -124,5 +127,37 @@ func getEntriesFromDisk() -> [LocalEntry] {
         saveEntriesToDisk(entries: [])
         return getEntriesFromDisk()
     }
+}
 
+func saveImageAtDocumentDirectory(url: URL) -> URL {
+    let userName = UserDefaults.standard.string(forKey: "userName")
+    let path = getDocumentsURL().appendingPathComponent(userName! + getTimeStampString() + ".jpeg")
+    let image = UIImage(contentsOfFile: url.path)
+    let imageData = UIImageJPEGRepresentation(image!, 0.5)
+    FileManager.default.createFile(atPath: path.path, contents: imageData, attributes: [:])
+    return path
+}
+
+func getTimeStampString() -> String {
+    let date = Date()
+    let calendar = Calendar.current
+    let components = calendar.dateComponents([.year,.month,.day,.hour,.minute,.second], from: date)
+    let year = components.year
+    let month = components.month
+    let day = components.day
+    let hour = components.hour
+    let minute = components.minute
+    let second = components.second
+    let today_string = String(year!) + String(month!) + String(day!) + String(month!) + String(day!) + String(hour!) + String(minute!) + String(second!)
+    return today_string
+}
+
+func getImageFromDocumentDirectory(url: URL) -> UIImage? {
+    let imagePath = getDocumentsURL().appendingPathComponent(url.relativeString).path
+    if FileManager.default.fileExists(atPath: imagePath) {
+        return UIImage(contentsOfFile: imagePath)
+    }
+    else {
+        return nil
+    }
 }

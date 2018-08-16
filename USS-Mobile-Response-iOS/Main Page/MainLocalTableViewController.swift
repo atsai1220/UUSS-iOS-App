@@ -39,6 +39,7 @@ class MainLocalTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         if localEntries.count > 0 {
             self.tableView.separatorStyle = .singleLine
+            self.tableView.backgroundView = UIView()
             return 1
         }
         else {
@@ -64,7 +65,10 @@ class MainLocalTableViewController: UITableViewController {
 
         let collectionRef = self.localEntries[indexPath.row].collectionRef
         cell.textLabel?.text = collectionRef
-
+        print(self.localEntries[indexPath.row].localURL!)
+        let cellImage = UIImage(contentsOfFile: self.localEntries[indexPath.row].localURL!)
+        cell.imageView?.image = cellImage
+//        cell.indentationWidth = 10
         return cell
     }
 

@@ -124,6 +124,7 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         activityIndicator.startAnimating()
         
         // UserDefaults to save logged in state
+        UserDefaults.standard.set(userName!, forKey: "userName")
         UserDefaults.standard.set(true, forKey: "isLoggedIn")
         UserDefaults.standard.synchronize()
         

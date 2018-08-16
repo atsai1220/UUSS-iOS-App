@@ -52,5 +52,5 @@ struct LocalEntry: Codable {
 
 // field ID to value string pairs.
 struct metadataJSON: Codable {
-    var foo: String
+    var foo: String?
 }
