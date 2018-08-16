@@ -13,6 +13,7 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.white
     }
     @IBAction func doneTapped(_ sender: Any) {
         // TODO: Implement completion function to save changes.

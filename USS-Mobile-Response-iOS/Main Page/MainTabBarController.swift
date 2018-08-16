@@ -32,9 +32,18 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate
     }
     
     func showControllerFor(setting: Setting) {
-        let dummyViewController = UIViewController()
-        dummyViewController.navigationItem.title = setting.name
-        navigationController?.pushViewController(dummyViewController, animated: true)
+        let pageVC: UIViewController
+        if setting.name == "Profile" {
+            pageVC = ProfileViewController()
+        }
+        else if setting.name == "Settings" {
+            pageVC = SettingsViewController()
+        }
+        else {
+            pageVC = AboutViewController()
+        }
+        pageVC.navigationItem.title = setting.name
+        navigationController?.pushViewController(pageVC, animated: true)
     }
     
     

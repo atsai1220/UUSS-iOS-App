@@ -42,6 +42,7 @@
 		1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */; };
 		1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B72124EA5300EE51A8 /* LocalEntry.swift */; };
 		1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */; };
+		1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +84,7 @@
 		1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTableViewController.swift; sourceTree = "<group>"; };
 		1C76A8B72124EA5300EE51A8 /* LocalEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEntry.swift; sourceTree = "<group>"; };
 		1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
+		1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,8 +133,7 @@
 				1C601BAA210A73D900629D6F /* TestImagePickerView */,
 				9C5E159720EF69BD00BFD0F3 /* Main Page */,
 				9C5E15A820EF6ADF00BFD0F3 /* Side Menu */,
-				9C5E15AC20EF6B6E00BFD0F3 /* Profile */,
-				9C5E15AA20EF6B5F00BFD0F3 /* Settings */,
+				9C5E15AC20EF6B6E00BFD0F3 /* Side View Controllers */,
 				9C5E159A20EF69E000BFD0F3 /* New Server */,
 				9C5E159920EF69D400BFD0F3 /* Server List */,
 				9C5E159820EF69CD00BFD0F3 /* Login Page */,
@@ -244,20 +245,14 @@
 			path = "Side Menu";
 			sourceTree = "<group>";
 		};
-		9C5E15AA20EF6B5F00BFD0F3 /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				1C4D76BC20C1826F00458079 /* SettingsViewController.swift */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
-		9C5E15AC20EF6B6E00BFD0F3 /* Profile */ = {
+		9C5E15AC20EF6B6E00BFD0F3 /* Side View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				1C4D76BA20C1826200458079 /* ProfileViewController.swift */,
+				1C4D76BC20C1826F00458079 /* SettingsViewController.swift */,
+				1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */,
 			);
-			path = Profile;
+			path = "Side View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -347,6 +342,7 @@
 				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
 				1C76A8AC2113C5A700EE51A8 /* PhotoPickerViewController.swift in Sources */,
+				1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */,
 				1C76A8A92113B7E200EE51A8 /* ResourceTypeFormController.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
 				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,

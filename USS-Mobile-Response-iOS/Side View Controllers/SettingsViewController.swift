@@ -12,6 +12,7 @@ import UIKit
 class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.blue
     }
     
     @IBAction func doneTapped(_ sender: Any) {
