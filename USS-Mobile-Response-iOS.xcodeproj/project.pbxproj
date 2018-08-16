@@ -41,6 +41,7 @@
 		1C76A8B42124DEA100EE51A8 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B32124DEA100EE51A8 /* MapView.swift */; };
 		1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */; };
 		1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B72124EA5300EE51A8 /* LocalEntry.swift */; };
+		1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +82,7 @@
 		1C76A8B32124DEA100EE51A8 /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTableViewController.swift; sourceTree = "<group>"; };
 		1C76A8B72124EA5300EE51A8 /* LocalEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEntry.swift; sourceTree = "<group>"; };
+		1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +205,7 @@
 				1C4D76B420C16ACC00458079 /* MainTabBarController.swift */,
 				1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */,
 				1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */,
+				1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */,
 			);
 			path = "Main Page";
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
 				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
 				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
+				1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */,
 				1C76A8A32112BB9B00EE51A8 /* ResourceTypeForm.swift in Sources */,
 				1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */,
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,

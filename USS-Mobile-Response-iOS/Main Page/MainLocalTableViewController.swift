@@ -16,7 +16,7 @@ class MainLocalTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        self.tableView.register(MainTableViewCell.self, forCellReuseIdentifier: cellId)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -61,14 +61,11 @@ class MainLocalTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! MainTableViewCell
 
-        let collectionRef = self.localEntries[indexPath.row].collectionRef
-        cell.textLabel?.text = collectionRef
-        print(self.localEntries[indexPath.row].localURL!)
-        let cellImage = UIImage(contentsOfFile: self.localEntries[indexPath.row].localURL!)
-        cell.imageView?.image = cellImage
-//        cell.indentationWidth = 10
+        let item = self.localEntries[indexPath.row]
+        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localURL!)
+        cell.setting = setting
         return cell
     }
 
