@@ -117,7 +117,7 @@ class HazardsTableViewController: UITableViewController {
                 let resourceSpaceData = try JSONDecoder().decode([Hazard].self, from: data)
                 // return to main queue
                 DispatchQueue.main.async {
-                    // reload tableview or something
+                    // parse and filter JSON results
                     self.allHazards = resourceSpaceData.filter({
                         $0.theme == "Geologic Hazards" && $0.theme2 != ""
                     })
@@ -153,6 +153,7 @@ class HazardsTableViewController: UITableViewController {
                             self.filteredHazardsTitles.append(key)
                         }
                     }
+                    
                     self.filteredHazardsTitles = self.filteredHazardsTitles.sorted(by: { $0 < $1 })
                     
                     var indexPathsToReload = [IndexPath]()

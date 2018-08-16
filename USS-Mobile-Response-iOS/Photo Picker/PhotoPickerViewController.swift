@@ -18,7 +18,7 @@ class PhotoObj: NSObject {
 }
 
 class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
+    var collectionReference: String = ""
     let cellId = "photoCell"
     var selectedIndexPath: IndexPath?
     var mainImageChosen: Bool = true
@@ -56,7 +56,33 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
     
     @objc
     func saveAndUpload() {
-        print("save and uploading")
+        print("4-1: Create local device entry")
+        createLocalEntry()
+        print("4-2: HTTP uploading with custom plugin")
+        httpUpload()
+        print("4-3: Create resource on resource space")
+        createResourceSpaceEntry()
+        print("4-4: Add resource to selected collection")
+        addResourceToCollection()
+        print("4-4: Confirmation and update local history")
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func createLocalEntry() {
+        var newEntry = LocalEntry()
+        newEntry.collectionRef = self.collectionReference
+        newEntry.localURL = self.imageURL?.absoluteString
+        // TODO: store newEntry into local storage
+        var oldEntries = getEntriesFromDisk()
+        oldEntries.append(newEntry)
+        saveEntriesToDisk(entries: oldEntries)
+    }
+    
+    func httpUpload() {
+        
+    }
+    
+    func createResourceSpaceEntry() {
         let urlString = "https://geodata.geology.utah.gov/api/?"
         let privateKey = "7d510414a826c1af09d864e70c3656964839664786b8e774bafb7c10adc5fea1"
         let imageURL = self.imageURL?.absoluteString
@@ -67,7 +93,7 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
         let completeURL = urlString + queryString + signature
         print(completeURL)
         guard let url = URL(string: completeURL) else { return }
-
+        
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
@@ -82,7 +108,7 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
                     
                     print(type(of: resourceSpaceData[0]))
                     // reload tableview or something
-                
+                    
                 }
             } catch let jsonError {
                 print(jsonError)
@@ -90,8 +116,12 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
             }.resume()
         print("done...?")
         print(completeURL)
+    }
+    
+    func addResourceToCollection() {
         
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.view.addSubview(self.photoCollectionView)

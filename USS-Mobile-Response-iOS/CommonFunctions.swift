@@ -73,10 +73,6 @@ struct Hazard: Codable {
     let fullname: String
 }
 
-struct LocalEntry: Codable {
-    let name: String
-}
-
 extension UIPageViewController {
     func goToNextPage() {
         guard let currentViewController = self.viewControllers?.first else { return }
@@ -89,4 +85,44 @@ extension UIPageViewController {
         guard let previousViewController = dataSource?.pageViewController( self, viewControllerBefore: currentViewController ) else { return }
         setViewControllers([previousViewController], direction: .reverse, animated: true, completion: nil)
     }
+}
+
+func getDocumentsURL() -> URL {
+    if let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+        return url
+    }
+    else {
+        fatalError("Could not retrieve documents directory.")
+    }
+}
+
+func saveEntriesToDisk(entries: [LocalEntry]) {
+    // create url for documents directory
+    let url = getDocumentsURL().appendingPathComponent("entries.json")
+    let encoder = JSONEncoder()
+    do {
+        let data = try encoder.encode(entries)
+        try data.write(to: url, options: [])
+    } catch {
+        fatalError(error.localizedDescription)
+    }
+}
+
+func getEntriesFromDisk() -> [LocalEntry] {
+    if FileManager.default.fileExists(atPath: getDocumentsURL().appendingPathComponent("entries.json").path) {
+        let url = getDocumentsURL().appendingPathComponent("entries.json")
+        let decoder = JSONDecoder()
+        do {
+            let data = try Data(contentsOf: url, options: [])
+            let entries = try decoder.decode([LocalEntry].self, from: data)
+            return entries
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+    else {
+        saveEntriesToDisk(entries: [])
+        return getEntriesFromDisk()
+    }
+
 }

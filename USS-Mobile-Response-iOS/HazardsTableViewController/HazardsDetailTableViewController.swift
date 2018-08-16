@@ -108,10 +108,10 @@ class HazardsDetailTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // collection selection
         if collectionsOnly {
-//            let selectedHazard = self.hazardCollections[indexPath.row]
-            // TODO: create 'model' for upload
             let resourceTypeVC = ResourceTypeFormController()
+            resourceTypeVC.collectionReference = self.hazardCollections[indexPath.row].ref
             navigationController?.pushViewController(resourceTypeVC, animated: true)
         }
         else {
@@ -126,9 +126,8 @@ class HazardsDetailTableViewController: UITableViewController {
             }
             // collection selection
             else {
-//                let selectedHazard = self.hazardCollections[indexPath.row]
-                // TODO: create 'model' for upload
                 let resourceTypeVC = ResourceTypeFormController()
+                resourceTypeVC.collectionReference = self.hazardCollections[indexPath.row].ref
                 navigationController?.pushViewController(resourceTypeVC, animated: true)
             }
         }
