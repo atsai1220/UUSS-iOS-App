@@ -13,9 +13,21 @@ class PlistController {
     let fileURL: URL
     
     init() {
-        fileURL = Bundle.main.url(forResource: "ServerList", withExtension: "plist")!
-        let resourcePlist = NSArray(contentsOf: fileURL) as! [PlistDictionary]
-        resources = resourcePlist.map(ResourceSpace.init)
+        let documentsURL = getDocumentsURL().appendingPathComponent("servers.plist")
+        
+        if FileManager.default.fileExists(atPath: documentsURL.path) {
+            let resourcePlist = NSArray(contentsOf: documentsURL) as! [PlistDictionary]
+            fileURL = documentsURL
+            resources = resourcePlist.map(ResourceSpace.init)
+        }
+        else {
+            let bundleURL = Bundle.main.url(forResource: "ServerList", withExtension: "plist")!
+            let resourcePlist = NSArray(contentsOf: bundleURL) as! [PlistDictionary]
+            let plistData = try! PropertyListSerialization.data(fromPropertyList: resourcePlist, format: .xml, options: 0)
+            try! plistData.write(to: documentsURL)
+            fileURL = documentsURL
+            resources = resourcePlist.map(ResourceSpace.init)
+        }
     }
     
     func loadPlist() {

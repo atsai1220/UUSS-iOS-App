@@ -10,11 +10,13 @@ import UIKit
 
 class MainLocalTableViewController: UITableViewController {
     
+    let cellId = "cellId"
+    
     var localEntries: [LocalEntry] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.tableView.register(MainTableViewCell.self, forCellReuseIdentifier: cellId)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -22,6 +24,10 @@ class MainLocalTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        self.localEntries = getEntriesFromDisk()
+        self.tableView.reloadData()
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -33,6 +39,7 @@ class MainLocalTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         if localEntries.count > 0 {
             self.tableView.separatorStyle = .singleLine
+            self.tableView.backgroundView = UIView()
             return 1
         }
         else {
@@ -53,15 +60,14 @@ class MainLocalTableViewController: UITableViewController {
         return localEntries.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! MainTableViewCell
 
-        // Configure the cell...
-
+        let item = self.localEntries[indexPath.row]
+        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localURL!)
+        cell.setting = setting
         return cell
     }
-    */
 
     /*
     // Override to support conditional editing of the table view.

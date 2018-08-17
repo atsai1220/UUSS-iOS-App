@@ -10,17 +10,18 @@ import UIKit
 
 class PhotoCell: UICollectionViewCell {
     
-    let iconImageView: UIImageView = {
+    var iconImageView: UIImageView = {
        let imageView = UIImageView()
-        imageView.image = UIImage(named: "new")
+        imageView.image = UIImage(named: "item_add")
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }()
     
     var setting: PhotoObj? {
         didSet {
-            if let imageName = setting?.imageName {
-                iconImageView.image = UIImage(named: imageName)
+            if let image = setting?.imageName {
+                iconImageView.image = image
             }
         }
     }

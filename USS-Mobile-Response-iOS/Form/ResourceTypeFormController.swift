@@ -10,6 +10,8 @@ import UIKit
 
 class ResourceTypeFormController: UIViewController {
     
+    var collectionReference: String = ""
+    
     lazy var page: ResourceTypeForm = {
         let view = ResourceTypeForm()
         return view
@@ -34,15 +36,32 @@ class ResourceTypeFormController: UIViewController {
     
     func setupButtons() {
         page.photoButton.addTarget(self, action: #selector(photoTapped), for: .touchUpInside)
+        page.documentsButton.addTarget(self, action: #selector(documentTapped), for: .touchUpInside)
+        page.audioButton.addTarget(self, action: #selector(audioTapped), for: .touchUpInside)
+        page.videoButton.addTarget(self, action: #selector(videoTapped), for: .touchUpInside)
     }
     
     @objc
     func photoTapped(sender: UIButton!) {
-//        performSegue(withIdentifier: "imagePickerSegue", sender: self)
         let photoPickerVC = PhotoPickerViewController()
+        photoPickerVC.collectionReference = self.collectionReference
         navigationController?.pushViewController(photoPickerVC, animated: true)
-//        let parentVC = self.parent as! FormViewController
-//        parentVC.goToNextPage()
+    }
+    
+    
+    @objc
+    func documentTapped(sender: UIButton!) {
+        
+    }
+    
+    @objc
+    func audioTapped(sender: UIButton!) {
+        
+    }
+    
+    @objc
+    func videoTapped(sender: UIButton!) {
+        
     }
     
     override func viewDidLayoutSubviews() {

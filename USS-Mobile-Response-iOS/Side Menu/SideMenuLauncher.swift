@@ -74,13 +74,22 @@ class SideMenuLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
                 self.mainTabBarController?.showControllerFor(setting: setting)
             }
             else {
-                // perform logout
-                UserDefaults.standard.set(false, forKey: "isLoggedIn")
-                UserDefaults.standard.synchronize()
-                // navigate to login page
-                DispatchQueue.main.asyncAfter(deadline: .now(), execute: { self.navigateToLoginInterface() })
+                let alertController = UIAlertController(title: "Logout confirmation", message: "Are you sure about logging out?", preferredStyle: .alert)
+                
+                let confirmAction = UIAlertAction(title: "Logout", style: .default, handler: { (action: UIAlertAction) in
+                    // perform logout
+                    UserDefaults.standard.set(false, forKey: "isLoggedIn")
+                    UserDefaults.standard.synchronize()
+                    // navigate to login page
+                    DispatchQueue.main.asyncAfter(deadline: .now(), execute: { self.navigateToLoginInterface() })
+                })
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction) in
+                    
+                })
+                alertController.addAction(confirmAction)
+                alertController.addAction(cancelAction)
+                self.mainTabBarController?.present(alertController, animated: true, completion: nil)
             }
-            
         }
         
     }
