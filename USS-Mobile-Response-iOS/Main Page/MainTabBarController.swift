@@ -57,7 +57,7 @@ class MainTabBarController: UITabBarController, NewMapDelegate
         super.viewDidLoad()
         selectedIndex = 0
         navigationItem.title = "Main"
-//        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.prefersLargeTitles = true
         
         let localViewCotnroller: MainLocalTableViewController = MainLocalTableViewController()
         

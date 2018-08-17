@@ -10,6 +10,7 @@
 		1C043CA020CAA90E006A9D69 /* ServerList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C043C9F20CAA90E006A9D69 /* ServerList.plist */; };
 		1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */; };
 		1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA320CAD0BB006A9D69 /* PlistController.swift */; };
+		1C0DD398212768F900D656F7 /* NewMapFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DD397212768F900D656F7 /* NewMapFormViewController.swift */; };
 		1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */; };
 		1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C403E3920D010A6000DB616 /* AddServerViewController.swift */; };
 		1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C403E3F20D3A8EC000DB616 /* ServerTableViewController.swift */; };
@@ -49,6 +50,7 @@
 		1C043C9F20CAA90E006A9D69 /* ServerList.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ServerList.plist; sourceTree = "<group>"; };
 		1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceSpaceModel.swift; sourceTree = "<group>"; };
 		1C043CA320CAD0BB006A9D69 /* PlistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistController.swift; sourceTree = "<group>"; };
+		1C0DD397212768F900D656F7 /* NewMapFormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMapFormViewController.swift; sourceTree = "<group>"; };
 		1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTableNavigationController.swift; sourceTree = "<group>"; };
 		1C403E3920D010A6000DB616 /* AddServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServerViewController.swift; sourceTree = "<group>"; };
 		1C403E3F20D3A8EC000DB616 /* ServerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTableViewController.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 		9C5E159720EF69BD00BFD0F3 /* Main Page */ = {
 			isa = PBXGroup;
 			children = (
+				1C0DD397212768F900D656F7 /* NewMapFormViewController.swift */,
 				1C76A8B32124DEA100EE51A8 /* MapView.swift */,
 				1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */,
 				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
@@ -359,6 +362,7 @@
 				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,
 				1C601BBC210FEA3C00629D6F /* Form.swift in Sources */,
 				1C601BAC210A73F700629D6F /* TestImagePickerViewController.swift in Sources */,
+				1C0DD398212768F900D656F7 /* NewMapFormViewController.swift in Sources */,
 				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
