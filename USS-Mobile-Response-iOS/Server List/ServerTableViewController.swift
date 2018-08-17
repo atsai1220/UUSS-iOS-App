@@ -63,9 +63,22 @@ class ServerTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            plistSource.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .left)
-            plistController.remove(at: indexPath.row)
+            if indexPath.row != 0 || indexPath.row != 1 {
+                plistSource.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .left)
+                plistController.remove(at: indexPath.row)
+                protocolDelegate?.setResultOfTableRowSelect(name: plistSource[0].name
+                    , url: plistSource[0].name)
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.row == 0 || indexPath.row == 1 {
+            return false
+        }
+        else {
+            return true
         }
     }
     

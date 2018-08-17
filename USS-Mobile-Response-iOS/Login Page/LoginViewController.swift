@@ -11,12 +11,23 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     /*
      IBOutlets
      */
+    @IBOutlet weak var logoImage: UIImageView!
     @IBOutlet weak var userNameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var serverField: UITextField!
     @IBOutlet weak var serverButton: UIButton!
+    
+    @IBOutlet weak var loginButton: UIButton!
+    
+    @IBOutlet weak var publicButton: UIButton!
+    
     var selectedServerName: String?
     var selectedServerURL: String?
+    
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
     
     /*
      IBActions
@@ -54,6 +65,21 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        logoImage.layer.masksToBounds = true
+        logoImage.layer.cornerRadius = 5.0
+        
+        loginButton.setTitleColor(UIColor.white, for: .normal)
+        publicButton.setTitleColor(UIColor.white, for: .normal)
+        
+        loginButton.backgroundColor = UIColor.lightGray
+        loginButton.layer.masksToBounds = true
+        loginButton.layer.cornerRadius = 5.0
+
+        publicButton.backgroundColor = UIColor.lightGray
+        publicButton.layer.masksToBounds = true
+        publicButton.layer.cornerRadius = 5.0
+        
         selectedServerName = plistController.resources.first?.name
         selectedServerURL = plistController.resources.first?.url
         serverButton.setTitle(selectedServerName!.truncated(length: 19), for: .normal)
@@ -71,7 +97,7 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         plistController.loadPlist()
         plistSource = plistController.resources
         if let serverName = selectedServerName {
-            serverButton.setTitle(serverName.truncated(length: 19), for: .normal)
+            serverButton.setTitle(serverName.truncated(length: 30), for: .normal)
         }
     }
     
