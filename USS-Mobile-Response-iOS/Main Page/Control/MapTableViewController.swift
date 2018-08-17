@@ -8,13 +8,20 @@
 
 import UIKit
 
+protocol NewMapDelegate: class
+{
+    func addMap(buttonPressed: Bool)
+}
+
 class MapTableViewController: UITableViewController
 {
+    weak var delegate: NewMapDelegate?
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         tableView.register(TableCell.self, forCellReuseIdentifier: "cellId")
-        tableView.register(TableHeader.self, forHeaderFooterViewReuseIdentifier: "headerId")
+//        tableView.register(TableHeader.self, forHeaderFooterViewReuseIdentifier: "headerId")
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -29,47 +36,49 @@ class MapTableViewController: UITableViewController
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
-        return tableView.dequeueReusableHeaderFooterView(withIdentifier: "headerId")
-    }
-}
-
-class TableHeader: UITableViewHeaderFooterView
-{
-    override init(reuseIdentifier: String?)
-    {
-        super.init(reuseIdentifier: reuseIdentifier)
-        setUpViews()
-    }
-
-    required init?(coder aDecoder: NSCoder)
-    {
-        fatalError("init(coder:) has not been implemented")
+        
+//        let tView: UITableViewHeaderFooterView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "headerId")!
+        let headerView: UIView = UIView()
+        let nameLabel: UILabel =
+        {
+            let label = UILabel()
+            label.text = "Maps"
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.font = UIFont.boldSystemFont(ofSize: 25)
+            return label
+        }()
+        
+        let newMapButton: UIButton =
+        {
+            let button: UIButton = UIButton(type: .roundedRect)
+            button.layer.cornerRadius = 10
+            button.layer.borderWidth = 2
+            button.layer.shadowOffset = CGSize(width: 12.0, height: 12.0)
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.layer.shadowOpacity = 0.8
+            button.layer.shadowRadius = 12.0
+            button.layer.borderColor = UIColor.black.cgColor
+            button.setTitle("Add Map", for: UIControlState.normal)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.addTarget(self, action: #selector(addMap), for: .touchUpInside)
+            
+            return button
+        }()
+        
+        
+            headerView.addSubview(nameLabel)
+            headerView.addSubview(newMapButton)
+            headerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1(80)]-8-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nameLabel, "v1": newMapButton]))
+            headerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nameLabel]))
+            headerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": newMapButton]))
+        
+        return headerView
     }
     
-    let nameLabel: UILabel =
+    @objc func addMap()
     {
-        let label = UILabel()
-        label.text = "Maps"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 25)
-        return label
-    }()
-    
-    let newMapButton: UIButton =
-    {
-        var button: UIButton = UIButton(type: .system)
-        button.setTitle("Add Map", for: UIControlState.normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    func setUpViews()
-    {
-        addSubview(nameLabel)
-        addSubview(newMapButton)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1(80)]-8-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nameLabel, "v1": newMapButton]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nameLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": newMapButton]))
+//        print("map button pressed in tableView!!!!")
+        delegate?.addMap(buttonPressed: true)
     }
 }
 

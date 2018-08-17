@@ -7,8 +7,14 @@
 import Foundation
 import UIKit
 
-class MainTabBarController: UITabBarController, UITabBarControllerDelegate
+class MainTabBarController: UITabBarController, NewMapDelegate
 {
+    func addMap(buttonPressed: Bool)
+    {
+        let newMapFormVC: NewMapFormViewController = NewMapFormViewController()
+        navigationController?.pushViewController(newMapFormVC, animated: true)
+    }
+    
     var mapView: MapView?
     var mapTableViewController: MapTableViewController?
     
@@ -27,11 +33,11 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate
     }
     
     @IBAction func newTapped(_ sender: Any) {
-//        performSegue(withIdentifier: "formSegue", sender: self)
         performSegue(withIdentifier: "hazardSegue", sender: self)
     }
     
-    func showControllerFor(setting: Setting) {
+    func showControllerFor(setting: Setting)
+    {
         let dummyViewController = UIViewController()
         dummyViewController.navigationItem.title = setting.name
         navigationController?.pushViewController(dummyViewController, animated: true)
@@ -41,16 +47,16 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        self.delegate = self
         selectedIndex = 0
         navigationItem.title = "Main"
-        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationController?.navigationBar.prefersLargeTitles = false
         
         let localViewCotnroller: MainLocalTableViewController = MainLocalTableViewController()
         
         let trashViewController: MainTrashTableViewController = MainTrashTableViewController()
         
         let mapsViewController: MapTableViewController = MapTableViewController()
+        mapsViewController.delegate = self
         mapsViewController.title = "Maps"
         
         localViewCotnroller.tabBarItem = UITabBarItem(title: "Local", image: UIImage(named: "baggage"), tag: 0)
@@ -58,7 +64,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate
         trashViewController.tabBarItem = UITabBarItem(title: "Trash", image: UIImage(named: "bin"), tag: 2)
         
         self.setViewControllers([localViewCotnroller, mapsViewController, trashViewController], animated: true)
-        
         
     }
     
