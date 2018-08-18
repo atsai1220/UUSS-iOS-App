@@ -51,12 +51,13 @@ class MapTableViewController: UITableViewController
         let newMapButton: UIButton =
         {
             let button: UIButton = UIButton(type: .roundedRect)
-            button.layer.cornerRadius = 10
+            button.layer.cornerRadius = 15
             button.layer.borderWidth = 2
-            button.layer.shadowOffset = CGSize(width: 12.0, height: 12.0)
+            button.backgroundColor = UIColor.white
+            button.layer.shadowOpacity = 1.0
             button.layer.shadowColor = UIColor.black.cgColor
-            button.layer.shadowOpacity = 0.8
-            button.layer.shadowRadius = 12.0
+            button.layer.shadowOffset = CGSize(width: 0.0, height:3.0)
+            button.layer.shadowRadius = 3.0
             button.layer.borderColor = UIColor.black.cgColor
             button.setTitle("Add Map", for: UIControlState.normal)
             button.translatesAutoresizingMaskIntoConstraints = false
