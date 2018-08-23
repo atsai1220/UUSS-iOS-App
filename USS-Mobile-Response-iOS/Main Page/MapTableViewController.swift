@@ -15,23 +15,43 @@ protocol NewMapDelegate: class
 
 class MapTableViewController: UITableViewController
 {
+    func insertCellData(image: UIImage)
+    {
+        tableData.append("Item \(tableData.count + 1)")
+        
+        let indexPath = IndexPath(row: tableData.count - 1, section: 0)
+        
+        self.tableView.cellForRow(at: indexPath)?.imageView?.image = UIImage(named: "map")
+        
+        self.tableView.insertRows(at: [indexPath], with: .left)
+        
+//        self.tableView.reloadData()
+    }
+    
     weak var delegate: NewMapDelegate?
+    var tableData: [String] = ["booga", "item2", "item3"]
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
         tableView.register(TableCell.self, forCellReuseIdentifier: "cellId")
 //        tableView.register(TableHeader.self, forHeaderFooterViewReuseIdentifier: "headerId")
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return 5
+        return tableData.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        return tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
+//        return tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! TableCell
+        cell.nameLabel.text = tableData[indexPath.row]
+        
+//        cell.imageView?.image = UIImage(named: "map")
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
@@ -85,9 +105,12 @@ class MapTableViewController: UITableViewController
 
 class TableCell: UITableViewCell
 {
+    var cellImage: UIImageView?
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        cellImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
         setUpViews()
     }
     
@@ -98,7 +121,7 @@ class TableCell: UITableViewCell
     let nameLabel: UILabel =
     {
         let label = UILabel()
-        label.text = "Sample Item"
+//        label.text = tableVC.tableData.i
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 25)
         return label
@@ -106,8 +129,10 @@ class TableCell: UITableViewCell
     
     func setUpViews()
     {
+        let views: [String: AnyObject] = ["v0": nameLabel, "img":cellImage!]
         addSubview(nameLabel)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nameLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nameLabel]))
+        addSubview(cellImage!)
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[img(<=50)]-16-[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
+//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[img]|", options: [], metrics: nil, views: views))
     }
 }
