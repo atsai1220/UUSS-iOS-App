@@ -19,13 +19,16 @@ class HazardsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Hazards"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = false
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
         self.refreshControl = UIRefreshControl()
-        self.refreshControl?.addTarget(self, action: #selector(loadHazardsFromApi), for: .valueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(collectHazards), for: .valueChanged)
         
-        loadHazardsFromApi()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        collectHazards()
     }
 
     override func didReceiveMemoryWarning() {
@@ -79,43 +82,39 @@ class HazardsTableViewController: UITableViewController {
         navigationController?.pushViewController(hazardsDetailTableVC, animated: true)
     }
     
-    func showActionSheet(indexPat: IndexPath) {
-        let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Photo (.JPEG and .TIF)", style: .default, handler: { (action: UIAlertAction) in
-            let photoPickerVC = PhotoPickerViewController()
-            photoPickerVC.collectionReference = "123"
-            self.navigationController?.pushViewController(photoPickerVC, animated: true)
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
-            
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Video (.MOV and .MP4)", style: .default, handler: { (action: UIAlertAction) in
-            
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
-            
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        self.present(actionSheet, animated: true, completion: nil)
-    }
     
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-//        if segue.identifier == "formSegue" {
-//            if let formVC = segue.destination as? FormViewController {
-//                formVC.selectedHazard = self.selectedHazard!
-//            }
-//        }
-        if segue.identifier == "hazardsSelectionSegue" {
-            
+    @objc
+    func collectHazards() {
+        // check Internet connection
+        let internetTestObject = Reachability()
+        if internetTestObject.hasInternet() {
+            loadHazardsFromApi()
+        }
+        else {
+            if localHazardsFromDiskExists() {
+                self.allHazards = getCompleteHazardsFromDisk()
+                // show warning
+                let alert = UIAlertController(title: "No Connection", message: "Using cached hazards.", preferredStyle: .alert)
+                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                alert.addAction(okayAction)
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                // show warning
+                let alert = UIAlertController(title: "No Connection", message: "No Internet connection and cached hazards are not available.", preferredStyle: .alert)
+                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                alert.addAction(okayAction)
+                self.present(alert, animated: true, completion: nil)
+            }
+            self.filterAllHazardsAndReloadTable()
+
+            if self.refreshControl?.isRefreshing == true {
+                self.refreshControl?.endRefreshing()
+            }
         }
     }
     
-    @objc
+    
     func loadHazardsFromApi() {
         let urlString = "https://geodata.geology.utah.gov/api/?"
         let privateKey = "7d510414a826c1af09d864e70c3656964839664786b8e774bafb7c10adc5fea1"
@@ -138,48 +137,12 @@ class HazardsTableViewController: UITableViewController {
                     self.allHazards = resourceSpaceData.filter({
                         $0.theme == "Geologic Hazards" && $0.theme2 != ""
                     })
+                    // save to disk in case of connectivity lost
+                    saveCompleteHazardsToDisk(hazards: self.allHazards)
+                
+                    self.filterAllHazardsAndReloadTable()
                     
-                    self.hazardsDictionary = self.allHazards.reduce([String: [Hazard]]()) {
-                        (dict, hazard) in
-                            var tempDict = dict
-                        if var array = tempDict[hazard.theme2] {
-                            if array.contains(where: { (insideHazard: Hazard) -> Bool in
-                                insideHazard.name == hazard.name
-                            }) {
-                                
-                            }
-                            else {
-                                array.append(hazard)
-                                tempDict.updateValue(array, forKey: hazard.theme2)
-                            }
-                        }
-                        else {
-                            let newArray: [Hazard] = [hazard]
-                            tempDict[hazard.theme2] = newArray
-                        }
-                        return tempDict
-                    }
-                    
-                    for (key, _) in self.hazardsDictionary {
-                        if self.filteredHazardsTitles.contains(where: { (insideName: String) -> Bool in
-                            insideName == key
-                        }) {
-                            
-                        }
-                        else {
-                            self.filteredHazardsTitles.append(key)
-                        }
-                    }
-                    
-                    self.filteredHazardsTitles = self.filteredHazardsTitles.sorted(by: { $0 < $1 })
-                    
-                    var indexPathsToReload = [IndexPath]()
-                    for index in self.filteredHazardsTitles.indices {
-                        let indexPath = IndexPath(row: index, section: 0)
-                        indexPathsToReload.append(indexPath)
-                    }
-                    self.tableView.reloadData()
-                    self.tableView.reloadRows(at: indexPathsToReload, with: .left)
+
                     
                     if self.refreshControl?.isRefreshing == true {
                         self.refreshControl?.endRefreshing()
@@ -189,6 +152,50 @@ class HazardsTableViewController: UITableViewController {
                 print(jsonError)
             }
             }.resume()
+    }
+    
+    func filterAllHazardsAndReloadTable() {
+        self.hazardsDictionary = self.allHazards.reduce([String: [Hazard]]()) {
+            (dict, hazard) in
+            var tempDict = dict
+            if var array = tempDict[hazard.theme2] {
+                if array.contains(where: { (insideHazard: Hazard) -> Bool in
+                    insideHazard.name == hazard.name
+                }) {
+                    
+                }
+                else {
+                    array.append(hazard)
+                    tempDict.updateValue(array, forKey: hazard.theme2)
+                }
+            }
+            else {
+                let newArray: [Hazard] = [hazard]
+                tempDict[hazard.theme2] = newArray
+            }
+            return tempDict
+        }
+        
+        for (key, _) in self.hazardsDictionary {
+            if self.filteredHazardsTitles.contains(where: { (insideName: String) -> Bool in
+                insideName == key
+            }) {
+                
+            }
+            else {
+                self.filteredHazardsTitles.append(key)
+            }
+        }
+        
+        self.filteredHazardsTitles = self.filteredHazardsTitles.sorted(by: { $0 < $1 })
+        
+        var indexPathsToReload = [IndexPath]()
+        for index in self.filteredHazardsTitles.indices {
+            let indexPath = IndexPath(row: index, section: 0)
+            indexPathsToReload.append(indexPath)
+        }
+        self.tableView.reloadData()
+        self.tableView.reloadRows(at: indexPathsToReload, with: .left)
     }
 
 

@@ -96,22 +96,21 @@ func getDocumentsURL() -> URL {
     }
 }
 
-func saveEntriesToDisk(entries: [LocalEntry]) {
+func saveLocalEntriesToDisk(entries: [LocalEntry]) {
     // create url for documents directory
     let url = getDocumentsURL().appendingPathComponent("entries.json")
     let encoder = JSONEncoder()
     
     do {
-        
         let data = try encoder.encode(entries)
-        let object = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+//        let test = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
         try data.write(to: url, options: [])
     } catch {
         fatalError(error.localizedDescription)
     }
 }
 
-func getEntriesFromDisk() -> [LocalEntry] {
+func getLocalEntriesFromDisk() -> [LocalEntry] {
     if FileManager.default.fileExists(atPath: getDocumentsURL().appendingPathComponent("entries.json").path) {
         let url = getDocumentsURL().appendingPathComponent("entries.json")
         let decoder = JSONDecoder()
@@ -124,8 +123,81 @@ func getEntriesFromDisk() -> [LocalEntry] {
         }
     }
     else {
-        saveEntriesToDisk(entries: [])
-        return getEntriesFromDisk()
+        saveLocalEntriesToDisk(entries: [])
+        return getLocalEntriesFromDisk()
+    }
+}
+
+func saveTrashEntriesToDisk(entries: [LocalEntry]) {
+    // create url for documents directory
+    let url = getDocumentsURL().appendingPathComponent("trash.json")
+    let encoder = JSONEncoder()
+    
+    do {
+        let data = try encoder.encode(entries)
+//        let object = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+        try data.write(to: url, options: [])
+    } catch {
+        fatalError(error.localizedDescription)
+    }
+}
+
+func getTrashEntriesFromDisk() -> [LocalEntry] {
+    if FileManager.default.fileExists(atPath: getDocumentsURL().appendingPathComponent("trash.json").path) {
+        let url = getDocumentsURL().appendingPathComponent("trash.json")
+        let decoder = JSONDecoder()
+        do {
+            let data = try Data(contentsOf: url, options: [])
+            let entries = try decoder.decode([LocalEntry].self, from: data)
+            return entries
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+    else {
+        saveTrashEntriesToDisk(entries: [])
+        return getTrashEntriesFromDisk()
+    }
+}
+
+func saveCompleteHazardsToDisk(hazards: [Hazard]) {
+    // create url for documents directory
+    let url = getDocumentsURL().appendingPathComponent("allHazards.json")
+    let encoder = JSONEncoder()
+    
+    do {
+        let data = try encoder.encode(hazards)
+        //        let object = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+        try data.write(to: url, options: [])
+    } catch {
+        fatalError(error.localizedDescription)
+    }
+}
+
+func getCompleteHazardsFromDisk() -> [Hazard] {
+    if FileManager.default.fileExists(atPath: getDocumentsURL().appendingPathComponent("allHazards.json").path) {
+        let url = getDocumentsURL().appendingPathComponent("allHazards.json")
+        let decoder = JSONDecoder()
+        do {
+            let data = try Data(contentsOf: url, options: [])
+            let entries = try decoder.decode([Hazard].self, from: data)
+            return entries
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+    else {
+        saveCompleteHazardsToDisk(hazards: [])
+        return getCompleteHazardsFromDisk()
+    }
+}
+
+func localHazardsFromDiskExists() -> Bool {
+    if FileManager.default.fileExists(atPath: getDocumentsURL().appendingPathComponent("allHazards.json").path) {
+        return true
+    }
+    else {
+        return false
     }
 }
 

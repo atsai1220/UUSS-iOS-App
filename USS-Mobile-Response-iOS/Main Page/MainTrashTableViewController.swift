@@ -10,16 +10,23 @@ import UIKit
 
 class MainTrashTableViewController: UITableViewController {
     
-    var trashBin: [LocalEntry] = []
+    let cellId = "cellId"
+    
+    var trashEntries: [LocalEntry] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.tableView.register(MainTableViewCell.self, forCellReuseIdentifier: cellId)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.trashEntries = getTrashEntriesFromDisk()
+        self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,8 +38,9 @@ class MainTrashTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        if trashBin.count > 0 {
+        if trashEntries.count > 0 {
             self.tableView.separatorStyle = .singleLine
+            self.tableView.backgroundView = UIView()
             return 1
         }
         else {
@@ -50,7 +58,30 @@ class MainTrashTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return trashBin.count
+        return trashEntries.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! MainTableViewCell
+        
+        let item = self.trashEntries[indexPath.row]
+        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localFileName!)
+        cell.setting = setting
+        cell.separatorInset = .zero
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+
+            self.trashEntries.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .left)
+            saveTrashEntriesToDisk(entries: self.trashEntries)
+        }
     }
 
     /*
