@@ -69,7 +69,7 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
             mapView!.bottomAnchor.constraintEqualToSystemSpacingBelow(guide.bottomAnchor, multiplier: 1.0)])
         
         
-        captureMap = UIButton(type: UIButton.ButtonType.system)
+        captureMap = UIButton(type: .system)
         captureMap!.layer.cornerRadius = 15
         captureMap!.layer.borderWidth = 2
         captureMap!.backgroundColor = UIColor.white
