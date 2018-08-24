@@ -19,7 +19,7 @@ class HazardsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Hazards"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = false
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
         self.refreshControl = UIRefreshControl()
