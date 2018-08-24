@@ -23,24 +23,12 @@ class HazardsTableViewController: UITableViewController {
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
         self.refreshControl = UIRefreshControl()
-        self.refreshControl?.addTarget(self, action: #selector(loadHazardsFromApi), for: .valueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(collectHazards), for: .valueChanged)
         
-        // check Internet connection
-        let internetTestObject = Reachability()
-        if internetTestObject.hasInternet() {
-            print("true")
-        }
-        else {
-            print("false")
-        }
-//        if localHazardsFromDiskExists() {
-//            // check Internet connection
-//        }
-//        else {
-//            // must retrieve from Internet
-//            loadHazardsFromApi()
-//        }
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        collectHazards()
     }
 
     override func didReceiveMemoryWarning() {
@@ -96,6 +84,37 @@ class HazardsTableViewController: UITableViewController {
     
     
     @objc
+    func collectHazards() {
+        // check Internet connection
+        let internetTestObject = Reachability()
+        if internetTestObject.hasInternet() {
+            loadHazardsFromApi()
+        }
+        else {
+            if localHazardsFromDiskExists() {
+                self.allHazards = getCompleteHazardsFromDisk()
+                // show warning
+                let alert = UIAlertController(title: "No Connection", message: "Using cached hazards.", preferredStyle: .alert)
+                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                alert.addAction(okayAction)
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                // show warning
+                let alert = UIAlertController(title: "No Connection", message: "No Internet connection and cached hazards are not available.", preferredStyle: .alert)
+                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                alert.addAction(okayAction)
+                self.present(alert, animated: true, completion: nil)
+            }
+            self.filterAllHazardsAndReloadTable()
+
+            if self.refreshControl?.isRefreshing == true {
+                self.refreshControl?.endRefreshing()
+            }
+        }
+    }
+    
+    
     func loadHazardsFromApi() {
         let urlString = "https://geodata.geology.utah.gov/api/?"
         let privateKey = "7d510414a826c1af09d864e70c3656964839664786b8e774bafb7c10adc5fea1"
@@ -120,48 +139,10 @@ class HazardsTableViewController: UITableViewController {
                     })
                     // save to disk in case of connectivity lost
                     saveCompleteHazardsToDisk(hazards: self.allHazards)
+                
+                    self.filterAllHazardsAndReloadTable()
                     
-                    self.hazardsDictionary = self.allHazards.reduce([String: [Hazard]]()) {
-                        (dict, hazard) in
-                            var tempDict = dict
-                        if var array = tempDict[hazard.theme2] {
-                            if array.contains(where: { (insideHazard: Hazard) -> Bool in
-                                insideHazard.name == hazard.name
-                            }) {
-                                
-                            }
-                            else {
-                                array.append(hazard)
-                                tempDict.updateValue(array, forKey: hazard.theme2)
-                            }
-                        }
-                        else {
-                            let newArray: [Hazard] = [hazard]
-                            tempDict[hazard.theme2] = newArray
-                        }
-                        return tempDict
-                    }
-                    
-                    for (key, _) in self.hazardsDictionary {
-                        if self.filteredHazardsTitles.contains(where: { (insideName: String) -> Bool in
-                            insideName == key
-                        }) {
-                            
-                        }
-                        else {
-                            self.filteredHazardsTitles.append(key)
-                        }
-                    }
-                    
-                    self.filteredHazardsTitles = self.filteredHazardsTitles.sorted(by: { $0 < $1 })
-                    
-                    var indexPathsToReload = [IndexPath]()
-                    for index in self.filteredHazardsTitles.indices {
-                        let indexPath = IndexPath(row: index, section: 0)
-                        indexPathsToReload.append(indexPath)
-                    }
-                    self.tableView.reloadData()
-                    self.tableView.reloadRows(at: indexPathsToReload, with: .left)
+
                     
                     if self.refreshControl?.isRefreshing == true {
                         self.refreshControl?.endRefreshing()
@@ -171,6 +152,50 @@ class HazardsTableViewController: UITableViewController {
                 print(jsonError)
             }
             }.resume()
+    }
+    
+    func filterAllHazardsAndReloadTable() {
+        self.hazardsDictionary = self.allHazards.reduce([String: [Hazard]]()) {
+            (dict, hazard) in
+            var tempDict = dict
+            if var array = tempDict[hazard.theme2] {
+                if array.contains(where: { (insideHazard: Hazard) -> Bool in
+                    insideHazard.name == hazard.name
+                }) {
+                    
+                }
+                else {
+                    array.append(hazard)
+                    tempDict.updateValue(array, forKey: hazard.theme2)
+                }
+            }
+            else {
+                let newArray: [Hazard] = [hazard]
+                tempDict[hazard.theme2] = newArray
+            }
+            return tempDict
+        }
+        
+        for (key, _) in self.hazardsDictionary {
+            if self.filteredHazardsTitles.contains(where: { (insideName: String) -> Bool in
+                insideName == key
+            }) {
+                
+            }
+            else {
+                self.filteredHazardsTitles.append(key)
+            }
+        }
+        
+        self.filteredHazardsTitles = self.filteredHazardsTitles.sorted(by: { $0 < $1 })
+        
+        var indexPathsToReload = [IndexPath]()
+        for index in self.filteredHazardsTitles.indices {
+            let indexPath = IndexPath(row: index, section: 0)
+            indexPathsToReload.append(indexPath)
+        }
+        self.tableView.reloadData()
+        self.tableView.reloadRows(at: indexPathsToReload, with: .left)
     }
 
 
