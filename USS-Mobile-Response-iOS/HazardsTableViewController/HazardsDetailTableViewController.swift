@@ -108,37 +108,30 @@ class HazardsDetailTableViewController: UITableViewController, UIImagePickerCont
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // collection selection
-        if collectionsOnly {
-            let resourceTypeVC = ResourceTypeFormController()
-            resourceTypeVC.collectionReference = self.hazardCollections[indexPath.row].ref
-            navigationController?.pushViewController(resourceTypeVC, animated: true)
+        
+        if indexPath.section == 0 && !collectionsOnly {
+            // category
+            let selectedCategory = self.filteredCategoryTitles[indexPath.row]
+            let hazardsDetailTableVC = HazardsDetailTableViewController()
+            hazardsDetailTableVC.title = selectedCategory
+            hazardsDetailTableVC.selectedHazards = self.categoryDictionary[selectedCategory]!
+            hazardsDetailTableVC.collectionsOnly = true
+            navigationController?.pushViewController(hazardsDetailTableVC, animated: true)
         }
         else {
-            // category selection
-            if indexPath.section == 0 {
-                let selectedCategory = self.filteredCategoryTitles[indexPath.row]
-                let hazardsDetailTableVC = HazardsDetailTableViewController()
-                hazardsDetailTableVC.title = selectedCategory
-                hazardsDetailTableVC.selectedHazards = self.categoryDictionary[selectedCategory]!
-                hazardsDetailTableVC.collectionsOnly = true
-                navigationController?.pushViewController(hazardsDetailTableVC, animated: true)
-            }
-            // collection selection
-            else {
-                let resourceTypeVC = ResourceTypeFormController()
-                resourceTypeVC.collectionReference = self.hazardCollections[indexPath.row].ref
-                navigationController?.pushViewController(resourceTypeVC, animated: true)
-            }
+            // collection
+            showActionSheet(indexPath: indexPath)
         }
     }
     
-    func showActionSheet(indexPat: IndexPath) {
+    func showActionSheet(indexPath: IndexPath) {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Photo (.JPEG and .TIF)", style: .default, handler: { (action: UIAlertAction) in
-            
+            let photoPickerVC = PhotoPickerViewController()
+            photoPickerVC.collectionReference = self.hazardCollections[indexPath.row].ref
+            self.navigationController?.pushViewController(photoPickerVC, animated: true)
         }))
         actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
             

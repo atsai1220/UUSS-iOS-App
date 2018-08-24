@@ -160,6 +160,47 @@ func getTrashEntriesFromDisk() -> [LocalEntry] {
     }
 }
 
+func saveCompleteHazardsToDisk(hazards: [Hazard]) {
+    // create url for documents directory
+    let url = getDocumentsURL().appendingPathComponent("allHazards.json")
+    let encoder = JSONEncoder()
+    
+    do {
+        let data = try encoder.encode(hazards)
+        //        let object = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+        try data.write(to: url, options: [])
+    } catch {
+        fatalError(error.localizedDescription)
+    }
+}
+
+func getCompleteHazardsFromDisk() -> [Hazard] {
+    if FileManager.default.fileExists(atPath: getDocumentsURL().appendingPathComponent("allHazards.json").path) {
+        let url = getDocumentsURL().appendingPathComponent("allHazards.json")
+        let decoder = JSONDecoder()
+        do {
+            let data = try Data(contentsOf: url, options: [])
+            let entries = try decoder.decode([Hazard].self, from: data)
+            return entries
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+    else {
+        saveCompleteHazardsToDisk(hazards: [])
+        return getCompleteHazardsFromDisk()
+    }
+}
+
+func localHazardsFromDiskExists() -> Bool {
+    if FileManager.default.fileExists(atPath: getDocumentsURL().appendingPathComponent("allHazards.json").path) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
 func saveImageAtDocumentDirectory(url: URL) -> String {
 
     let userName = UserDefaults.standard.string(forKey: "userName")

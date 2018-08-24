@@ -25,7 +25,22 @@ class HazardsTableViewController: UITableViewController {
         self.refreshControl = UIRefreshControl()
         self.refreshControl?.addTarget(self, action: #selector(loadHazardsFromApi), for: .valueChanged)
         
-        loadHazardsFromApi()
+        // check Internet connection
+        let internetTestObject = Reachability()
+        if internetTestObject.hasInternet() {
+            print("true")
+        }
+        else {
+            print("false")
+        }
+//        if localHazardsFromDiskExists() {
+//            // check Internet connection
+//        }
+//        else {
+//            // must retrieve from Internet
+//            loadHazardsFromApi()
+//        }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -79,41 +94,6 @@ class HazardsTableViewController: UITableViewController {
         navigationController?.pushViewController(hazardsDetailTableVC, animated: true)
     }
     
-    func showActionSheet(indexPat: IndexPath) {
-        let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Photo (.JPEG and .TIF)", style: .default, handler: { (action: UIAlertAction) in
-            let photoPickerVC = PhotoPickerViewController()
-            photoPickerVC.collectionReference = "123"
-            self.navigationController?.pushViewController(photoPickerVC, animated: true)
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
-            
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Video (.MOV and .MP4)", style: .default, handler: { (action: UIAlertAction) in
-            
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
-            
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        self.present(actionSheet, animated: true, completion: nil)
-    }
-    
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-//        if segue.identifier == "formSegue" {
-//            if let formVC = segue.destination as? FormViewController {
-//                formVC.selectedHazard = self.selectedHazard!
-//            }
-//        }
-        if segue.identifier == "hazardsSelectionSegue" {
-            
-        }
-    }
     
     @objc
     func loadHazardsFromApi() {
@@ -138,6 +118,8 @@ class HazardsTableViewController: UITableViewController {
                     self.allHazards = resourceSpaceData.filter({
                         $0.theme == "Geologic Hazards" && $0.theme2 != ""
                     })
+                    // save to disk in case of connectivity lost
+                    saveCompleteHazardsToDisk(hazards: self.allHazards)
                     
                     self.hazardsDictionary = self.allHazards.reduce([String: [Hazard]]()) {
                         (dict, hazard) in

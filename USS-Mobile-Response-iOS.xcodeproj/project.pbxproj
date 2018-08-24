@@ -11,6 +11,7 @@
 		1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */; };
 		1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA320CAD0BB006A9D69 /* PlistController.swift */; };
 		1C0DD398212768F900D656F7 /* NewMapFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DD397212768F900D656F7 /* NewMapFormViewController.swift */; };
+		1C1AE27D212FBEDD00F436FD /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1AE27C212FBEDD00F436FD /* Reachability.swift */; };
 		1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */; };
 		1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C403E3920D010A6000DB616 /* AddServerViewController.swift */; };
 		1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C403E3F20D3A8EC000DB616 /* ServerTableViewController.swift */; };
@@ -28,13 +29,9 @@
 		1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB1210BB86400629D6F /* CommonFunctions.swift */; };
 		1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */; };
 		1C601BB7210F821700629D6F /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB6210F821700629D6F /* SettingCell.swift */; };
-		1C601BBB210FEA3C00629D6F /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB9210FEA3C00629D6F /* FormViewController.swift */; };
-		1C601BBC210FEA3C00629D6F /* Form.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BBA210FEA3C00629D6F /* Form.swift */; };
 		1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */; };
-		1C76A8A32112BB9B00EE51A8 /* ResourceTypeForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A22112BB9B00EE51A8 /* ResourceTypeForm.swift */; };
 		1C76A8A52113B08000EE51A8 /* MainLocalTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */; };
 		1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */; };
-		1C76A8A92113B7E200EE51A8 /* ResourceTypeFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A82113B7E200EE51A8 /* ResourceTypeFormController.swift */; };
 		1C76A8AC2113C5A700EE51A8 /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */; };
 		1C76A8AE2113CC8300EE51A8 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */; };
 		1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AF2114052000EE51A8 /* HazardsDetailTableViewController.swift */; };
@@ -50,6 +47,7 @@
 		1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceSpaceModel.swift; sourceTree = "<group>"; };
 		1C043CA320CAD0BB006A9D69 /* PlistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistController.swift; sourceTree = "<group>"; };
 		1C0DD397212768F900D656F7 /* NewMapFormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMapFormViewController.swift; sourceTree = "<group>"; };
+		1C1AE27C212FBEDD00F436FD /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTableNavigationController.swift; sourceTree = "<group>"; };
 		1C403E3920D010A6000DB616 /* AddServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServerViewController.swift; sourceTree = "<group>"; };
 		1C403E3F20D3A8EC000DB616 /* ServerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTableViewController.swift; sourceTree = "<group>"; };
@@ -70,13 +68,9 @@
 		1C601BB1210BB86400629D6F /* CommonFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFunctions.swift; sourceTree = "<group>"; };
 		1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardsTableViewController.swift; sourceTree = "<group>"; };
 		1C601BB6210F821700629D6F /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
-		1C601BB9210FEA3C00629D6F /* FormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
-		1C601BBA210FEA3C00629D6F /* Form.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Form.swift; sourceTree = "<group>"; };
 		1C76A8A021127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "USS-Mobile-Response-iOS.xcdatamodel"; sourceTree = "<group>"; };
-		1C76A8A22112BB9B00EE51A8 /* ResourceTypeForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceTypeForm.swift; sourceTree = "<group>"; };
 		1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLocalTableViewController.swift; sourceTree = "<group>"; };
 		1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTrashTableViewController.swift; sourceTree = "<group>"; };
-		1C76A8A82113B7E200EE51A8 /* ResourceTypeFormController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceTypeFormController.swift; sourceTree = "<group>"; };
 		1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerViewController.swift; sourceTree = "<group>"; };
 		1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		1C76A8AF2114052000EE51A8 /* HazardsDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardsDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -138,7 +132,6 @@
 				9C5E159820EF69CD00BFD0F3 /* Login Page */,
 				1C57E50020BF8387004E1270 /* AppDelegate.swift */,
 				1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */,
-				1C601BB8210FEA3C00629D6F /* Form */,
 				1C043CA520CBB5FB006A9D69 /* Model */,
 				1C5B55E120C68924006FF1B4 /* Control */,
 				1C57E50420BF8387004E1270 /* Main.storyboard */,
@@ -155,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				1C043CA320CAD0BB006A9D69 /* PlistController.swift */,
+				1C1AE27C212FBEDD00F436FD /* Reachability.swift */,
 			);
 			path = Control;
 			sourceTree = "<group>";
@@ -168,22 +162,11 @@
 			path = HazardsTableViewController;
 			sourceTree = "<group>";
 		};
-		1C601BB8210FEA3C00629D6F /* Form */ = {
-			isa = PBXGroup;
-			children = (
-				1C601BB9210FEA3C00629D6F /* FormViewController.swift */,
-				1C601BBA210FEA3C00629D6F /* Form.swift */,
-			);
-			path = Form;
-			sourceTree = "<group>";
-		};
 		1C76A8AA2113C58400EE51A8 /* Resource Picker */ = {
 			isa = PBXGroup;
 			children = (
 				1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */,
 				1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */,
-				1C76A8A22112BB9B00EE51A8 /* ResourceTypeForm.swift */,
-				1C76A8A82113B7E200EE51A8 /* ResourceTypeFormController.swift */,
 			);
 			path = "Resource Picker";
 			sourceTree = "<group>";
@@ -323,11 +306,11 @@
 				1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */,
 				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
-				1C601BBB210FEA3C00629D6F /* FormViewController.swift in Sources */,
 				1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */,
 				1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */,
 				1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
+				1C1AE27D212FBEDD00F436FD /* Reachability.swift in Sources */,
 				1C76A8AE2113CC8300EE51A8 /* PhotoCell.swift in Sources */,
 				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
@@ -335,12 +318,10 @@
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
 				1C76A8AC2113C5A700EE51A8 /* PhotoPickerViewController.swift in Sources */,
 				1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */,
-				1C76A8A92113B7E200EE51A8 /* ResourceTypeFormController.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
 				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
 				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
 				1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */,
-				1C76A8A32112BB9B00EE51A8 /* ResourceTypeForm.swift in Sources */,
 				1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */,
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
@@ -349,7 +330,6 @@
 				1C76A8A52113B08000EE51A8 /* MainLocalTableViewController.swift in Sources */,
 				1C4D76BD20C1826F00458079 /* SettingsViewController.swift in Sources */,
 				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,
-				1C601BBC210FEA3C00629D6F /* Form.swift in Sources */,
 				1C0DD398212768F900D656F7 /* NewMapFormViewController.swift in Sources */,
 				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
 			);

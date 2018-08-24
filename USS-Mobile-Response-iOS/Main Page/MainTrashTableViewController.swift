@@ -80,7 +80,7 @@ class MainTrashTableViewController: UITableViewController {
 
             self.trashEntries.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .left)
-            saveLocalEntriesToDisk(entries: self.trashEntries)
+            saveTrashEntriesToDisk(entries: self.trashEntries)
         }
     }
 
