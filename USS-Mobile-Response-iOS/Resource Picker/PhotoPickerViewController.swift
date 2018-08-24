@@ -73,9 +73,9 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
         let savedImageName = saveImageAtDocumentDirectory(url: self.imageURL!)
         newEntry.collectionRef = self.collectionReference
         newEntry.localFileName = savedImageName
-        var oldEntries = getEntriesFromDisk()
+        var oldEntries = getLocalEntriesFromDisk()
         oldEntries.append(newEntry)
-        saveEntriesToDisk(entries: oldEntries)
+        saveLocalEntriesToDisk(entries: oldEntries)
     }
     
     func httpUpload() {

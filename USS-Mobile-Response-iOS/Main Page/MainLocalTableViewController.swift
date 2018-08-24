@@ -26,7 +26,7 @@ class MainLocalTableViewController: UITableViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        self.localEntries = getEntriesFromDisk()
+        self.localEntries = getLocalEntriesFromDisk()
         self.tableView.reloadData()
     }
     override func didReceiveMemoryWarning() {
@@ -74,6 +74,19 @@ class MainLocalTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            var trashEntries = getTrashEntriesFromDisk()
+            trashEntries.append(self.localEntries[indexPath.row])
+            saveTrashEntriesToDisk(entries: trashEntries)
+            
+            self.localEntries.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .left)
+            saveLocalEntriesToDisk(entries: self.localEntries)
+        }
+    }
+
 
     /*
     // Override to support conditional editing of the table view.

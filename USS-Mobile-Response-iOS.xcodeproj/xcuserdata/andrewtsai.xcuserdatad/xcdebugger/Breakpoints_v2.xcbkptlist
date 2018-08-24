@@ -137,22 +137,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "USS-Mobile-Response-iOS/CommonFunctions.swift"
-            timestampString = "556487589.751942"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
-            landmarkName = "saveImageAtDocumentDirectory(url:)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "USS-Mobile-Response-iOS/Login Page/LoginViewController.swift"
             timestampString = "556422571.196488"
             startingColumnNumber = "9223372036854775807"
@@ -170,12 +154,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "USS-Mobile-Response-iOS/CommonFunctions.swift"
-            timestampString = "556487589.752094"
+            timestampString = "556774184.474993"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "106"
-            endingLineNumber = "106"
-            landmarkName = "saveEntriesToDisk(entries:)"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "saveLocalEntriesToDisk(entries:)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

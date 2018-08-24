@@ -34,7 +34,6 @@ class MapTableViewController: UITableViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
         tableView.register(TableCell.self, forCellReuseIdentifier: "cellId")
 //        tableView.register(TableHeader.self, forHeaderFooterViewReuseIdentifier: "headerId")
     }
