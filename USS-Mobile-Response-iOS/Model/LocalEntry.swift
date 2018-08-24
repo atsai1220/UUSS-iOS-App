@@ -44,7 +44,7 @@ struct LocalEntry: Codable {
     var resourceType: String?
     var archive: String?
     var url: String?
-    var localURL: String?
+    var localFileName: String?
     var no_exif: String?
     var autorotate: String?
     var metadata: metadataJSON?

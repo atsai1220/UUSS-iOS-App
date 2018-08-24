@@ -10,11 +10,11 @@ import UIKit
 
 class MainCellSetting: NSObject {
     let name: String
-    let imageURL: String
+    let imageName: String
     
     init(name: String, imageName: String) {
         self.name = name
-        self.imageURL = imageName
+        self.imageName = imageName
     }
 }
 
@@ -22,8 +22,9 @@ class MainTableViewCell: UITableViewCell {
     
     var setting: MainCellSetting? {
         didSet {
+            let localImage = getImageFromDocumentDirectory(imageName: (setting?.imageName)!)
+            self.iconImageView.image = localImage
             self.nameLabel.text = setting?.name
-            self.iconImageView.image = UIImage(named: (setting?.imageURL)!)
         }
     }
     
@@ -37,6 +38,7 @@ class MainTableViewCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.image = UIImage()
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -57,11 +59,10 @@ class MainTableViewCell: UITableViewCell {
     func setupViews() {
         addSubview(self.nameLabel)
         addSubview(self.iconImageView)
-        
-        addConstraintsWithFormat(format: "H:|-8-[v0(30)]-16-[v1]|", views: self.iconImageView, self.nameLabel)
+//        self.iconImageView.frame = CGRect(origin: CGPoint(x: 0, y: self.frame.midY), size: CGSize(width: 100, height: 100))
+        addConstraintsWithFormat(format: "H:|-8-[v0(150)]-16-[v1]|", views: self.iconImageView, self.nameLabel)
         addConstraintsWithFormat(format: "V:|[v0]|", views: self.nameLabel)
-        addConstraintsWithFormat(format: "V:[v0(30)]", views: self.iconImageView)
-        addConstraint(NSLayoutConstraint(item: iconImageView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
+        addConstraintsWithFormat(format: "V:|-[v0]-|", views: self.iconImageView)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -69,6 +70,8 @@ class MainTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    
     
     
 

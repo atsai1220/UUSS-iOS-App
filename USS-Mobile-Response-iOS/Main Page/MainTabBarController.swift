@@ -43,6 +43,10 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapToTableDel
     
     @IBAction func newTapped(_ sender: Any) {
         performSegue(withIdentifier: "hazardSegue", sender: self)
+        
+//        let resourceTypeVC = ResourceTypeFormController()
+//        resourceTypeVC.collectionReference = "Test Entry"
+//        navigationController?.pushViewController(resourceTypeVC, animated: true)
     }
     
     func showControllerFor(setting: Setting) {
@@ -66,7 +70,7 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapToTableDel
         super.viewDidLoad()
         selectedIndex = 0
         navigationItem.title = "Main"
-//        navigationController?.navigationBar.prefersLargeTitles = false
+//        navigationController?.navigationBar.prefersLargeTitles = true
         
         let localViewCotnroller: MainLocalTableViewController = MainLocalTableViewController()
         

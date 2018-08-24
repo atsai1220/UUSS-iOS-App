@@ -22,6 +22,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Need to access Camera to take photos.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Need to access location to use maps</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Need to access Photo library to upload images.</string>
 	<key>UILaunchStoryboardName</key>
@@ -45,7 +47,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Need to access location to use maps</string>
 </dict>
 </plist>

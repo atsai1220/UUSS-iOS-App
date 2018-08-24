@@ -70,9 +70,9 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
     
     func createLocalEntry() {
         var newEntry = LocalEntry()
-        let savedImagePath = saveImageAtDocumentDirectory(url: self.imageURL!)
+        let savedImageName = saveImageAtDocumentDirectory(url: self.imageURL!)
         newEntry.collectionRef = self.collectionReference
-        newEntry.localURL = savedImagePath.path
+        newEntry.localFileName = savedImageName
         var oldEntries = getEntriesFromDisk()
         oldEntries.append(newEntry)
         saveEntriesToDisk(entries: oldEntries)

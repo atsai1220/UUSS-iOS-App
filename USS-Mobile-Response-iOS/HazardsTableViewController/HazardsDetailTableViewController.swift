@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HazardsDetailTableViewController: UITableViewController {
+class HazardsDetailTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let cellId = "cellId"
     var selectedHazards: [Hazard] = []
@@ -131,6 +131,26 @@ class HazardsDetailTableViewController: UITableViewController {
                 navigationController?.pushViewController(resourceTypeVC, animated: true)
             }
         }
+    }
+    
+    func showActionSheet(indexPat: IndexPath) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Photo (.JPEG and .TIF)", style: .default, handler: { (action: UIAlertAction) in
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Video (.MOV and .MP4)", style: .default, handler: { (action: UIAlertAction) in
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actionSheet, animated: true, completion: nil)
     }
     
     func loadCollectionAndCategoryArrays() {

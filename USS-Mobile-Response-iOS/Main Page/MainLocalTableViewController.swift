@@ -17,6 +17,7 @@ class MainLocalTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.register(MainTableViewCell.self, forCellReuseIdentifier: cellId)
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -64,9 +65,14 @@ class MainLocalTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! MainTableViewCell
 
         let item = self.localEntries[indexPath.row]
-        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localURL!)
+        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localFileName!)
         cell.setting = setting
+        cell.separatorInset = .zero
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
     }
 
     /*
