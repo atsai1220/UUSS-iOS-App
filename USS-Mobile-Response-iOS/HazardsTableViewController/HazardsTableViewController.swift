@@ -69,17 +69,34 @@ class HazardsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let itemTitle = self.filteredHazardsTitles[indexPath.row]
+//        showActionSheet(indexPat: indexPath)
         
+        let itemTitle = self.filteredHazardsTitles[indexPath.row]
         self.selectedHazards = self.hazardsDictionary[itemTitle]!
         let hazardsDetailTableVC = HazardsDetailTableViewController()
         hazardsDetailTableVC.navigationItem.title = itemTitle
         hazardsDetailTableVC.selectedHazards = self.selectedHazards
         navigationController?.pushViewController(hazardsDetailTableVC, animated: true)
-//        let resourceTypeVC = ResourceTypeFormController()
-//        navigationController?.pushViewController(resourceTypeVC, animated: true)
-//        performSegue(withIdentifier: "formSegue", sender: self)
-//        performSegue(withIdentifier: "resourceTypeSegue", sender: self)
+    }
+    
+    func showActionSheet(indexPat: IndexPath) {
+        let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Photo (.JPEG and .TIF)", style: .default, handler: { (action: UIAlertAction) in
+            let photoPickerVC = PhotoPickerViewController()
+            photoPickerVC.collectionReference = "123"
+            self.navigationController?.pushViewController(photoPickerVC, animated: true)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Video (.MOV and .MP4)", style: .default, handler: { (action: UIAlertAction) in
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actionSheet, animated: true, completion: nil)
     }
     
     // MARK: - Navigation

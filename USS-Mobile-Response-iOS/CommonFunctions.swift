@@ -129,13 +129,15 @@ func getEntriesFromDisk() -> [LocalEntry] {
     }
 }
 
-func saveImageAtDocumentDirectory(url: URL) -> URL {
+func saveImageAtDocumentDirectory(url: URL) -> String {
+
     let userName = UserDefaults.standard.string(forKey: "userName")
-    let path = getDocumentsURL().appendingPathComponent(userName! + getTimeStampString() + ".jpeg")
+    let imageName = userName! + getTimeStampString() + ".jpeg"
+    let path = getDocumentsURL().appendingPathComponent(imageName)
     let image = UIImage(contentsOfFile: url.path)
     let imageData = UIImageJPEGRepresentation(image!, 0.5)
     FileManager.default.createFile(atPath: path.path, contents: imageData, attributes: [:])
-    return path
+    return imageName
 }
 
 func getTimeStampString() -> String {
@@ -152,8 +154,14 @@ func getTimeStampString() -> String {
     return today_string
 }
 
-func getImageFromDocumentDirectory(url: URL) -> UIImage? {
-    let imagePath = getDocumentsURL().appendingPathComponent(url.relativeString).path
+func getImageFromDocumentDirectory(imageName: String) -> UIImage? {
+    /*
+     let pathComponent = "pack\(self.packID)-\(selectRow + 1).mp4"
+     let directoryURL: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+     let folderPath: URL = directoryURL.appendingPathComponent("Downloads", isDirectory: true)
+     let fileURL: URL = folderPath.appendingPathComponent(pathComponent)
+     */
+    let imagePath = getDocumentsURL().appendingPathComponent(imageName).path
     if FileManager.default.fileExists(atPath: imagePath) {
         return UIImage(contentsOfFile: imagePath)
     }

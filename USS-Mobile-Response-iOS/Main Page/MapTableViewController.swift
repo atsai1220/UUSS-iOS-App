@@ -36,7 +36,6 @@ class MapTableViewController: UITableViewController
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
-        
 //        let tView: UITableViewHeaderFooterView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "headerId")!
         let headerView: UIView = UIView()
         let nameLabel: UILabel =

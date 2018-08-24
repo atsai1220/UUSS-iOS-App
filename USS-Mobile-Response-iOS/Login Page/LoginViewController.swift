@@ -127,7 +127,7 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
             return
         }
         
-        UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromRight, animations: { window.rootViewController = mainNavigationController }, completion: nil)
+        UIView.transition(with: window, duration: 0.4, options: .transitionFlipFromRight, animations: { window.rootViewController = mainNavigationController }, completion: nil)
     }
     
     private func loginToAPI() {
