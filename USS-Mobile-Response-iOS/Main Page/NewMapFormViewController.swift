@@ -12,7 +12,7 @@ import MapKit
 
 protocol AddMapToTableDelegate: class
 {
-    func addMapToTable(map: MKMapView)
+    func addMapToTable(map: MKMapView, withImage image: UIImage)
 }
 
 class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate
@@ -69,7 +69,7 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
             mapView!.bottomAnchor.constraintEqualToSystemSpacingBelow(guide.bottomAnchor, multiplier: 1.0)])
         
         
-        captureMap = UIButton(type: UIButton.ButtonType.system)
+        captureMap = UIButton(type: .system)
         captureMap!.layer.cornerRadius = 15
         captureMap!.layer.borderWidth = 2
         captureMap!.backgroundColor = UIColor.white
@@ -100,27 +100,26 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
     @objc func snapShotMap()
     {
         
-          addMapDelegate?.addMapToTable(map: mapView!)
-//        mapCamera = MKMapCamera(lookingAtCenter: mapView!.centerCoordinate, fromDistance: regionRadius, pitch: 0.0, heading: 0.0)
-//        snapshotOptions = MKMapSnapshotOptions()
-//        snapshotOptions!.camera = mapCamera!
-//        snapshotOptions!.region = mapView!.region
-//        snapshotOptions!.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-//        snapshotOptions!.scale = UIScreen.main.scale
-//        snapshotOptions!.mapType = .standard
-//
-//        snapShotter = MKMapSnapshotter(options: snapshotOptions!)
-//        snapShotter?.start(completionHandler: {(snapshot, error) in
-//            if((error) != nil)
-//            {
-//                print("There was a problem taking the snapshot")
-//            }
-//            else
-//            {
-//                var image: UIImage = snapshot!.image
-//                var x = 5
-//            }
-//        })
+        mapCamera = MKMapCamera(lookingAtCenter: mapView!.centerCoordinate, fromDistance: regionRadius, pitch: 0.0, heading: 0.0)
+        snapshotOptions = MKMapSnapshotOptions()
+        snapshotOptions!.camera = mapCamera!
+        snapshotOptions!.region = mapView!.region
+        snapshotOptions!.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        snapshotOptions!.scale = UIScreen.main.scale
+        snapshotOptions!.mapType = .standard
+
+        snapShotter = MKMapSnapshotter(options: snapshotOptions!)
+        snapShotter?.start(completionHandler: {(snapshot, error) in
+            if((error) != nil)
+            {
+                print("There was a problem taking the snapshot")
+            }
+            else
+            {
+                let image: UIImage = snapshot!.image
+                self.addMapDelegate?.addMapToTable(map: self.mapView!, withImage: image)
+            }
+        })
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar)

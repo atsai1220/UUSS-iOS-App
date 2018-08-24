@@ -11,46 +11,10 @@ import MapKit
 
 class MainTabBarController: UITabBarController, NewMapDelegate, AddMapToTableDelegate
 {
-    func addMapToTable(map: MKMapView)
+    func addMapToTable(map: MKMapView, withImage image: UIImage)
     {
         navigationController?.popViewController(animated: true)
-        var indexPaths: [IndexPath] = mapTableViewController!.tableView.indexPathsForVisibleRows!
-        var cell: UITableViewCell = mapTableViewController!.tableView.cellForRow(at: indexPaths[0])!
-        
-//        var mapImage = makeSnapshotOfMap(map: map)
-//        cell.imageView!.image = UIImage(named: "map")
-        mapTableViewController?.insertCellData(image: UIImage(named: "map")!)
-        
-    }
-    
-    func makeSnapshotOfMap(map: MKMapView) -> UIImage
-    {
-        let regionRadius: CLLocationDistance = 500
-           var mapCamera: MKMapCamera
-            var snapshotOptions: MKMapSnapshotOptions
-        var image: UIImage = UIImage()
-        var snapShotter: MKMapSnapshotter
-                mapCamera = MKMapCamera(lookingAtCenter: map.centerCoordinate, fromDistance: regionRadius, pitch: 0.0, heading: 0.0)
-                snapshotOptions = MKMapSnapshotOptions()
-                snapshotOptions.camera = mapCamera
-        snapshotOptions.region = map.region
-                snapshotOptions.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                snapshotOptions.scale = UIScreen.main.scale
-                snapshotOptions.mapType = .standard
-        
-                snapShotter = MKMapSnapshotter(options: snapshotOptions)
-                snapShotter.start(completionHandler: {(snapshot, error) in
-                    if((error) != nil)
-                    {
-                        print("There was a problem taking the snapshot")
-                    }
-                    else
-                    {
-                        image = snapshot!.image
-                    }
-                })
-        
-        return image
+        mapTableViewController?.insertCellData(with: UIImage(named: "appMap")!)
     }
     
     func addMap(buttonPressed: Bool)

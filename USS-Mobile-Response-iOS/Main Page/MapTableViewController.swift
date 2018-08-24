@@ -15,21 +15,18 @@ protocol NewMapDelegate: class
 
 class MapTableViewController: UITableViewController
 {
-    func insertCellData(image: UIImage)
+    func insertCellData(with image: UIImage)
     {
-        tableData.append("Item \(tableData.count + 1)")
+//        tableData.append("Item \(tableData.count + 1)")
         
-        let indexPath = IndexPath(row: tableData.count - 1, section: 0)
+        let indexPath = IndexPath(row: tableData.count, section: 0)
         
-        self.tableView.cellForRow(at: indexPath)?.imageView?.image = UIImage(named: "map")
-        
+        tableData.append(image)
         self.tableView.insertRows(at: [indexPath], with: .left)
-        
-//        self.tableView.reloadData()
     }
     
     weak var delegate: NewMapDelegate?
-    var tableData: [String] = ["booga", "item2", "item3"]
+    var tableData: [UIImage] = []
     
     override func viewDidLoad()
     {
@@ -48,9 +45,8 @@ class MapTableViewController: UITableViewController
     {
 //        return tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! TableCell
-        cell.nameLabel.text = tableData[indexPath.row]
-        
-//        cell.imageView?.image = UIImage(named: "map")
+        cell.nameLabel.text = cell.nameLabel.text
+        cell.imageView?.image = tableData[indexPath.row]
         return cell
     }
     
@@ -110,7 +106,7 @@ class TableCell: UITableViewCell
     override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        cellImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        cellImage = UIImageView()
         setUpViews()
     }
     
@@ -121,7 +117,6 @@ class TableCell: UITableViewCell
     let nameLabel: UILabel =
     {
         let label = UILabel()
-//        label.text = tableVC.tableData.i
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 25)
         return label
@@ -129,10 +124,13 @@ class TableCell: UITableViewCell
     
     func setUpViews()
     {
-        let views: [String: AnyObject] = ["v0": nameLabel, "img":cellImage!]
-        addSubview(nameLabel)
+        cellImage!.translatesAutoresizingMaskIntoConstraints = false
+//        let views: [String: AnyObject] = ["v0": nameLabel, "img":cellImage!]
+//        addSubview(nameLabel)
         addSubview(cellImage!)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[img(<=50)]-16-[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[img]|", options: [], metrics: nil, views: views))
+    
+//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[img(<=50)]-16-[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[img(>=50)]", options: [], metrics: nil, views: ["img":cellImage!]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[img]|", options: [], metrics: nil, views: ["img":cellImage!]))
     }
 }
