@@ -10,9 +10,9 @@ import UIKit
 import CoreLocation
 import MapKit
 
-protocol AddMapToTableDelegate: class
+protocol AddMapDelegate: class
 {
-    func addMapToTable(map: MKMapView, withImage image: UIImage)
+    func addMapToTable(map: MKMapView, withName name: String)
 }
 
 class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate
@@ -30,7 +30,7 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
     var captureMap: UIButton?
     var mapCamera: MKMapCamera?
     var locLatandLong: CLLocationCoordinate2D?
-    weak var addMapDelegate: AddMapToTableDelegate?
+    weak var addMapDelegate: AddMapDelegate?
     
     override func viewDidLoad()
     {
@@ -79,7 +79,7 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
         captureMap!.layer.shadowRadius = 3.0
         captureMap!.setTitle("Add Map", for: .normal)
         captureMap!.translatesAutoresizingMaskIntoConstraints = false
-        captureMap!.addTarget(self, action: #selector(snapShotMap), for: .touchUpInside)
+        captureMap!.addTarget(self, action: #selector(saveMap), for: .touchUpInside)
         self.view.addSubview(captureMap!)
         
         let capViewAndSbar: [String: UIView] = ["cMap":captureMap!, "sBar":searchBar!]
@@ -97,29 +97,19 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
         checkForLocationServices()
     }
     
-    @objc func snapShotMap()
+    @objc func saveMap()
     {
-        
-        mapCamera = MKMapCamera(lookingAtCenter: mapView!.centerCoordinate, fromDistance: regionRadius, pitch: 0.0, heading: 0.0)
-        snapshotOptions = MKMapSnapshotOptions()
-        snapshotOptions!.camera = mapCamera!
-        snapshotOptions!.region = mapView!.region
-        snapshotOptions!.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        snapshotOptions!.scale = UIScreen.main.scale
-        snapshotOptions!.mapType = .standard
-
-        snapShotter = MKMapSnapshotter(options: snapshotOptions!)
-        snapShotter?.start(completionHandler: {(snapshot, error) in
-            if((error) != nil)
-            {
-                print("There was a problem taking the snapshot")
-            }
-            else
-            {
-                let image: UIImage = snapshot!.image
-                self.addMapDelegate?.addMapToTable(map: self.mapView!, withImage: image)
-            }
+        let mapNameAlert: UIAlertController = UIAlertController(title: "Map Name", message: "", preferredStyle: .alert)
+        mapNameAlert.addTextField(configurationHandler: {( textfeild: UITextField )-> Void in
+            textfeild.placeholder = "Please enter a name for the map"
+            
+            mapNameAlert.addAction(UIAlertAction(title: "Save", style: .default, handler: { _ in
+                let mapName: String = textfeild.text!
+                self.addMapDelegate?.addMapToTable(map: self.mapView!, withName: mapName)
+            }))
         })
+        
+        self.present(mapNameAlert, animated: true, completion: nil)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar)

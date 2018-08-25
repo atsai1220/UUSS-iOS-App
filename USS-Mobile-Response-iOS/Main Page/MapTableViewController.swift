@@ -5,28 +5,33 @@
 //  Created by Charlie Barber on 8/10/18.
 //  Copyright © 2018 Andrew Tsai. All rights reserved.
 //
-
+//import Foundation
 import UIKit
+import CoreData
 
 protocol NewMapDelegate: class
 {
     func addMap(buttonPressed: Bool)
 }
 
+protocol CellDelegate: class
+{
+    func loadMapFromSelectedCell(with lat: Double, and long: Double)
+}
+
 class MapTableViewController: UITableViewController
 {
-    func insertCellData(with image: UIImage)
+    weak var delegate: NewMapDelegate?
+    weak var cellDelegate: CellDelegate?
+    var tableData: [NSManagedObject] = []
+    
+    func insertCellData(with mapObject: NSManagedObject)
     {
-//        tableData.append("Item \(tableData.count + 1)")
-        
         let indexPath = IndexPath(row: tableData.count, section: 0)
-        
-        tableData.append(image)
+
+        tableData.append(mapObject)
         self.tableView.insertRows(at: [indexPath], with: .left)
     }
-    
-    weak var delegate: NewMapDelegate?
-    var tableData: [UIImage] = []
     
     override func viewDidLoad()
     {
@@ -42,11 +47,20 @@ class MapTableViewController: UITableViewController
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-//        return tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! TableCell
-        cell.nameLabel.text = cell.nameLabel.text
-        cell.imageView?.image = tableData[indexPath.row]
+        cell.nameLabel.text = tableData[indexPath.row].value(forKey: "name") as! String
+       
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        let mapObject: NSManagedObject = tableData[indexPath.row]
+        let lat: Double = mapObject.value(forKey: "latitude") as! Double
+        let long: Double = mapObject.value(forKey: "longitude") as! Double
+        
+        navigationController?.pushViewController(<#T##viewController: UIViewController##UIViewController#>, animated: true)
+        //        cellDelegate?.loadMapFromSelectedCell(with: lat, and: long)
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
@@ -122,13 +136,13 @@ class TableCell: UITableViewCell
     
     func setUpViews()
     {
-        cellImage!.translatesAutoresizingMaskIntoConstraints = false
+//        cellImage!.translatesAutoresizingMaskIntoConstraints = false
 //        let views: [String: AnyObject] = ["v0": nameLabel, "img":cellImage!]
-//        addSubview(nameLabel)
-        addSubview(cellImage!)
+        addSubview(nameLabel)
+//        addSubview(cellImage!)
     
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[img(<=50)]-16-[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[img(>=50)]", options: [], metrics: nil, views: ["img":cellImage!]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[img]|", options: [], metrics: nil, views: ["img":cellImage!]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[label]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["label": nameLabel]))
+//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[img(>=50)]", options: [], metrics: nil, views: ["img":cellImage!]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[label]|", options: [], metrics: nil, views: ["label":nameLabel]))
     }
 }

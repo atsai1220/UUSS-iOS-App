@@ -7,14 +7,65 @@
 import Foundation
 import UIKit
 import MapKit
+import CoreData
 
 
-class MainTabBarController: UITabBarController, NewMapDelegate, AddMapToTableDelegate
+class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
 {
-    func addMapToTable(map: MKMapView, withImage image: UIImage)
+    func addMapToTable(map: MKMapView, withName name: String)
     {
         navigationController?.popViewController(animated: true)
-        mapTableViewController?.insertCellData(with: UIImage(named: "appMap")!)
+        save(map: map, with: name)
+    }
+    
+    func save(map: MKMapView, with name: String)
+    {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+       
+        let managedContext: NSManagedObjectContext = appDelegate.persistentContainer.viewContext
+        
+        let entity: NSEntityDescription = NSEntityDescription.entity(forEntityName: "Map", in: managedContext)!
+        
+        let mapObject: NSManagedObject = NSManagedObject(entity: entity, insertInto: managedContext)
+        
+        
+        mapObject.setValue(map.region.center.latitude, forKey: "latitude")
+        mapObject.setValue(map.region.center.longitude, forKey: "longitude")
+        mapObject.setValue(name, forKey: "name")
+        
+        do
+        {
+            try managedContext.save()
+            mapTableViewController?.insertCellData(with: mapObject)
+            mapTableViewController?.tableData.append(mapObject)
+        }
+        catch let error as NSError
+        {
+            print("There was an error saving. \(error)")
+        }
+        
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        let managedContext: NSManagedObjectContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest: NSFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Map")
+        
+        do {
+            try
+                mapTableViewController?.tableData = managedContext.fetch(fetchRequest)
+            var x = 5
+        }
+        catch let error as NSError
+        {
+            print("\(error). Could not complete fetch request")
+        }
     }
     
     func addMap(buttonPressed: Bool)
