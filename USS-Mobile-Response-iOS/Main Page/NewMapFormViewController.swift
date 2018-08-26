@@ -15,7 +15,7 @@ protocol AddMapDelegate: class
     func addMapToTable(map: MKMapView, withName name: String)
 }
 
-class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate
+class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MKMapViewDelegate
 {
     var locationManager: CLLocationManager?
     var searchBar: UISearchBar?
@@ -88,8 +88,7 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
         
         NSLayoutConstraint.activate([
             captureMap!.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            //            captureMap!.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)])
-        captureMap!.topAnchor.constraintGreaterThanOrEqualToSystemSpacingBelow(searchBar!.bottomAnchor, multiplier: 1.0)])
+            captureMap!.topAnchor.constraintGreaterThanOrEqualToSystemSpacingBelow(searchBar!.bottomAnchor, multiplier: 1.0)])
         
         locationManager = CLLocationManager()
         locationManager!.delegate = self
@@ -140,12 +139,14 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
                 else
                 {
                     let place = placeMarks![0]
-//                    var region: MKCoordinateRegion = self.mapView!.region
-//                    var region: MKCoordinateRegion = nil
+                    
                     let coord: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: place.location!.coordinate.latitude, longitude: place.location!.coordinate.longitude)
                     let region = MKCoordinateRegionMakeWithDistance(coord, self.regionRadius, self.regionRadius)
                     self.mapView!.setRegion(region, animated: true)
-                    self.mapView!.showsUserLocation = true
+                    
+                    let annotation: MapAnnotation = MapAnnotation(coordinate: coord, title: place.name!, subTitle: "")
+                    self.mapView!.addAnnotation(annotation)
+                    self.mapView!.delegate = self
                 }
         })
         
@@ -159,6 +160,13 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
 //            self.mapView!.setRegion(region, animated: true)
 //            self.mapView!.showsUserLocation = true
 //        }
+    }
+    
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
+    {
+        let view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "mapCenter")
+        return view
     }
     
     func requestLocationPermision()

@@ -14,15 +14,9 @@ protocol NewMapDelegate: class
     func addMap(buttonPressed: Bool)
 }
 
-protocol CellDelegate: class
-{
-    func loadMapFromSelectedCell(with lat: Double, and long: Double)
-}
-
 class MapTableViewController: UITableViewController
 {
     weak var delegate: NewMapDelegate?
-    weak var cellDelegate: CellDelegate?
     var tableData: [NSManagedObject] = []
     
     func insertCellData(with mapObject: NSManagedObject)
@@ -48,7 +42,7 @@ class MapTableViewController: UITableViewController
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! TableCell
-        cell.nameLabel.text = tableData[indexPath.row].value(forKey: "name") as! String
+        cell.nameLabel.text = tableData[indexPath.row].value(forKey: "name") as? String
        
         return cell
     }
@@ -56,16 +50,18 @@ class MapTableViewController: UITableViewController
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         let mapObject: NSManagedObject = tableData[indexPath.row]
-        let lat: Double = mapObject.value(forKey: "latitude") as! Double
-        let long: Double = mapObject.value(forKey: "longitude") as! Double
+        let lat: Double = (mapObject.value(forKey: "latitude") as? Double)!
+        let long: Double = (mapObject.value(forKey: "longitude") as? Double)!
         
-        navigationController?.pushViewController(<#T##viewController: UIViewController##UIViewController#>, animated: true)
-        //        cellDelegate?.loadMapFromSelectedCell(with: lat, and: long)
+        let mapViewController: MapViewController = MapViewController()
+        mapViewController.mapLatitude = lat
+        mapViewController.mapLongitude = long
+        
+        navigationController?.pushViewController(mapViewController, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
-//        let tView: UITableViewHeaderFooterView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "headerId")!
         let headerView: UIView = UIView()
         let nameLabel: UILabel =
         {
@@ -143,6 +139,6 @@ class TableCell: UITableViewCell
     
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[label]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["label": nameLabel]))
 //        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[img(>=50)]", options: [], metrics: nil, views: ["img":cellImage!]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[label]|", options: [], metrics: nil, views: ["label":nameLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[label]-16-|", options: [], metrics: nil, views: ["label":nameLabel]))
     }
 }

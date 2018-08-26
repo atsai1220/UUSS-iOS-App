@@ -57,10 +57,10 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
         
         let fetchRequest: NSFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Map")
         
-        do {
+        do
+        {
             try
                 mapTableViewController?.tableData = managedContext.fetch(fetchRequest)
-            var x = 5
         }
         catch let error as NSError
         {
@@ -75,7 +75,7 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
         navigationController?.pushViewController(newMapFormVC, animated: true)
     }
     
-    var mapView: MapView?
+//    var mapView: MapView?
     var mapTableViewController: MapTableViewController?
     
     lazy var sideMenuLauncher: SideMenuLauncher =
