@@ -275,13 +275,11 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 imagePickerController.sourceType = .camera
-                imagePickerController.allowsEditing = true
                 self.present(imagePickerController, animated: true, completion: nil)
             }
         }))
         actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
             imagePickerController.sourceType = .photoLibrary
-            imagePickerController.allowsEditing = true
             self.present(imagePickerController, animated: true, completion: nil)
         }))
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
