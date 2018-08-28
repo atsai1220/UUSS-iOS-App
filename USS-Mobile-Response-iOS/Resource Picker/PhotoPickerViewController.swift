@@ -89,23 +89,25 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     }()
     
     var imageURL: URL?
+    var scrollView = UIScrollView()
+    var containerView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
         
-        let scrollView = UIScrollView()
-        let containerView = UIView()
-//        view.addSubview(scrollView)
-//        scrollView.addSubview(containerView)
+        
+        scrollView.addSubview(containerView)
+        view.addSubview(scrollView)
+    
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
         titleTextField.delegate = self
 
-        /*
-        scrollView.backgroundColor = UIColor.gray
-        containerView.backgroundColor = UIColor.white
+    
+        view.backgroundColor = UIColor.white
+        
         containerView.addSubview(imageLabel)
         containerView.addSubview(imageView)
         containerView.addSubview(titleLabel)
@@ -114,62 +116,45 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         containerView.addSubview(descriptionTextView)
         containerView.addSubview(notesLabel)
         containerView.addSubview(notesTextView)
- */
-//        scrollView.backgroundColor = UIColor.gray
-        view.backgroundColor = UIColor.white
-        view.addSubview(imageLabel)
-        view.addSubview(imageView)
-        view.addSubview(titleLabel)
-        view.addSubview(titleTextField)
-        view.addSubview(descriptionLabel)
-        view.addSubview(descriptionTextView)
-        view.addSubview(notesLabel)
-        view.addSubview(notesTextView)
-        
-        /*
-         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 8),
-         scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-         scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-         containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-         containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-         containerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
-         containerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 8),
- */
         
         NSLayoutConstraint.activate([
-            imageLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            imageLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            imageLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            containerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
+            containerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
+            containerView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1),
+            imageLabel.topAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.topAnchor),
+            imageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            imageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             imageView.topAnchor.constraintEqualToSystemSpacingBelow(imageLabel.bottomAnchor, multiplier: 1),
-            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             imageView.widthAnchor.constraint(equalToConstant: 200),
             imageView.heightAnchor.constraint(equalToConstant: 200),
             titleLabel.topAnchor.constraintEqualToSystemSpacingBelow(imageView.bottomAnchor, multiplier: 1.5),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             titleTextField.topAnchor.constraintEqualToSystemSpacingBelow(titleLabel.bottomAnchor, multiplier: 1),
-            titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            titleTextField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            titleTextField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
             titleTextField.heightAnchor.constraint(equalToConstant: 40),
             descriptionLabel.topAnchor.constraintEqualToSystemSpacingBelow(titleTextField.bottomAnchor, multiplier: 1.5),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            descriptionLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             descriptionTextView.topAnchor.constraintEqualToSystemSpacingBelow(descriptionLabel.bottomAnchor, multiplier: 1),
-            descriptionTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            descriptionTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            descriptionTextView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            descriptionTextView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
             descriptionTextView.heightAnchor.constraint(equalToConstant: 100),
             notesLabel.topAnchor.constraintEqualToSystemSpacingBelow(descriptionTextView.bottomAnchor, multiplier: 1.5),
-            notesLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            notesLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            notesLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            notesLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             notesTextView.topAnchor.constraintEqualToSystemSpacingBelow(notesLabel.bottomAnchor, multiplier: 1),
-            notesTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            notesTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            notesTextView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            notesTextView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
             notesTextView.heightAnchor.constraint(equalToConstant: 100),
-            
-            
+            notesTextView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
             ])
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -179,6 +164,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+//        scrollView.contentSize = containerView.frame.size
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
