@@ -8,50 +8,183 @@
 
 import UIKit
 
-class PhotoObj: NSObject {
-    let name: String
-    var imageName: UIImage?
-    
-    init(name: String) {
-        self.name = name
-    }
-}
-
-class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     var collectionReference: String = ""
-    let cellId = "photoCell"
-    var selectedIndexPath: IndexPath?
-    var mainImageChosen: Bool = true
+    let textFieldLimit = 60
+    
+    var imageLabel: UILabel = {
+        var label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Image: "
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        return label
+    }()
+    
+    var titleLabel: UILabel = {
+        var label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Title: "
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        return label
+    }()
+    
+    var descriptionLabel: UILabel = {
+        var label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Description: "
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        return label
+    }()
+    
+    var notesLabel: UILabel = {
+        var label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Notes: "
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        return label
+    }()
+    
+    var imageView: UIImageView = {
+        var imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "item_add")
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.gray.cgColor
+        imageView.layer.cornerRadius = 5
+        imageView.layer.masksToBounds = true
+        return imageView
+    }()
+    
+    var titleTextField: UITextField = {
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.layer.borderColor = UIColor.gray.cgColor
+        textField.layer.borderWidth = 1
+        textField.layer.cornerRadius = 5
+        textField.layer.masksToBounds = true
+        
+        return textField
+    }()
+    
+    var descriptionTextView: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.layer.borderColor = UIColor.gray.cgColor
+        textView.layer.borderWidth = 1
+        textView.layer.cornerRadius = 5
+        textView.layer.masksToBounds = true
+        return textView
+    }()
+    
+    var notesTextView: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.layer.borderColor = UIColor.gray.cgColor
+        textView.layer.borderWidth = 1
+        textView.layer.cornerRadius = 5
+        textView.layer.masksToBounds = true
+        return textView
+    }()
+    
     var imageURL: URL?
-    
-    lazy var collectionViewLayout: UICollectionViewLayout = {
-        let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
-        layout.itemSize = CGSize(width: 300, height: 300)
-        return layout
-    }()
-    
-    lazy var photoCollectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: self.collectionViewLayout)
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: cellId)
-        collectionView.backgroundColor = UIColor.white
-        return collectionView
-    }()
-    
-    var mainPhoto: PhotoObj = {
-        let item = PhotoObj(name: "main")
-        return item
-    }()
-    
-    var altPhotos: [PhotoObj] = {
-        return [PhotoObj(name: "new")]
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
+        
+        let scrollView = UIScrollView()
+        let containerView = UIView()
+//        view.addSubview(scrollView)
+//        scrollView.addSubview(containerView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        titleTextField.delegate = self
+
+        /*
+        scrollView.backgroundColor = UIColor.gray
+        containerView.backgroundColor = UIColor.white
+        containerView.addSubview(imageLabel)
+        containerView.addSubview(imageView)
+        containerView.addSubview(titleLabel)
+        containerView.addSubview(titleTextField)
+        containerView.addSubview(descriptionLabel)
+        containerView.addSubview(descriptionTextView)
+        containerView.addSubview(notesLabel)
+        containerView.addSubview(notesTextView)
+ */
+//        scrollView.backgroundColor = UIColor.gray
+        view.backgroundColor = UIColor.white
+        view.addSubview(imageLabel)
+        view.addSubview(imageView)
+        view.addSubview(titleLabel)
+        view.addSubview(titleTextField)
+        view.addSubview(descriptionLabel)
+        view.addSubview(descriptionTextView)
+        view.addSubview(notesLabel)
+        view.addSubview(notesTextView)
+        
+        /*
+         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 8),
+         scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+         scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+         containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+         containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+         containerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
+         containerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 8),
+ */
+        
+        NSLayoutConstraint.activate([
+            imageLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            imageLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            imageLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageView.topAnchor.constraintEqualToSystemSpacingBelow(imageLabel.bottomAnchor, multiplier: 1),
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 200),
+            imageView.heightAnchor.constraint(equalToConstant: 200),
+            titleLabel.topAnchor.constraintEqualToSystemSpacingBelow(imageView.bottomAnchor, multiplier: 1.5),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            titleTextField.topAnchor.constraintEqualToSystemSpacingBelow(titleLabel.bottomAnchor, multiplier: 1),
+            titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            titleTextField.heightAnchor.constraint(equalToConstant: 40),
+            descriptionLabel.topAnchor.constraintEqualToSystemSpacingBelow(titleTextField.bottomAnchor, multiplier: 1.5),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            descriptionTextView.topAnchor.constraintEqualToSystemSpacingBelow(descriptionLabel.bottomAnchor, multiplier: 1),
+            descriptionTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            descriptionTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            descriptionTextView.heightAnchor.constraint(equalToConstant: 100),
+            notesLabel.topAnchor.constraintEqualToSystemSpacingBelow(descriptionTextView.bottomAnchor, multiplier: 1.5),
+            notesLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            notesLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            notesTextView.topAnchor.constraintEqualToSystemSpacingBelow(notesLabel.bottomAnchor, multiplier: 1),
+            notesTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            notesTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            notesTextView.heightAnchor.constraint(equalToConstant: 100),
+            
+            
+            ])
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else { return true }
+        let newLength = text.count + string.count - range.length
+        return newLength <= textFieldLimit
     }
     
     @objc
@@ -122,79 +255,16 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.view.addSubview(self.photoCollectionView)
-    }
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1
-        }
-        else {
-//            return altPhotos.count
-            return 0
-        }
-        
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath as IndexPath) as! PhotoCell
-        if indexPath.section == 0 {
-            let setting = mainPhoto
-            myCell.setting = setting
-            myCell.backgroundColor = UIColor.white
-            myCell.layer.borderWidth = 1
-            myCell.layer.borderColor = UIColor.black.cgColor
-            return myCell
-        }
-        else {
-            let setting = altPhotos[indexPath.row]
-            myCell.setting = setting
-            myCell.backgroundColor = UIColor.white
-            myCell.layer.borderWidth = 1
-            myCell.layer.borderColor = UIColor.black.cgColor
-            return myCell
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
-    {
-        // select new photo to main
-        if indexPath.section == 0 {
-            mainImageChosen = true
-
-            showActionSheet(indexPath: indexPath)
-        }
-        else {
-            // last item
-            mainImageChosen = false
-            if indexPath.item == altPhotos.count-1{
-                altPhotos.append(PhotoObj(name: "new"))
-                photoCollectionView.insertItems(at: [indexPath])
-            }
-            // any other collectionview cell is alt
-            else {
-                
-            }
-        }
-    }
     
     func showActionSheet(indexPath: IndexPath) {
-        
-        self.selectedIndexPath = indexPath
-        
+
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         
         // Create and modify an UIAlertController.actionSheet to allow option between Camera or Photo Library.
         let actionSheet = UIAlertController(title: "Photo Source", message: "Please choose a source for image upload.", preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
-            
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 imagePickerController.sourceType = .camera
                 self.present(imagePickerController, animated: true, completion: nil)
@@ -211,15 +281,8 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        if mainImageChosen {
-            mainPhoto.imageName = image
-            photoCollectionView.reloadData()
-            self.imageURL = info[UIImagePickerControllerImageURL] as? URL
-            picker.dismiss(animated: true, completion: nil)
-        }
-        else {
-            
-        }
+        self.imageURL = info[UIImagePickerControllerImageURL] as? URL
+        picker.dismiss(animated: true, completion: nil)
     }
     
     
@@ -227,11 +290,4 @@ class PhotoPickerViewController: UIViewController, UICollectionViewDataSource, U
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        photoCollectionView.frame = self.view.frame
-        
-    }
-    
 }

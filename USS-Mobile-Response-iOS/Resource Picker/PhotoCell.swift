@@ -18,13 +18,13 @@ class PhotoCell: UICollectionViewCell {
         return imageView
     }()
     
-    var setting: PhotoObj? {
-        didSet {
-            if let image = setting?.imageName {
-                iconImageView.image = image
-            }
-        }
-    }
+//    var setting: PhotoObj? {
+//        didSet {
+//            if let image = setting?.imageName {
+//                iconImageView.image = image
+//            }
+//        }
+//    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
