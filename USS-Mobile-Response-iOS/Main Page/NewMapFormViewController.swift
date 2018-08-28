@@ -73,7 +73,7 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
         captureMap!.layer.cornerRadius = 15
         captureMap!.layer.borderWidth = 2
         captureMap!.backgroundColor = UIColor.white
-        captureMap!.layer.shadowOpacity = 1.0
+        captureMap!.layer.shadowOpacity = 0.5
         captureMap!.layer.shadowColor = UIColor.black.cgColor
         captureMap!.layer.shadowOffset = CGSize(width: 0.0, height:5.0)
         captureMap!.layer.shadowRadius = 3.0

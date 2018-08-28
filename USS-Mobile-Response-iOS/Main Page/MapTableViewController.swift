@@ -78,7 +78,7 @@ class MapTableViewController: UITableViewController
             button.layer.cornerRadius = 15
             button.layer.borderWidth = 2
             button.backgroundColor = UIColor.white
-            button.layer.shadowOpacity = 1.0
+            button.layer.shadowOpacity = 0.5
             button.layer.shadowColor = UIColor.black.cgColor
             button.layer.shadowOffset = CGSize(width: 0.0, height:3.0)
             button.layer.shadowRadius = 3.0

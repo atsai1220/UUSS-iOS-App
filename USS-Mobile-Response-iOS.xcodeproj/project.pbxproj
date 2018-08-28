@@ -35,11 +35,12 @@
 		1C76A8AC2113C5A700EE51A8 /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */; };
 		1C76A8AE2113CC8300EE51A8 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */; };
 		1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AF2114052000EE51A8 /* HazardsDetailTableViewController.swift */; };
-		1C76A8B42124DEA100EE51A8 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B32124DEA100EE51A8 /* MapView.swift */; };
 		1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */; };
 		1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B72124EA5300EE51A8 /* LocalEntry.swift */; };
 		1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */; };
 		1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */; };
+		F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */; };
+		F6CDB5B72134BCCD0016C036 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B62134BCCC0016C036 /* MapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,11 +75,12 @@
 		1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerViewController.swift; sourceTree = "<group>"; };
 		1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		1C76A8AF2114052000EE51A8 /* HazardsDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardsDetailTableViewController.swift; sourceTree = "<group>"; };
-		1C76A8B32124DEA100EE51A8 /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTableViewController.swift; sourceTree = "<group>"; };
 		1C76A8B72124EA5300EE51A8 /* LocalEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEntry.swift; sourceTree = "<group>"; };
 		1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAnnotation.swift; sourceTree = "<group>"; };
+		F6CDB5B62134BCCC0016C036 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,8 +176,9 @@
 		9C5E159720EF69BD00BFD0F3 /* Main Page */ = {
 			isa = PBXGroup;
 			children = (
+				F6CDB5B62134BCCC0016C036 /* MapViewController.swift */,
+				F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */,
 				1C0DD397212768F900D656F7 /* NewMapFormViewController.swift */,
-				1C76A8B32124DEA100EE51A8 /* MapView.swift */,
 				1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */,
 				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
 				1C4D76B420C16ACC00458079 /* MainTabBarController.swift */,
@@ -316,6 +319,7 @@
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
+				F6CDB5B72134BCCD0016C036 /* MapViewController.swift in Sources */,
 				1C76A8AC2113C5A700EE51A8 /* PhotoPickerViewController.swift in Sources */,
 				1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
@@ -326,9 +330,9 @@
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
 				1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */,
-				1C76A8B42124DEA100EE51A8 /* MapView.swift in Sources */,
 				1C76A8A52113B08000EE51A8 /* MainLocalTableViewController.swift in Sources */,
 				1C4D76BD20C1826F00458079 /* SettingsViewController.swift in Sources */,
+				F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */,
 				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,
 				1C0DD398212768F900D656F7 /* NewMapFormViewController.swift in Sources */,
 				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
