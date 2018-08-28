@@ -212,6 +212,15 @@ func saveImageAtDocumentDirectory(url: URL) -> String {
     return imageName
 }
 
+func saveExistingImageAtDocumentDirectory(image: UIImage) -> String {
+    let userName = UserDefaults.standard.string(forKey: "userName")
+    let imageName = userName! + getTimeStampString() + ".jpeg"
+    let path = getDocumentsURL().appendingPathComponent(imageName)
+    let imageData = UIImageJPEGRepresentation(image, 0.5)
+    FileManager.default.createFile(atPath: path.path, contents: imageData, attributes: [:])
+    return imageName
+}
+
 func getTimeStampString() -> String {
     let date = Date()
     let calendar = Calendar.current

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     var collectionReference: String = ""
@@ -189,35 +190,43 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     @objc
     func saveAndUpload() {
         print("4-1: Create local device entry")
-        createLocalEntry()
+        let savedName = createLocalEntry()
         print("4-2: HTTP uploading with custom plugin")
         httpUpload()
         print("4-3: Create resource on resource space")
-        createResourceSpaceEntry()
+        createResourceSpaceEntry(imageName: savedName)
         print("4-4: Add resource to selected collection")
         addResourceToCollection()
         print("4-4: Confirmation and update local history")
         self.navigationController?.popToRootViewController(animated: true)
     }
     
-    func createLocalEntry() {
+    func createLocalEntry() -> String {
         var newEntry = LocalEntry()
-        let savedImageName = saveImageAtDocumentDirectory(url: self.imageURL!)
+        var savedImageName = ""
+        if let possibleImageURL = self.imageURL {
+            savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
+        }
+        else {
+            savedImageName = saveExistingImageAtDocumentDirectory(image: self.imageView.image!)
+        }
+        
         newEntry.collectionRef = self.collectionReference
         newEntry.localFileName = savedImageName
         var oldEntries = getLocalEntriesFromDisk()
         oldEntries.append(newEntry)
         saveLocalEntriesToDisk(entries: oldEntries)
+        return savedImageName
     }
     
     func httpUpload() {
         
     }
     
-    func createResourceSpaceEntry() {
+    func createResourceSpaceEntry(imageName: String) {
         let urlString = "https://geodata.geology.utah.gov/api/?"
         let privateKey = "7d510414a826c1af09d864e70c3656964839664786b8e774bafb7c10adc5fea1"
-        let imageURL = self.imageURL?.absoluteString
+        let imageURL = getImageFromDocumentDirectory(imageName: imageName)
         print("URL GOES HERE??")
         print(imageURL!)
         let queryString = "user=atsai-uuss&function=create_resource&param1=1&param2=0&param3=\(imageURL!)&param4=&param5=&param6=&param7="
@@ -266,11 +275,13 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 imagePickerController.sourceType = .camera
+                imagePickerController.allowsEditing = true
                 self.present(imagePickerController, animated: true, completion: nil)
             }
         }))
         actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
             imagePickerController.sourceType = .photoLibrary
+            imagePickerController.allowsEditing = true
             self.present(imagePickerController, animated: true, completion: nil)
         }))
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -281,10 +292,25 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         self.imageView.image = image
-        self.imageURL = info[UIImagePickerControllerImageURL] as? URL
+        if let newURL = info[UIImagePickerControllerImageURL] as? URL {
+            self.imageURL = newURL
+        }
+        else {
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+        
         picker.dismiss(animated: true, completion: nil)
     }
     
+    @objc
+    func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
