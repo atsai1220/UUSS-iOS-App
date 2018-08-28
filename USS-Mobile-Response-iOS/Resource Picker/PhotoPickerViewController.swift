@@ -54,6 +54,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         imageView.layer.borderColor = UIColor.gray.cgColor
         imageView.layer.cornerRadius = 5
         imageView.layer.masksToBounds = true
+        
         return imageView
     }()
     
@@ -89,24 +90,30 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     }()
     
     var imageURL: URL?
-    var scrollView = UIScrollView()
-    var containerView = UIView()
+    var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    var containerView: UIView = {
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        return containerView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
         
-        
         scrollView.addSubview(containerView)
         view.addSubview(scrollView)
     
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        
         titleTextField.delegate = self
 
-    
         view.backgroundColor = UIColor.white
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(tapGestureRecognizer)
         
         containerView.addSubview(imageLabel)
         containerView.addSubview(imageView)
@@ -130,7 +137,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
             imageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             imageView.topAnchor.constraintEqualToSystemSpacingBelow(imageLabel.bottomAnchor, multiplier: 1),
             imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: 200),
+            imageView.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 1, constant: -16),
             imageView.heightAnchor.constraint(equalToConstant: 200),
             titleLabel.topAnchor.constraintEqualToSystemSpacingBelow(imageView.bottomAnchor, multiplier: 1.5),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
@@ -171,6 +178,12 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         guard let text = textField.text else { return true }
         let newLength = text.count + string.count - range.length
         return newLength <= textFieldLimit
+    }
+    
+    @objc
+    func imageTapped() {
+        print("tapped")
+        showActionSheet(imageView: self.imageView)
     }
     
     @objc
@@ -243,7 +256,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     
     
     
-    func showActionSheet(indexPath: IndexPath) {
+    func showActionSheet(imageView: UIImageView) {
 
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
@@ -267,6 +280,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        self.imageView.image = image
         self.imageURL = info[UIImagePickerControllerImageURL] as? URL
         picker.dismiss(animated: true, completion: nil)
     }
