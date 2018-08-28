@@ -26,6 +26,8 @@
 	<string>Need to access location to use maps</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Need to access Photo library to upload images.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need to access Photo library to save images.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

@@ -8,8 +8,9 @@
 
 import UIKit
 import Photos
+import CoreLocation
 
-class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     var collectionReference: String = ""
     let textFieldLimit = 60
     
@@ -102,8 +103,15 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         return containerView
     }()
     
+    let locationManager = CLLocationManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        
+        
         navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
         
         scrollView.addSubview(containerView)
@@ -294,7 +302,27 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
             self.imageURL = newURL
         }
         else {
-            UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+            
+            PHPhotoLibrary.shared().performChanges({
+                let assetChangeRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+                var currentLocation: CLLocation!
+                if( CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
+                    CLLocationManager.authorizationStatus() ==  .authorizedAlways){
+                    
+                    currentLocation = self.locationManager.location
+                    
+                }
+                assetChangeRequest.location = currentLocation
+            }) { (success, error) in
+                if success {
+                    
+                } else {
+                    let ac = UIAlertController(title: "Save error", message: error?.localizedDescription, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(ac, animated: true)
+                }
+            }
+//            UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
         }
         
         picker.dismiss(animated: true, completion: nil)
