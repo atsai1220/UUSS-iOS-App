@@ -41,11 +41,13 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     }
     
     @IBAction func loginTapped(_ sender: Any) {
+        view.endEditing(true)
         loginToAPI()
     }
     
     @IBAction func publicTapped(_ sender: Any) {
         // Create activity indicator
+        view.endEditing(true)
         let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
         activityIndicator.center = view.center
         let activityBackground = UIView(frame: view.frame)
@@ -83,6 +85,33 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         selectedServerName = plistController.resources.first?.name
         selectedServerURL = plistController.resources.first?.url
         serverButton.setTitle(selectedServerName!.truncated(length: 19), for: .normal)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc
+    func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+    
+    @objc
+    func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y += keyboardSize.height
+            }
+            self.view.frame.origin.y = 0
+        }
     }
     
     fileprivate func isLoggedIn() -> Bool {
