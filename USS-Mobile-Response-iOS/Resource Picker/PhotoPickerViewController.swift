@@ -10,7 +10,7 @@ import UIKit
 import Photos
 import CoreLocation
 
-class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
     var collectionReference: String = ""
     let textFieldLimit = 60
     
@@ -118,6 +118,8 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         view.addSubview(scrollView)
     
         titleTextField.delegate = self
+        descriptionTextView.delegate = self
+        notesTextView.delegate = self
 
         view.backgroundColor = UIColor.white
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
@@ -171,6 +173,9 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
             notesTextView.heightAnchor.constraint(equalToConstant: 100),
             notesTextView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
             ])
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -181,6 +186,59 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 //        scrollView.contentSize = containerView.frame.size
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if (text == "\n") {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        let point = CGPoint(x: 0, y: textField.frame.midY - 100)
+        self.scrollView.setContentOffset(point, animated: true)
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView == notesTextView {
+            let point = CGPoint(x: 0, y: textView.frame.minY - 175)
+            self.scrollView.setContentOffset(point, animated: true)
+            return
+        }
+        else {
+            let point = CGPoint(x: 0, y: textView.frame.midY - 125)
+            self.scrollView.setContentOffset(point, animated: true)
+        }
+    }
+    
+    
+    
+    @objc func keyboardWillShow(notification:NSNotification){
+        
+        var userInfo = notification.userInfo!
+        var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+        
+        var contentInset:UIEdgeInsets = self.scrollView.contentInset
+        contentInset.bottom = keyboardFrame.size.height + 50
+        self.scrollView.contentInset = contentInset
+    }
+    
+    @objc func keyboardWillHide(notification:NSNotification){
+        
+        let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+        self.scrollView.contentInset = contentInset
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -270,8 +328,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     func addResourceToCollection() {
         
     }
-    
-    
+
     
     func showActionSheet(imageView: UIImageView) {
 

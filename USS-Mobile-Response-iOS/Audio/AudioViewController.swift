@@ -33,7 +33,8 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
         
         audioPlaybackViewController = AudioPlaybackViewController()
         audioPlaybackViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        audioPlaybackViewController!.playButton?.addTarget(self, action: #selector(playAudio), for: .touchUpInside)
+        audioPlaybackViewController!.playButton!.addTarget(self, action: #selector(playAudio), for: .touchUpInside)
+        audioPlaybackViewController!.garbageButton!.addTarget(self, action: #selector(deleteAudio), for: .touchUpInside)
         self.view.addSubview(audioPlaybackViewController!.view)
 
         recordButton = UIButton()
@@ -116,7 +117,21 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
     
     @objc func deleteAudio()
     {
-        
+        do
+        {
+            try self.fileManager!.removeItem(at: self.soundFileURL!)
+            self.recordButton!.isEnabled = true
+            self.recordButton!.backgroundColor = UIColor.red
+            let alert: UIAlertController = UIAlertController(title: "File Deleted", message: "You have successfully deleted your audio file", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        catch
+        {
+            let alert: UIAlertController = UIAlertController(title: "Error", message: "There was a problem deleting the audio file. Did you record audio", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     @objc func playAudio()
@@ -127,9 +142,9 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
             audioPlayer!.volume = 1.0
             audioPlayer!.play()
         }
-        catch let error as NSError
+        catch
         {
-            let alert: UIAlertController = UIAlertController(title: "Playback Error", message: "There was a problem with playback. \(error.localizedDescription)", preferredStyle: .alert)
+            let alert: UIAlertController = UIAlertController(title: "Playback Error", message: "There was a problem with playback. Did you record audio?", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
@@ -183,6 +198,23 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
     {
         super.viewDidAppear(animated)
         AppDelegate.AppUtility.lockOrientation(.portrait)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool)
+    {
+        super.viewDidDisappear(animated)
+        
+        do
+        {
+            try self.fileManager!.removeItem(at: self.soundFileURL!)
+        }
+        catch
+        {
+            let alert: UIAlertController = UIAlertController(title: "Error", message: "There was a problem deleting the audio file", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
     }
 }
 
