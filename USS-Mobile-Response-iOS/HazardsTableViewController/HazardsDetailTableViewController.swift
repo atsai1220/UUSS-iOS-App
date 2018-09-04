@@ -141,6 +141,9 @@ class HazardsDetailTableViewController: UITableViewController, UIImagePickerCont
         }))
         actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
             
+            let audioViewController: AudioViewController = AudioViewController()
+            self.navigationController?.pushViewController(audioViewController, animated: true)
+            
         }))
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(actionSheet, animated: true, completion: nil)
