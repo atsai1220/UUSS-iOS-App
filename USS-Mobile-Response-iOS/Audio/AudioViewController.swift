@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import AVFoundation
 
-class AudioViewController: UIViewController, AVAudioRecorderDelegate
+class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPlayerDelegate
 {
     private var recordButton: UIButton?
     private var pauseButton: UIButton?
@@ -25,16 +25,21 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
     private var soundFileURL: URL?
     private var audioPlaybackViewController: AudioPlaybackViewController?
     private var audioPlayer: AVAudioPlayer?
+    private var appDelegate: AppDelegate?
+    private let notificationCenter: NotificationCenter = NotificationCenter.default
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        setupNotifications()
         self.view.backgroundColor = UIColor.black
         
         audioPlaybackViewController = AudioPlaybackViewController()
         audioPlaybackViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         audioPlaybackViewController!.playButton!.addTarget(self, action: #selector(playAudio), for: .touchUpInside)
         audioPlaybackViewController!.garbageButton!.addTarget(self, action: #selector(deleteAudio), for: .touchUpInside)
+        audioPlaybackViewController!.playButton!.isEnabled = false
+        audioPlaybackViewController!.garbageButton!.isEnabled = false
         self.view.addSubview(audioPlaybackViewController!.view)
 
         recordButton = UIButton()
@@ -80,8 +85,8 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
             ])
         
         
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.audioSession!.requestRecordPermission({(granted: Bool) -> Void in
+        appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        appDelegate!.audioSession!.requestRecordPermission({(granted: Bool) -> Void in
             if(granted)
             {
                 self.fileManager = FileManager.default
@@ -119,6 +124,10 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
     {
         do
         {
+            audioPlaybackViewController!.playButton?.isEnabled = false
+            audioPlaybackViewController!.garbageButton?.isEnabled = false
+            audioPlayer?.stop()
+            audioPlaybackViewController!.recordLength!.text = "00:00:00"
             try self.fileManager!.removeItem(at: self.soundFileURL!)
             self.recordButton!.isEnabled = true
             self.recordButton!.backgroundColor = UIColor.red
@@ -139,7 +148,8 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
         do
         {
             try audioPlayer = AVAudioPlayer(contentsOf: self.soundFileURL!)
-            audioPlayer!.volume = 1.0
+            audioPlayer!.setVolume(1.0, fadeDuration: 0.0)
+            timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateProgressBar), userInfo: nil, repeats: true)
             audioPlayer!.play()
         }
         catch
@@ -156,12 +166,16 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
         
         if(recordButton!.titleLabel!.text == "Record" && self.recordButton!.isEnabled)
         {
+            audioPlaybackViewController!.playButton?.isEnabled = false
+            audioPlaybackViewController!.garbageButton?.isEnabled = false
             recordButton!.setTitle("Stop", for: .normal)
             timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
             audioRecorder!.record()
         }
         else
         {
+            audioPlaybackViewController!.playButton?.isEnabled = true
+            audioPlaybackViewController!.garbageButton?.isEnabled = true
             recordingTime = timeLabel!.text
             audioPlaybackViewController!.recordLength!.text = recordingTime
             audioRecorder!.stop()
@@ -171,6 +185,14 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
             recordButton!.setTitle("Record", for: .normal)
             recordButton!.backgroundColor = UIColor.gray
             self.recordButton!.isEnabled = false
+        }
+    }
+    
+    @objc func updateProgressBar()
+    {
+        if(audioPlayer!.isPlaying)
+        {
+            audioPlaybackViewController!.progressBar!.setProgress(Float(audioPlayer!.currentTime / audioPlayer!.duration), animated: true)
         }
     }
     
@@ -213,6 +235,26 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate
             let alert: UIAlertController = UIAlertController(title: "Error", message: "There was a problem deleting the audio file", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+        }
+        
+    }
+    
+    func setupNotifications()
+    {
+        notificationCenter.addObserver(self, selector: #selector(handleInteruption), name: .AVAudioSessionInterruption, object: nil)
+    }
+    
+    @objc func handleInteruption(notification: Notification)
+    {
+        guard let userInfo = notification.userInfo,
+            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+            let type = AVAudioSessionInterruptionType(rawValue: typeValue) else {
+                return
+        }
+        
+        if type == .began
+        {
+            print("playback interrupted")
         }
         
     }
