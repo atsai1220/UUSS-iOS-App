@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import MapKit
+import CoreData
 
 protocol AddMapDelegate: class
 {
@@ -31,6 +32,7 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
     var mapCamera: MKMapCamera?
     var locLatandLong: CLLocationCoordinate2D?
     weak var addMapDelegate: AddMapDelegate?
+    var searchId: String = "search"
     
     override func viewDidLoad()
     {
@@ -96,8 +98,35 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
         checkForLocationServices()
     }
     
+    func saveAnnotations()
+    {
+        let annotationArray: [MKAnnotation] = self.mapView!.annotations
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext: NSManagedObjectContext = appDelegate.persistentContainer.viewContext
+        let entity: NSEntityDescription = NSEntityDescription.entity(forEntityName: "Annotation", in: managedContext)!
+        let mapObject: NSManagedObject = NSManagedObject(entity: entity, insertInto: managedContext)
+
+        for annotation in annotationArray
+        {
+            mapObject.setValue(annotation.coordinate.latitude, forKey: "annotationLatitude")
+            mapObject.setValue(annotation.coordinate.longitude, forKey: "annotationLongitude")
+            mapObject.setValue(annotation.title!, forKey: "annotationTitle")
+            mapObject.setValue(searchId, forKey: "annotationId")
+        }
+
+        do
+        {
+            try managedContext.save()
+        }
+        catch let error as NSError
+        {
+            print("There was an error saving. \(error)")
+        }
+    }
+    
     @objc func saveMap()
     {
+        saveAnnotations()
         let mapNameAlert: UIAlertController = UIAlertController(title: "Map Name", message: "", preferredStyle: .alert)
         mapNameAlert.addTextField(configurationHandler: {( textfeild: UITextField )-> Void in
             textfeild.placeholder = "Please enter a name for the map"
@@ -145,6 +174,7 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
                     self.mapView!.setRegion(region, animated: true)
                     
                     let annotation: MapAnnotation = MapAnnotation(coordinate: coord, title: place.name!, subTitle: "")
+                    self.mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
                     self.mapView!.addAnnotation(annotation)
                     self.mapView!.delegate = self
                 }
@@ -165,8 +195,8 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
     {
-        let view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "mapCenter")
-        return view
+        let annotationView: MKAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: searchId)
+        return annotationView
     }
     
     func requestLocationPermision()

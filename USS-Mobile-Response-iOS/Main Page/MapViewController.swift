@@ -7,13 +7,15 @@
 //
 
 import MapKit
+import CoreData
 
-class MapViewController: UIViewController
+class MapViewController: UIViewController, MKMapViewDelegate
 {
     var currentLocation: MKCoordinateRegion?
     var mapView: MKMapView?
     private var latitude: Double?
     private var longitude: Double?
+    private var annotations: [NSObject] = []
     
     override func viewDidLoad()
     {
@@ -50,5 +52,30 @@ class MapViewController: UIViewController
         {
             longitude = newValue
         }
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
+    {
+        return mapView.view(for: annotation)
+    }
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        let managedContext: NSManagedObjectContext = appDelegate.persistentContainer.viewContext
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Map", in: managedContext)
+        
+        do
+        {
+            annotations = try managedContext.fetch(NSFetchRequest.init(entityName: (entity?.name)!)) as! [NSObject]
+            
+        }
+        catch
+        {
+            print("Fetch failed")
+        }
+        
     }
 }

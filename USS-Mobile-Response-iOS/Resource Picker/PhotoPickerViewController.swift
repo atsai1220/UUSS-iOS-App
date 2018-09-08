@@ -105,7 +105,8 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     
     let locationManager = CLLocationManager()
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         
         locationManager.delegate = self
@@ -266,6 +267,11 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         print("4-4: Confirmation and update local history")
         self.navigationController?.popToRootViewController(animated: true)
     }
+    
+//    func createLocalAudioEntry() -> String
+//    {
+//
+//    }
     
     func createLocalEntry() -> String {
         var newEntry = LocalEntry()
