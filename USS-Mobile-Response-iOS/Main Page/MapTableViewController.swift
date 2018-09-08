@@ -172,8 +172,8 @@ class TableCell: UITableViewCell
         addSubview(nameLabel)
 //        addSubview(cellImage!)
     
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[label]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["label": nameLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[label]|", options: [], metrics: nil, views: ["label": nameLabel]))
 //        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[img(>=50)]", options: [], metrics: nil, views: ["img":cellImage!]))
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[label]-16-|", options: [], metrics: nil, views: ["label":nameLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[label]-16-|", options: [], metrics: nil, views: ["label":nameLabel]))
     }
 }
