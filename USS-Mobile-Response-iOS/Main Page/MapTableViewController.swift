@@ -34,6 +34,41 @@ class MapTableViewController: UITableViewController
 //        tableView.register(TableHeader.self, forHeaderFooterViewReuseIdentifier: "headerId")
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
+    {
+        var managedObjectArray: [NSManagedObject] = []
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext: NSManagedObjectContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest: NSFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Map")
+        
+        do
+        {
+            try managedObjectArray = managedContext.fetch(fetchRequest)
+        }
+        catch let error as NSError
+        {
+            print("\(error). Could not complete fetch request")
+        }
+        
+        var managedObject: NSManagedObject?
+        for object in managedObjectArray
+        {
+            if object.value(forKey: "name") as? String == tableData[indexPath.row].value(forKey: "name") as? String
+            {
+                managedObject = object
+            }
+        }
+        
+        if editingStyle == .delete
+        {
+            self.tableData.remove(at: indexPath.row)
+            managedContext.delete(managedObject!)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return tableData.count
@@ -139,6 +174,6 @@ class TableCell: UITableViewCell
     
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[label]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["label": nameLabel]))
 //        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[img(>=50)]", options: [], metrics: nil, views: ["img":cellImage!]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[label]-16-|", options: [], metrics: nil, views: ["label":nameLabel]))
+//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[label]-16-|", options: [], metrics: nil, views: ["label":nameLabel]))
     }
 }
