@@ -142,6 +142,7 @@ class HazardsDetailTableViewController: UITableViewController, UIImagePickerCont
         actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
             
             let audioViewController: AudioViewController = AudioViewController()
+            audioViewController.collectionReference = self.hazardCollections[indexPath.row].ref
             self.navigationController?.pushViewController(audioViewController, animated: true)
             
         }))

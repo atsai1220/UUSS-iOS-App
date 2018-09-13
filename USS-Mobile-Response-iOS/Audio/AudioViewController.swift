@@ -27,6 +27,9 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     private var audioPlayer: AVAudioPlayer?
     private var appDelegate: AppDelegate?
     private let notificationCenter: NotificationCenter = NotificationCenter.default
+    private var audioFileName: String = "tempAudioFile"
+    private var recordSettings: [String: Any]?
+    var collectionReference: String = ""
     
     override func viewDidLoad()
     {
@@ -38,8 +41,10 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         audioPlaybackViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         audioPlaybackViewController!.playButton!.addTarget(self, action: #selector(playAudio), for: .touchUpInside)
         audioPlaybackViewController!.garbageButton!.addTarget(self, action: #selector(deleteAudio), for: .touchUpInside)
+        audioPlaybackViewController!.saveButton!.addTarget(self, action: #selector(saveAudio), for: .touchUpInside)
         audioPlaybackViewController!.playButton!.isEnabled = false
         audioPlaybackViewController!.garbageButton!.isEnabled = false
+        audioPlaybackViewController!.saveButton!.isEnabled = false
         self.view.addSubview(audioPlaybackViewController!.view)
 
         recordButton = UIButton()
@@ -91,15 +96,15 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
             {
                 self.fileManager = FileManager.default
                 self.urlPath = self.fileManager!.urls(for: .documentDirectory, in: .userDomainMask)
-                self.soundFileURL = self.urlPath![0].appendingPathComponent("sound.caf")
-                let recordSettings =  [AVEncoderAudioQualityKey: AVAudioQuality.min.rawValue,
+                self.soundFileURL = self.urlPath![0].appendingPathComponent("\(self.audioFileName).caf")
+                self.recordSettings =  [AVEncoderAudioQualityKey: AVAudioQuality.min.rawValue,
                                        AVEncoderBitRateKey: 16,
                                        AVNumberOfChannelsKey: 2,
                                        AVSampleRateKey: 44100.0] as [String : Any]
                 
                 do
                 {
-                    try self.audioRecorder = AVAudioRecorder(url: self.soundFileURL!, settings: recordSettings)
+                    try self.audioRecorder = AVAudioRecorder(url: self.soundFileURL!, settings: self.recordSettings!)
 
                 }
                 catch let error as NSError
@@ -118,6 +123,49 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
                 self.present(alert, animated: true, completion: nil)
             }
         })
+    }
+    
+    @objc func saveAudio()
+    {
+        var localAudioEntry = LocalEntry()
+        
+        let alert: UIAlertController = UIAlertController(title: "Save", message: "Enter a file name.", preferredStyle: .alert)
+        alert.addTextField(configurationHandler: {(textfield) in
+            
+            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: {(alertAction) in
+                
+                self.audioFileName = textfield.text!
+                localAudioEntry.localFileName = self.audioFileName
+                localAudioEntry.collectionRef = self.collectionReference
+                localAudioEntry.fileType = FileType.AUDIO.rawValue
+                let newURL = self.urlPath![0].appendingPathComponent("\(self.audioFileName).caf")
+                
+                self.saveNewFile(origURL: self.soundFileURL!, newURL: newURL)
+                var oldEntries = getLocalEntriesFromDisk()
+                oldEntries.append(localAudioEntry)
+                saveLocalEntriesToDisk(entries: oldEntries)
+                self.navigationController?.popToRootViewController(animated: true)
+                
+            }))
+            
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {(alertAction) in
+                    alert.dismiss(animated: true, completion: nil)
+                }))
+            })
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func saveNewFile(origURL: URL, newURL: URL)
+    {
+        do
+        {
+            self.soundFileURL = try self.fileManager?.replaceItemAt(newURL, withItemAt: newURL)
+        }
+        catch
+        {
+            print("Problem saving new file")
+        }
     }
     
     @objc func deleteAudio()
@@ -176,6 +224,7 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         {
             audioPlaybackViewController!.playButton?.isEnabled = true
             audioPlaybackViewController!.garbageButton?.isEnabled = true
+            audioPlaybackViewController!.saveButton?.isEnabled = true
             recordingTime = timeLabel!.text
             audioPlaybackViewController!.recordLength!.text = recordingTime
             audioRecorder!.stop()

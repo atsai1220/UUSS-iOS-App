@@ -65,7 +65,7 @@ class MainTrashTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! MainTableViewCell
         
         let item = self.trashEntries[indexPath.row]
-        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localFileName!)
+        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localFileName!, fileType: item.fileType!)
         cell.setting = setting
         cell.separatorInset = .zero
         return cell

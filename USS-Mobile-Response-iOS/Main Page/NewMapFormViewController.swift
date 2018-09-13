@@ -33,11 +33,12 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
     var locLatandLong: CLLocationCoordinate2D?
     weak var addMapDelegate: AddMapDelegate?
     var searchId: String = "search"
+    var searchAnnotation: MapAnnotation?
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-
+        
         searchBar = UISearchBar()
         searchBar!.placeholder = "Search"
         searchBar!.showsCancelButton = true
@@ -57,7 +58,9 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
         
         
         mapView = MKMapView()
+        mapView!.delegate = self
         mapView!.translatesAutoresizingMaskIntoConstraints = false
+        mapView!.showsUserLocation = true
 //        let currentLocation: MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
 //        mapView!.setRegion(currentLocation, animated: true)
 
@@ -126,6 +129,9 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
     
     @objc func saveMap()
     {
+        self.mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
+        self.mapView!.addAnnotation(self.searchAnnotation!)
+        self.mapView!.delegate = self
         saveAnnotations()
         let mapNameAlert: UIAlertController = UIAlertController(title: "Map Name", message: "", preferredStyle: .alert)
         mapNameAlert.addTextField(configurationHandler: {( textfeild: UITextField )-> Void in
@@ -140,13 +146,19 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
         self.present(mapNameAlert, animated: true, completion: nil)
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar)
+    {
+        captureMap?.isEnabled = false
+    }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar)
     {
         searchBar.endEditing(true)
+        captureMap?.isEnabled = true
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
     {
+        captureMap?.isEnabled = true
         searchBar.endEditing(true)
         let searchBarString: String = searchBar.text!
         geoCoder = CLGeocoder()
@@ -173,13 +185,23 @@ class NewMapFormViewController: UIViewController, CLLocationManagerDelegate, UIS
                     let region = MKCoordinateRegionMakeWithDistance(coord, self.regionRadius, self.regionRadius)
                     self.mapView!.setRegion(region, animated: true)
                     
-                    let annotation: MapAnnotation = MapAnnotation(coordinate: coord, title: place.name!, subTitle: "")
-                    self.mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
-                    self.mapView!.addAnnotation(annotation)
-                    self.mapView!.delegate = self
+                    if (self.searchAnnotation == nil)
+                    {
+                        self.mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
+                        self.searchAnnotation = MapAnnotation(coordinate: coord, title: place.name!, subTitle: "")
+                        self.mapView!.addAnnotation(self.searchAnnotation!)
+                    }
+                    else
+                    {
+                        self.mapView!.removeAnnotation(self.searchAnnotation!)
+                        self.mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
+                        self.searchAnnotation = MapAnnotation(coordinate: coord, title: place.name!, subTitle: "")
+                        self.mapView!.addAnnotation(self.searchAnnotation!)
+                    }
                 }
         })
         
+//          let annotation: MapAnnotation = MapAnnotation(coordinate: coord, title: place.name!, subTitle: "")
 //        geoCoder!.geocodeAddressString(searchBarString) { (placeMarks, error) in
 //            let place = placeMarks![0]
 //            print(place.location!.coordinate.latitude)

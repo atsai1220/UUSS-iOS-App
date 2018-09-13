@@ -130,7 +130,6 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
-				F6028FF22143421600429805 /* Core Data */,
 				F60773652135F36A009F6962 /* Audio */,
 				1C76A8AA2113C58400EE51A8 /* Resource Picker */,
 				1C601BB3210D1EAD00629D6F /* HazardsTableViewController */,
@@ -240,13 +239,6 @@
 				1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */,
 			);
 			path = "Side View Controllers";
-			sourceTree = "<group>";
-		};
-		F6028FF22143421600429805 /* Core Data */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Core Data";
 			sourceTree = "<group>";
 		};
 		F60773652135F36A009F6962 /* Audio */ = {

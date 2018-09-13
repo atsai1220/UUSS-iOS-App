@@ -45,6 +45,7 @@ struct LocalEntry: Codable {
     var notes: String?
     var resourceType: String?
     var localFileName: String?
+    var fileType: String?
     var metadata: metadataJSON?
 }
 

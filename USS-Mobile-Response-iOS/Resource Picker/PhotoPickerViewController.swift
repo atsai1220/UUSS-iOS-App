@@ -267,12 +267,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         print("4-4: Confirmation and update local history")
         self.navigationController?.popToRootViewController(animated: true)
     }
-    
-//    func createLocalAudioEntry() -> String
-//    {
-//
-//    }
-    
+        
     func createLocalEntry() -> String {
         var newEntry = LocalEntry()
         var savedImageName = ""
@@ -285,6 +280,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         
         newEntry.collectionRef = self.collectionReference
         newEntry.localFileName = savedImageName
+        newEntry.fileType = FileType.PHOTO.rawValue
         var oldEntries = getLocalEntriesFromDisk()
         oldEntries.append(newEntry)
         saveLocalEntriesToDisk(entries: oldEntries)

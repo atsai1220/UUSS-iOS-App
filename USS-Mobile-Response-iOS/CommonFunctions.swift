@@ -250,3 +250,11 @@ func getImageFromDocumentDirectory(imageName: String) -> UIImage? {
         return nil
     }
 }
+
+enum FileType: String
+{
+    case PHOTO = "PHOTO"
+    case VIDEO = "VIDEO"
+    case AUDIO = "AUDIO"
+    case DOCUMENT = "DOCUMENT"
+}

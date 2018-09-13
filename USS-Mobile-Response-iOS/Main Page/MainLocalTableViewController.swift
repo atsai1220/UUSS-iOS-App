@@ -56,6 +56,11 @@ class MainLocalTableViewController: UITableViewController {
         }
     }
 
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+//    {
+//        <#code#>
+//    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return localEntries.count
@@ -64,8 +69,9 @@ class MainLocalTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! MainTableViewCell
 
+
         let item = self.localEntries[indexPath.row]
-        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localFileName!)
+        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localFileName!, fileType: item.fileType!)
         cell.setting = setting
         cell.separatorInset = .zero
         return cell

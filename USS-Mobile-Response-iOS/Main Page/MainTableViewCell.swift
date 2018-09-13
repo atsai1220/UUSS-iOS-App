@@ -11,20 +11,40 @@ import UIKit
 class MainCellSetting: NSObject {
     let name: String
     let imageName: String
+    let fileType: String
     
-    init(name: String, imageName: String) {
+    init(name: String, imageName: String, fileType: String)
+    {
         self.name = name
         self.imageName = imageName
+        self.fileType = fileType
     }
 }
 
 class MainTableViewCell: UITableViewCell {
     
-    var setting: MainCellSetting? {
-        didSet {
-            let localImage = getImageFromDocumentDirectory(imageName: (setting?.imageName)!)
-            self.iconImageView.image = localImage
-            self.nameLabel.text = setting?.name
+    var setting: MainCellSetting?
+    {
+        didSet
+        {
+            switch setting?.fileType
+            {
+                case FileType.PHOTO.rawValue:
+                    let localImage = getImageFromDocumentDirectory(imageName: (setting?.imageName)!)
+                    self.iconImageView.image = localImage
+                    self.nameLabel.text = setting?.name
+                case FileType.AUDIO.rawValue:
+                    self.iconImageView.image = UIImage(named: "audio")
+                    self.nameLabel.text = setting?.name
+                default:
+                    self.iconImageView.image = nil
+                    self.nameLabel.text = ""
+            }
+            
+            if(setting?.fileType == FileType.PHOTO.rawValue)
+            {
+                
+            }
         }
     }
     
