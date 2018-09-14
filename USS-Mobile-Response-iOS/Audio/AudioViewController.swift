@@ -34,7 +34,7 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        setupNotifications()
+        
         self.view.backgroundColor = UIColor.black
         
         audioPlaybackViewController = AudioPlaybackViewController()
@@ -105,7 +105,6 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
                 do
                 {
                     try self.audioRecorder = AVAudioRecorder(url: self.soundFileURL!, settings: self.recordSettings!)
-
                 }
                 catch let error as NSError
                 {
@@ -125,8 +124,26 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         })
     }
     
+    func setUpPlayer()
+    {
+        do
+        {
+            try audioPlayer = AVAudioPlayer(contentsOf: self.soundFileURL!)
+            audioPlayer!.setVolume(1.0, fadeDuration: 0.0)
+            audioPlayer!.delegate = self
+            timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateProgressBar), userInfo: nil, repeats: true)
+        }
+        catch
+        {
+            let alert: UIAlertController = UIAlertController(title: "Playback Error", message: "There was a problem with playback. Did you record audio?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     @objc func saveAudio()
     {
+        audioPlayer?.stop()
         var localAudioEntry = LocalEntry()
         
         let alert: UIAlertController = UIAlertController(title: "Save", message: "Enter a file name.", preferredStyle: .alert)
@@ -172,8 +189,10 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     {
         do
         {
+            audioPlaybackViewController!.progressBar?.setProgress(0.0, animated: false)
             audioPlaybackViewController!.playButton?.isEnabled = false
             audioPlaybackViewController!.garbageButton?.isEnabled = false
+            audioPlaybackViewController!.saveButton?.isEnabled = false
             audioPlayer?.stop()
             audioPlaybackViewController!.recordLength!.text = "00:00:00"
             try self.fileManager!.removeItem(at: self.soundFileURL!)
@@ -193,20 +212,16 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     
     @objc func playAudio()
     {
-        do
+        if(!audioPlayer!.isPlaying)
         {
-            try audioPlayer = AVAudioPlayer(contentsOf: self.soundFileURL!)
-            audioPlayer!.setVolume(1.0, fadeDuration: 0.0)
-            timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateProgressBar), userInfo: nil, repeats: true)
+            audioPlaybackViewController?.playButton?.setImage(UIImage(named: "pause"), for: .normal)
             audioPlayer!.play()
         }
-        catch
+        else if(audioPlayer!.isPlaying)
         {
-            let alert: UIAlertController = UIAlertController(title: "Playback Error", message: "There was a problem with playback. Did you record audio?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            audioPlaybackViewController?.playButton?.setImage(UIImage(named: "play"), for: .normal)
+            audioPlayer!.pause()
         }
-        
     }
     
     @objc func toggleRecording()
@@ -234,6 +249,7 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
             recordButton!.setTitle("Record", for: .normal)
             recordButton!.backgroundColor = UIColor.gray
             self.recordButton!.isEnabled = false
+            setUpPlayer()
         }
     }
     
@@ -247,8 +263,11 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     
     @objc func updateTimer() -> Void
     {
-        seconds = seconds + 1
-        timeLabel!.text = updateString(time: seconds)
+        if(recordButton!.isEnabled || audioPlayer!.isPlaying)
+        {
+            seconds = seconds + 1
+            timeLabel!.text = updateString(time: seconds)
+        }
     }
     
     func updateString(time:TimeInterval) -> String
@@ -288,24 +307,10 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         
     }
     
-    func setupNotifications()
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool)
     {
-        notificationCenter.addObserver(self, selector: #selector(handleInteruption), name: .AVAudioSessionInterruption, object: nil)
-    }
-    
-    @objc func handleInteruption(notification: Notification)
-    {
-        guard let userInfo = notification.userInfo,
-            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let type = AVAudioSessionInterruptionType(rawValue: typeValue) else {
-                return
-        }
-        
-        if type == .began
-        {
-            print("playback interrupted")
-        }
-        
+        audioPlaybackViewController?.progressBar?.setProgress(0.0, animated: false)
+        audioPlaybackViewController?.playButton?.setImage(UIImage(named: "play"), for: .normal)
     }
 }
 

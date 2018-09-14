@@ -35,15 +35,11 @@ class MainTableViewCell: UITableViewCell {
                     self.nameLabel.text = setting?.name
                 case FileType.AUDIO.rawValue:
                     self.iconImageView.image = UIImage(named: "audio")
+                    self.iconImageView.contentMode = .scaleAspectFit
                     self.nameLabel.text = setting?.name
                 default:
                     self.iconImageView.image = nil
                     self.nameLabel.text = ""
-            }
-            
-            if(setting?.fileType == FileType.PHOTO.rawValue)
-            {
-                
             }
         }
     }
