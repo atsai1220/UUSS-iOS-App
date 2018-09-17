@@ -24,6 +24,8 @@
 	<string>Need to access Camera to take photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Need to access location to use maps</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Enable microphone to record</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Need to access Photo library to upload images.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -49,7 +51,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Enable microphone to record</string>
 </dict>
 </plist>

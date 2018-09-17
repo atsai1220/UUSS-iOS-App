@@ -137,6 +137,9 @@ class HazardsDetailTableViewController: UITableViewController, UIImagePickerCont
             
         }))
         actionSheet.addAction(UIAlertAction(title: "Video (.MOV and .MP4)", style: .default, handler: { (action: UIAlertAction) in
+            let videoViewcontroller: VideoViewController = VideoViewController()
+            videoViewcontroller.collectionReference = self.hazardCollections[indexPath.row].ref
+            self.navigationController?.pushViewController(videoViewcontroller, animated: true)
             
         }))
         actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
