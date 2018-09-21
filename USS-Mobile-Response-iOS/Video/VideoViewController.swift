@@ -62,20 +62,20 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     
-    func videoIsAvailable(for sourceType: UIImagePickerController.SourceType) -> Bool
-    {
-        let types = UIImagePickerController.availableMediaTypes(for: .camera)
-        
-        for type in types!
-        {
-            if(type == kUTTypeMovie as String)
-            {
-                return true
-            }
-        }
-        
-        return false
-    }
+//    func videoIsAvailable(for sourceType: UIImagePickerController.SourceType) -> Bool
+//    {
+//        let types = UIImagePickerController.availableMediaTypes(for: .camera)
+//        
+//        for type in types!
+//        {
+//            if(type == kUTTypeMovie as String)
+//            {
+//                return true
+//            }
+//        }
+//        
+//        return false
+//    }
     
 //    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
 //    {
