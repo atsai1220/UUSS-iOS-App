@@ -25,7 +25,7 @@ class HazardsDetailTableViewController: UITableViewController, UIImagePickerCont
         super.viewDidLoad()
         
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
- 
+        self.tableView.tableFooterView = UIView(frame: .zero)
         if collectionsOnly {
             loadOnlyCollectionArray()
         }
