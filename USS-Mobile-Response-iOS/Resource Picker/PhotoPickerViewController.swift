@@ -10,7 +10,8 @@ import UIKit
 import Photos
 import CoreLocation
 
-class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
+class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate
+{
     var collectionReference: String = ""
     let textFieldLimit = 60
     
@@ -225,8 +226,8 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     
     
     
-    @objc func keyboardWillShow(notification:NSNotification){
-        
+    @objc func keyboardWillShow(notification:NSNotification)
+    {
         var userInfo = notification.userInfo!
         var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
@@ -236,20 +237,22 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         self.scrollView.contentInset = contentInset
     }
     
-    @objc func keyboardWillHide(notification:NSNotification){
-        
+    @objc func keyboardWillHide(notification:NSNotification)
+    {
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         self.scrollView.contentInset = contentInset
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
+    {
         guard let text = textField.text else { return true }
         let newLength = text.count + string.count - range.length
         return newLength <= textFieldLimit
     }
     
     @objc
-    func imageTapped() {
+    func imageTapped()
+    {
         print("tapped")
         showActionSheet(imageView: self.imageView)
     }
@@ -388,7 +391,8 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     @objc
-    func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
+    func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer)
+    {
         if let error = error {
             // we got back an error!
             let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
@@ -397,7 +401,8 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         }
     }
     
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
