@@ -11,11 +11,33 @@ import UIKit
 import Photos
 import MobileCoreServices
 
-class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate
+class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate
 {
     var imagePickerController: UIImagePickerController?
     var collectionReference: String = ""
     var safeArea: UILayoutGuide?
+    var videoBox: UIImageView?
+    var videoBoxLabel: UILabel?
+    var titleBox: UITextView?
+    var titleLabel: UILabel?
+    var descriptionBox: UITextView?
+    var descriptionLabel: UILabel?
+    var notesBox: UITextView?
+    var notesLabel: UILabel?
+    
+    let toolBar: UIToolbar =
+    {
+        var toolBar: UIToolbar = UIToolbar()
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        toolBar.barStyle = .default
+        toolBar.isTranslucent = true
+        var doneButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneEnteringText))
+        var flexibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        var cancelButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelEnteringText))
+        toolBar.setItems([cancelButtonItem, flexibleSpace, doneButtonItem], animated: true)
+        return toolBar
+    }()
+    
     
     override func viewDidLoad()
     {
@@ -28,89 +50,89 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         self.view.backgroundColor = UIColor(red: 195.0/255.0, green: 81.0/255.0, blue: 47.0/255.0, alpha: 1.0)
         
         let videoBoxTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(videoBoxTapped))
-        let titleBoxTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(titleBoxTapped))
-        let descriptionBoxTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(descriptionBoxTapped))
-        let notesBoxTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(notesBoxTapped))
         
-        let videoBox: UIInputView = UIInputView()
-        videoBox.addGestureRecognizer(videoBoxTap)
-        videoBox.translatesAutoresizingMaskIntoConstraints = false
-        videoBox.backgroundColor = UIColor.white
-        videoBox.layer.borderColor = UIColor.black.cgColor
-        videoBox.layer.borderWidth = 5.0
-        videoBox.layer.cornerRadius = 5.0
-        videoBox.layer.shadowRadius = 3.0
-        videoBox.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
-        videoBox.layer.shadowOpacity = 1.0
-        videoBox.layer.shadowColor = UIColor.black.cgColor
-        self.view.addSubview(videoBox)
+        videoBox = UIImageView()
+        videoBox!.isUserInteractionEnabled = true
+        videoBox!.addGestureRecognizer(videoBoxTap)
+        videoBox!.translatesAutoresizingMaskIntoConstraints = false
+        videoBox!.backgroundColor = UIColor.white
+        videoBox!.layer.borderColor = UIColor.black.cgColor
+        videoBox!.layer.borderWidth = 5.0
+        videoBox!.layer.cornerRadius = 5.0
+        videoBox!.layer.shadowRadius = 3.0
+        videoBox!.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+        videoBox!.layer.shadowOpacity = 1.0
+        videoBox!.layer.shadowColor = UIColor.black.cgColor
+        self.view.addSubview(videoBox!)
         
-        let videoBoxLabel: UILabel = UILabel()
-        videoBoxLabel.translatesAutoresizingMaskIntoConstraints = false
-        videoBoxLabel.text = "Add Video"
-        videoBoxLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
-        videoBoxLabel.textColor = UIColor.black
-        videoBox.addSubview(videoBoxLabel)
+        videoBoxLabel = UILabel()
+        videoBoxLabel!.translatesAutoresizingMaskIntoConstraints = false
+        videoBoxLabel!.text = "Add Video"
+        videoBoxLabel!.font = UIFont.boldSystemFont(ofSize: 25.0)
+        videoBoxLabel!.textColor = UIColor.black
+        videoBox!.addSubview(videoBoxLabel!)
         
-        let titleBox: UIInputView = UIInputView()
-        titleBox.addGestureRecognizer(titleBoxTap)
-        titleBox.translatesAutoresizingMaskIntoConstraints = false
-        titleBox.backgroundColor = UIColor.white
-        titleBox.layer.borderColor = UIColor.black.cgColor
-        titleBox.layer.borderWidth = 5.0
-        titleBox.layer.cornerRadius = 5.0
-        titleBox.layer.shadowRadius = 3.0
-        titleBox.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
-        titleBox.layer.shadowOpacity = 1.0
-        titleBox.layer.shadowColor = UIColor.black.cgColor
-        self.view.addSubview(titleBox)
+        titleBox = UITextView()
+        titleBox!.delegate = self
+        titleBox!.inputAccessoryView = toolBar
+        titleBox!.translatesAutoresizingMaskIntoConstraints = false
+        titleBox!.layer.borderColor = UIColor.black.cgColor
+        titleBox!.layer.borderWidth = 5.0
+        titleBox!.layer.cornerRadius = 5.0
+        titleBox!.layer.shadowRadius = 3.0
+        titleBox!.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+        titleBox!.layer.shadowOpacity = 1.0
+        titleBox!.layer.shadowColor = UIColor.black.cgColor
+        self.view.addSubview(titleBox!)
         
-        let titleLabel: UILabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "Add Title"
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
-        titleLabel.textColor = UIColor.black
-        titleBox.addSubview(titleLabel)
+        titleLabel = UILabel()
+        titleLabel!.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel!.text = "Add Title"
+        titleLabel!.font = UIFont.boldSystemFont(ofSize: 25.0)
+        titleLabel!.textColor = UIColor.black
+        titleBox!.addSubview(titleLabel!)
         
-        let descriptionBox: UIInputView = UIInputView()
-        descriptionBox.addGestureRecognizer(descriptionBoxTap)
-        descriptionBox.translatesAutoresizingMaskIntoConstraints = false
-        descriptionBox.backgroundColor = UIColor.white
-        descriptionBox.layer.borderColor = UIColor.black.cgColor
-        descriptionBox.layer.borderWidth = 5.0
-        descriptionBox.layer.cornerRadius = 5.0
-        descriptionBox.layer.shadowRadius = 3.0
-        descriptionBox.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
-        descriptionBox.layer.shadowOpacity = 1.0
-        descriptionBox.layer.shadowColor = UIColor.black.cgColor
-        self.view.addSubview(descriptionBox)
+        descriptionBox = UITextView()
+        descriptionBox!.delegate = self
+        descriptionBox!.inputAccessoryView = toolBar
+        descriptionBox!.translatesAutoresizingMaskIntoConstraints = false
+        descriptionBox!.backgroundColor = UIColor.white
+        descriptionBox!.layer.borderColor = UIColor.black.cgColor
+        descriptionBox!.layer.borderWidth = 5.0
+        descriptionBox!.layer.cornerRadius = 5.0
+        descriptionBox!.layer.shadowRadius = 3.0
+        descriptionBox!.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+        descriptionBox!.layer.shadowOpacity = 1.0
+        descriptionBox!.layer.shadowColor = UIColor.black.cgColor
+        self.view.addSubview(descriptionBox!)
         
-        let descriptionLabel: UILabel = UILabel()
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.text = "Add Description"
-        descriptionLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
-        descriptionLabel.textColor = UIColor.black
-        descriptionBox.addSubview(descriptionLabel)
+        descriptionLabel = UILabel()
+        descriptionLabel!.translatesAutoresizingMaskIntoConstraints = false
+        descriptionLabel!.text = "Add Description"
+        descriptionLabel!.font = UIFont.boldSystemFont(ofSize: 25.0)
+        descriptionLabel!.textColor = UIColor.black
+        descriptionBox!.addSubview(descriptionLabel!)
         
-        let notesBox: UIInputView = UIInputView()
-        notesBox.addGestureRecognizer(notesBoxTap)
-        notesBox.translatesAutoresizingMaskIntoConstraints = false
-        notesBox.backgroundColor = UIColor.white
-        notesBox.layer.borderColor = UIColor.black.cgColor
-        notesBox.layer.borderWidth = 5.0
-        notesBox.layer.cornerRadius = 5.0
-        notesBox.layer.shadowRadius = 3.0
-        notesBox.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
-        notesBox.layer.shadowOpacity = 1.0
-        notesBox.layer.shadowColor = UIColor.black.cgColor
-        self.view.addSubview(notesBox)
+        notesBox = UITextView()
+        notesBox!.delegate = self
+        notesBox!.inputAccessoryView = toolBar
+        notesBox!.translatesAutoresizingMaskIntoConstraints = false
+        notesBox!.backgroundColor = UIColor.white
+        notesBox!.layer.borderColor = UIColor.black.cgColor
+        notesBox!.layer.borderWidth = 5.0
+        notesBox!.layer.cornerRadius = 5.0
+        notesBox!.layer.shadowRadius = 3.0
+        notesBox!.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+        notesBox!.layer.shadowOpacity = 1.0
+        notesBox!.layer.shadowColor = UIColor.black.cgColor
+        self.view.addSubview(notesBox!)
         
-        let notesLabel: UILabel = UILabel()
-        notesLabel.translatesAutoresizingMaskIntoConstraints = false
-        notesLabel.text = "Add Notes"
-        notesLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
-        notesLabel.textColor = UIColor.black
-        notesBox.addSubview(notesLabel)
+        notesLabel = UILabel()
+        notesLabel!.translatesAutoresizingMaskIntoConstraints = false
+        notesLabel!.text = "Add Notes"
+        notesLabel!.font = UIFont.boldSystemFont(ofSize: 25.0)
+        notesLabel!.textColor = UIColor.black
+        notesBox!.addSubview(notesLabel!)
         
         
         let logo: UIImageView = UIImageView(image: UIImage(named: "DNR"))
@@ -118,7 +140,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         logo.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(logo)
         
-        let views: [String: Any] = ["logo": logo, "videoBox": videoBox, "titleBox": titleBox, "descriptionBox": descriptionBox, "notesBox": notesBox]
+        let views: [String: Any] = ["logo": logo, "videoBox": videoBox!, "titleBox": titleBox!, "descriptionBox": descriptionBox!, "notesBox": notesBox!]
     
         
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[logo(<=50)]", options: [], metrics: nil, views: views))
@@ -129,28 +151,26 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[descriptionBox]-|", options: [], metrics: nil, views: views))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[descriptionBox(<=125)]", options: [], metrics: nil, views: views))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[notesBox]-|", options: [], metrics: nil, views: views))
-//        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[notesBox(<=150)]", options: [], metrics: nil, views: views))
 
         NSLayoutConstraint.activate([
             logo.topAnchor.constraintEqualToSystemSpacingBelow(safeArea!.topAnchor, multiplier: 2.0),
             logo.centerXAnchor.constraintEqualToSystemSpacingAfter(self.view.centerXAnchor, multiplier: 1.0),
-            videoBox.topAnchor.constraintEqualToSystemSpacingBelow(safeArea!.topAnchor, multiplier: 10.0),
-            videoBox.bottomAnchor.constraintEqualToSystemSpacingBelow(safeArea!.topAnchor, multiplier: 35.0),
-            videoBox.centerXAnchor.constraintEqualToSystemSpacingAfter(videoBoxLabel.centerXAnchor, multiplier: 1.0),
-            videoBox.centerYAnchor.constraintEqualToSystemSpacingBelow(videoBoxLabel.centerYAnchor, multiplier: 1.0),
-            titleBox.topAnchor.constraintEqualToSystemSpacingBelow(videoBox.bottomAnchor, multiplier: 2.0),
-            titleLabel.centerXAnchor.constraintEqualToSystemSpacingAfter(titleBox.centerXAnchor, multiplier: 1.0),
-            titleLabel.centerYAnchor.constraintEqualToSystemSpacingBelow(titleBox.centerYAnchor, multiplier: 1.0),
-            descriptionBox.topAnchor.constraintEqualToSystemSpacingBelow(titleBox.bottomAnchor, multiplier: 2.0),
-            descriptionLabel.centerXAnchor.constraintEqualToSystemSpacingAfter(descriptionBox.centerXAnchor, multiplier: 1.0),
-            descriptionLabel.centerYAnchor.constraintEqualToSystemSpacingBelow(descriptionBox.centerYAnchor, multiplier: 1.0),
-            notesBox.topAnchor.constraintEqualToSystemSpacingBelow(descriptionBox.bottomAnchor, multiplier: 2.0),
-            notesBox.bottomAnchor.constraintEqualToSystemSpacingBelow(safeArea!.bottomAnchor, multiplier: 1.0),
-            notesLabel.centerXAnchor.constraintEqualToSystemSpacingAfter(notesBox.centerXAnchor, multiplier: 1.0),
-            notesLabel.centerYAnchor.constraintEqualToSystemSpacingBelow(notesBox.centerYAnchor, multiplier: 1.0)
+            videoBox!.topAnchor.constraintEqualToSystemSpacingBelow(safeArea!.topAnchor, multiplier: 10.0),
+            videoBox!.bottomAnchor.constraintEqualToSystemSpacingBelow(safeArea!.topAnchor, multiplier: 35.0),
+            videoBox!.centerXAnchor.constraintEqualToSystemSpacingAfter(videoBoxLabel!.centerXAnchor, multiplier: 1.0),
+            videoBox!.centerYAnchor.constraintEqualToSystemSpacingBelow(videoBoxLabel!.centerYAnchor, multiplier: 1.0),
+            titleBox!.topAnchor.constraintEqualToSystemSpacingBelow(videoBox!.bottomAnchor, multiplier: 2.0),
+            titleLabel!.centerXAnchor.constraintEqualToSystemSpacingAfter(titleBox!.centerXAnchor, multiplier: 1.0),
+            titleLabel!.centerYAnchor.constraintEqualToSystemSpacingBelow(titleBox!.centerYAnchor, multiplier: 1.0),
+            descriptionBox!.topAnchor.constraintEqualToSystemSpacingBelow(titleBox!.bottomAnchor, multiplier: 2.0),
+            descriptionLabel!.centerXAnchor.constraintEqualToSystemSpacingAfter(descriptionBox!.centerXAnchor, multiplier: 1.0),
+            descriptionLabel!.centerYAnchor.constraintEqualToSystemSpacingBelow(descriptionBox!.centerYAnchor, multiplier: 1.0),
+            notesBox!.topAnchor.constraintEqualToSystemSpacingBelow(descriptionBox!.bottomAnchor, multiplier: 2.0),
+            notesBox!.bottomAnchor.constraintEqualToSystemSpacingBelow(safeArea!.bottomAnchor, multiplier: 1.0),
+            notesLabel!.centerXAnchor.constraintEqualToSystemSpacingAfter(notesBox!.centerXAnchor, multiplier: 1.0),
+            notesLabel!.centerYAnchor.constraintEqualToSystemSpacingBelow(notesBox!.centerYAnchor, multiplier: 1.0)
             ])
     }
-    
     
     func videoIsAvailable(for sourceType: UIImagePickerControllerSourceType) -> Bool
     {
@@ -166,22 +186,6 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         
         return false
     }
-    
-//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
-//    {
-//        <#code#>
-//    }
-//
-//    func imagePickerControllerDidCancel(_ picker: UIImagePickerController)
-//    {
-//        <#code#>
-//    }
-    
-//    override func viewWillAppear(_ animated: Bool)
-//    {
-//        super.viewWillAppear(animated)
-//        AppDelegate.AppUtility.lockOrientation(.all)
-//    }
     
     override func viewDidAppear(_ animated: Bool)
     {
@@ -209,16 +213,77 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         print("test")
     }
     
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
     {
-        print("recorded movie")
-        imagePickerController?.dismiss(animated: true, completion: nil)
+        switch picker.sourceType
+        {
+            case .camera:
+               
+                let videoPath: NSURL = info[UIImagePickerControllerMediaURL] as! NSURL
+                print("path is \(videoPath.relativePath!)")
+                
+                if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath.absoluteString!))
+                {
+                    let videoThumbnail: UIImage = createVideoThumbnail(from: videoPath.absoluteString!)
+                    UISaveVideoAtPathToSavedPhotosAlbum(videoPath.relativePath!, self, #selector(videoSaved) , nil)
+                    self.videoBox!.image = videoThumbnail
+                    self.videoBoxLabel!.removeFromSuperview()
+                }
+                else
+                {
+                    let alert: UIAlertController = UIAlertController(title: "Error", message: "The video could not be saved to your camera roll", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+                
+                imagePickerController!.dismiss(animated: true, completion: nil)
+            
+            case .savedPhotosAlbum:
+            
+                let videoPath: NSURL = info[UIImagePickerControllerMediaURL] as! NSURL
+                let image: UIImage = createVideoThumbnail(from: videoPath.absoluteString!)
+            
+                self.videoBox!.image = image
+                self.videoBoxLabel!.removeFromSuperview()
+            
+                imagePickerController!.dismiss(animated: true, completion: nil)
+            
+            case .photoLibrary:
+                break
+        }
+        
+    }
+    
+    
+    func createVideoThumbnail(from url: String) -> UIImage
+    {
+            print(URL(string: url)!)
+            let asset = AVAsset(url: URL(string: url)!)
+            let assetImgGenerate = AVAssetImageGenerator(asset: asset)
+            assetImgGenerate.appliesPreferredTrackTransform = true
+        
+            let time = CMTimeMakeWithSeconds(1.0, 600)
+            do {
+                let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
+                let thumbnail = UIImage(cgImage: img)
+                return thumbnail
+            }
+            catch
+            {
+                print(error.localizedDescription)
+                return UIImage()
+            }
+    }
+    
+    @objc func videoSaved(video: String,  didFinishSavingWithError: NSError, contextInfo: Any)
+    {
+        let alert: UIAlertController = UIAlertController(title: "Video Saved", message: "Your video was successfully saved to your camera roll", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func showActionSheet()
     {
-//        let actionSheet: UIAlertController = UIAlertController(title: "Choose Video Source", message: "Take a new video or use a video from your library", preferredStyle: .actionSheet)
         
         let actionSheet: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
@@ -246,7 +311,20 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Choose Video", style: .default, handler: {(alert: UIAlertAction) -> Void in
-            print("Video")
+            print("Existing Video")
+            
+            if(UIImagePickerController.isSourceTypeAvailable(.camera))
+            {
+                self.imagePickerController!.sourceType = .savedPhotosAlbum
+                self.imagePickerController!.mediaTypes = [kUTTypeMovie as String]
+                self.present(self.imagePickerController!, animated: true, completion: nil)
+            }
+            else
+            {
+                let alert: UIAlertController = UIAlertController(title: "No Photo Library", message: "There was a problem accessing your camera roll", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         }))
         
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(alert: UIAlertAction)-> Void in
@@ -261,10 +339,30 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         
     }
     
+    @objc func doneEnteringText()
+    {
+        print("Done enterint text")
+        self.view.endEditing(true)
+    }
+    
+    @objc func cancelEnteringText()
+    {
+        print("Cancel keyboard")
+        self.view.endEditing(true)
+    }
+    
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool
+    {
+        return true
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView)
+    {
+        print("\(textView) was tapped")
+    }
+    
     @objc func videoBoxTapped()
     {
-        print("videoBox tapped")
-        
         showActionSheet()
     }
     
