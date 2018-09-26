@@ -11,9 +11,12 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
+    let floatingButton = FloatingButton()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
+        view.addSubview(floatingButton)
 
     }
     @IBAction func doneTapped(_ sender: Any) {

@@ -29,6 +29,7 @@
 		1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB1210BB86400629D6F /* CommonFunctions.swift */; };
 		1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */; };
 		1C601BB7210F821700629D6F /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB6210F821700629D6F /* SettingCell.swift */; };
+		1C6A5FC5215C0974006B5619 /* FloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A5FC4215C0974006B5619 /* FloatingButton.swift */; };
 		1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */; };
 		1C76A8A52113B08000EE51A8 /* MainLocalTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */; };
 		1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */; };
@@ -73,6 +74,7 @@
 		1C601BB1210BB86400629D6F /* CommonFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFunctions.swift; sourceTree = "<group>"; };
 		1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardsTableViewController.swift; sourceTree = "<group>"; };
 		1C601BB6210F821700629D6F /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
+		1C6A5FC4215C0974006B5619 /* FloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingButton.swift; sourceTree = "<group>"; };
 		1C76A8A021127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "USS-Mobile-Response-iOS.xcdatamodel"; sourceTree = "<group>"; };
 		1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLocalTableViewController.swift; sourceTree = "<group>"; };
 		1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTrashTableViewController.swift; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 				1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */,
 				1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */,
 				1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */,
+				1C6A5FC4215C0974006B5619 /* FloatingButton.swift */,
 			);
 			path = "Main Page";
 			sourceTree = "<group>";
@@ -336,6 +339,7 @@
 			files = (
 				1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */,
 				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
+				1C6A5FC5215C0974006B5619 /* FloatingButton.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */,
 				F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */,
