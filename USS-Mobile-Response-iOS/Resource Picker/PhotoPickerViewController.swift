@@ -250,15 +250,15 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         return newLength <= textFieldLimit
     }
     
-    @objc
-    func imageTapped()
+    @objc func imageTapped()
     {
         print("tapped")
         showActionSheet(imageView: self.imageView)
     }
     
     @objc
-    func saveAndUpload() {
+    func saveAndUpload()
+    {
         print("4-1: Create local device entry")
         let savedName = createLocalEntry()
         print("4-2: HTTP uploading with custom plugin")
@@ -271,7 +271,8 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         self.navigationController?.popToRootViewController(animated: true)
     }
         
-    func createLocalEntry() -> String {
+    func createLocalEntry() -> String
+    {
         var newEntry = LocalEntry()
         var savedImageName = ""
         if let possibleImageURL = self.imageURL {
@@ -290,7 +291,8 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         return savedImageName
     }
     
-    func httpUpload() {
+    func httpUpload()
+    {
         
     }
     

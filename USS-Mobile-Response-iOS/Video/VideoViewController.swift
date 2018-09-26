@@ -24,6 +24,8 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     var descriptionLabel: UILabel?
     var notesBox: UITextView?
     var notesLabel: UILabel?
+    var imageUrl: URL?
+    var videoThumbnail: UIImage?
     
     let toolBar: UIToolbar =
     {
@@ -33,8 +35,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         toolBar.isTranslucent = true
         var doneButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneEnteringText))
         var flexibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        var cancelButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelEnteringText))
-        toolBar.setItems([cancelButtonItem, flexibleSpace, doneButtonItem], animated: true)
+        toolBar.setItems([flexibleSpace, doneButtonItem], animated: true)
         return toolBar
     }()
     
@@ -46,6 +47,9 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         safeArea = self.view.safeAreaLayoutGuide
         imagePickerController = UIImagePickerController()
         imagePickerController!.delegate = self
+        
+        let saveButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveVideoData))
+        self.navigationItem.rightBarButtonItem = saveButton
 
         self.view.backgroundColor = UIColor(red: 195.0/255.0, green: 81.0/255.0, blue: 47.0/255.0, alpha: 1.0)
         
@@ -74,6 +78,11 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         
         titleBox = UITextView()
         titleBox!.delegate = self
+        titleBox!.textAlignment = .center
+        titleBox!.tag = 0
+        titleBox!.textContainerInset = UIEdgeInsets(top: 25.0, left: 20.0, bottom: 10.0, right: 20.0)
+        titleBox!.font = UIFont.boldSystemFont(ofSize: 25.0)
+        titleBox!.textColor = UIColor.black
         titleBox!.inputAccessoryView = toolBar
         titleBox!.translatesAutoresizingMaskIntoConstraints = false
         titleBox!.layer.borderColor = UIColor.black.cgColor
@@ -94,6 +103,9 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         
         descriptionBox = UITextView()
         descriptionBox!.delegate = self
+        descriptionBox!.tag = 1
+        descriptionBox!.textContainerInset = UIEdgeInsets(top: 25.0, left: 20.0, bottom: 10.0, right: 20.0)
+        descriptionBox!.font = UIFont.boldSystemFont(ofSize: 25.0)
         descriptionBox!.inputAccessoryView = toolBar
         descriptionBox!.translatesAutoresizingMaskIntoConstraints = false
         descriptionBox!.backgroundColor = UIColor.white
@@ -115,6 +127,9 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         
         notesBox = UITextView()
         notesBox!.delegate = self
+        notesBox!.tag = 2
+        notesBox!.textContainerInset = UIEdgeInsets(top: 25.0, left: 20.0, bottom: 10.0, right: 20.0)
+        notesBox!.font = UIFont.boldSystemFont(ofSize: 25.0)
         notesBox!.inputAccessoryView = toolBar
         notesBox!.translatesAutoresizingMaskIntoConstraints = false
         notesBox!.backgroundColor = UIColor.white
@@ -203,16 +218,6 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         print("test")
     }
     
-    func textWillChange(_ textInput: UITextInput?)
-    {
-        print("test")
-    }
-    
-    func textDidChange(_ textInput: UITextInput?)
-    {
-        print("test")
-    }
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
     {
         switch picker.sourceType
@@ -224,7 +229,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
                 
                 if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath.absoluteString!))
                 {
-                    let videoThumbnail: UIImage = createVideoThumbnail(from: videoPath.absoluteString!)
+                    videoThumbnail = createVideoThumbnail(from: videoPath.absoluteString!)
                     UISaveVideoAtPathToSavedPhotosAlbum(videoPath.relativePath!, self, #selector(videoSaved) , nil)
                     self.videoBox!.image = videoThumbnail
                     self.videoBoxLabel!.removeFromSuperview()
@@ -341,24 +346,59 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     
     @objc func doneEnteringText()
     {
-        print("Done enterint text")
+        print("Done entering text")
         self.view.endEditing(true)
     }
-    
-    @objc func cancelEnteringText()
+
+    func textViewDidBeginEditing(_ textView: UITextView)
     {
-        print("Cancel keyboard")
-        self.view.endEditing(true)
-    }
-    
-    func textViewShouldEndEditing(_ textView: UITextView) -> Bool
-    {
-        return true
+        switch textView.tag
+        {
+            case 0:
+                self.titleLabel!.removeFromSuperview()
+            case 1:
+                self.descriptionLabel!.removeFromSuperview()
+            case 2:
+                self.notesLabel!.removeFromSuperview()
+            default:
+                break
+        }
     }
     
     func textViewDidEndEditing(_ textView: UITextView)
     {
-        print("\(textView) was tapped")
+        switch textView.tag
+        {
+            case 0:
+                if(textView.text.count == 0)
+                {
+                    self.titleBox!.addSubview(self.titleLabel!)
+                    NSLayoutConstraint.activate([
+                            self.titleLabel!.centerXAnchor.constraintEqualToSystemSpacingAfter(self.titleBox!.centerXAnchor, multiplier: 1.0),
+                            self.titleLabel!.centerYAnchor.constraintEqualToSystemSpacingBelow(self.titleBox!.centerYAnchor, multiplier: 1.0)
+                        ])
+                }
+            case 1:
+                if(textView.text.count == 0)
+                {
+                    self.descriptionBox!.addSubview(self.descriptionLabel!)
+                    NSLayoutConstraint.activate([
+                            self.descriptionLabel!.centerXAnchor.constraintEqualToSystemSpacingAfter(self.descriptionBox!.centerXAnchor, multiplier: 1.0),
+                            self.descriptionLabel!.centerYAnchor.constraintEqualToSystemSpacingBelow(self.descriptionBox!.centerYAnchor, multiplier: 1.0)
+                        ])
+                }
+            case 2:
+                if(textView.text.count == 0)
+                {
+                    self.notesBox!.addSubview(self.notesLabel!)
+                    NSLayoutConstraint.activate([
+                            self.notesLabel!.centerXAnchor.constraintEqualToSystemSpacingAfter(self.notesBox!.centerXAnchor, multiplier: 1.0),
+                            self.notesLabel!.centerYAnchor.constraintEqualToSystemSpacingBelow(self.notesBox!.centerYAnchor, multiplier: 1.0)
+                        ])
+                }
+            default:
+                break
+        }
     }
     
     @objc func videoBoxTapped()
@@ -381,5 +421,32 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         print("Notes Box tapped")
     }
     
+    @objc func saveVideoData()
+    {
+        
+        var localVideoEntry: LocalEntry = LocalEntry()
+        
+//        var savedImageName: String = ""
+//        if let possibleImageURL = self.imageUrl
+//        {
+//            savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
+//        }
+//        else
+//        {
+//            savedImageName = saveExistingImageAtDocumentDirectory(image: self.videoThumbnail!)
+//        }
+        
+        
+        localVideoEntry.localFileName = self.titleBox!.text
+        localVideoEntry.collectionRef = self.collectionReference
+        localVideoEntry.description = self.descriptionBox!.text
+        localVideoEntry.notes = self.notesBox!.text
+        localVideoEntry.fileType = FileType.VIDEO.rawValue
+        
+        var oldEntries = getLocalEntriesFromDisk()
+        oldEntries.append(localVideoEntry)
+        saveLocalEntriesToDisk(entries: oldEntries)
+        self.navigationController!.popToRootViewController(animated: true)
+    }
     
 }

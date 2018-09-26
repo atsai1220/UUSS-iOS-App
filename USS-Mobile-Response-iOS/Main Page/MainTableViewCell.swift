@@ -37,6 +37,12 @@ class MainTableViewCell: UITableViewCell {
                     self.iconImageView.image = UIImage(named: "audio")
                     self.iconImageView.contentMode = .scaleAspectFit
                     self.nameLabel.text = setting?.name
+                case FileType.VIDEO.rawValue:
+                    self.iconImageView.image = UIImage(named: "video")
+//                    let localImage = getImageFromDocumentDirectory(imageName: (setting?.imageName)!)
+//                    self.iconImageView.image = localImage
+                    self.iconImageView.contentMode = .scaleAspectFit
+                    self.nameLabel.text = setting?.name
                 default:
                     self.iconImageView.image = nil
                     self.nameLabel.text = ""
