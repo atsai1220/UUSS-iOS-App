@@ -7,17 +7,23 @@
 //
 
 import UIKit
+import Foundation
+import Photos
+import MobileCoreServices
 
-class MainCellSetting: NSObject {
+class MainCellSetting: NSObject
+{
     let name: String
     let imageName: String
     let fileType: String
+    let videoURL: String?
     
-    init(name: String, imageName: String, fileType: String)
+    init(name: String, imageName: String, fileType: String, videoURL: String)
     {
         self.name = name
         self.imageName = imageName
         self.fileType = fileType
+        self.videoURL = videoURL
     }
 }
 
@@ -38,10 +44,8 @@ class MainTableViewCell: UITableViewCell {
                     self.iconImageView.contentMode = .scaleAspectFit
                     self.nameLabel.text = setting?.name
                 case FileType.VIDEO.rawValue:
-                    self.iconImageView.image = UIImage(named: "video")
-//                    let localImage = getImageFromDocumentDirectory(imageName: (setting?.imageName)!)
-//                    self.iconImageView.image = localImage
-                    self.iconImageView.contentMode = .scaleAspectFit
+//                    self.iconImageView.image = UIImage(named: "video")
+                    self.iconImageView.image = createVideoThumbnail(from: setting!.videoURL!)
                     self.nameLabel.text = setting?.name
                 default:
                     self.iconImageView.image = nil
@@ -80,7 +84,8 @@ class MainTableViewCell: UITableViewCell {
         // Initialization code
     }
     
-    func setupViews() {
+    func setupViews()
+    {
         addSubview(self.nameLabel)
         addSubview(self.iconImageView)
 //        self.iconImageView.frame = CGRect(origin: CGPoint(x: 0, y: self.frame.midY), size: CGSize(width: 100, height: 100))
@@ -89,13 +94,32 @@ class MainTableViewCell: UITableViewCell {
         addConstraintsWithFormat(format: "V:|-[v0]-|", views: self.iconImageView)
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool)
+    {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
     
-    
+    func createVideoThumbnail(from url: String) -> UIImage
+    {
+        print(URL(string: url)!)
+        let asset = AVAsset(url: URL(string: url)!)
+        let assetImgGenerate = AVAssetImageGenerator(asset: asset)
+        assetImgGenerate.appliesPreferredTrackTransform = true
+        
+        let time = CMTimeMakeWithSeconds(1.0, 600)
+        do {
+            let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
+            let thumbnail = UIImage(cgImage: img)
+            return thumbnail
+        }
+        catch
+        {
+            print(error.localizedDescription)
+            return UIImage()
+        }
+    }
     
     
 

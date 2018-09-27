@@ -24,8 +24,11 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     var descriptionLabel: UILabel?
     var notesBox: UITextView?
     var notesLabel: UILabel?
-    var imageUrl: URL?
+    var videoUrl: URL?
     var videoThumbnail: UIImage?
+    var fileManager: FileManager?
+    var videoPath: NSURL?
+    
     
     let toolBar: UIToolbar =
     {
@@ -224,13 +227,13 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         {
             case .camera:
                
-                let videoPath: NSURL = info[UIImagePickerControllerMediaURL] as! NSURL
-                print("path is \(videoPath.relativePath!)")
+                videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
+                print("path is \(videoPath!.relativePath!)")
                 
-                if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath.absoluteString!))
+                if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath!.absoluteString!))
                 {
-                    videoThumbnail = createVideoThumbnail(from: videoPath.absoluteString!)
-                    UISaveVideoAtPathToSavedPhotosAlbum(videoPath.relativePath!, self, #selector(videoSaved) , nil)
+                    videoThumbnail = createVideoThumbnail(from: videoPath!.absoluteString!)
+                    UISaveVideoAtPathToSavedPhotosAlbum(videoPath!.relativePath!, self, #selector(videoSaved) , nil)
                     self.videoBox!.image = videoThumbnail
                     self.videoBoxLabel!.removeFromSuperview()
                 }
@@ -245,8 +248,8 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
             
             case .savedPhotosAlbum:
             
-                let videoPath: NSURL = info[UIImagePickerControllerMediaURL] as! NSURL
-                let image: UIImage = createVideoThumbnail(from: videoPath.absoluteString!)
+                videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
+                let image: UIImage = createVideoThumbnail(from: self.videoPath!.absoluteString!)
             
                 self.videoBox!.image = image
                 self.videoBoxLabel!.removeFromSuperview()
@@ -423,25 +426,15 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     
     @objc func saveVideoData()
     {
-        
+//        saveVideoToDisk()
         var localVideoEntry: LocalEntry = LocalEntry()
-        
-//        var savedImageName: String = ""
-//        if let possibleImageURL = self.imageUrl
-//        {
-//            savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
-//        }
-//        else
-//        {
-//            savedImageName = saveExistingImageAtDocumentDirectory(image: self.videoThumbnail!)
-//        }
-        
-        
+      
         localVideoEntry.localFileName = self.titleBox!.text
         localVideoEntry.collectionRef = self.collectionReference
         localVideoEntry.description = self.descriptionBox!.text
         localVideoEntry.notes = self.notesBox!.text
         localVideoEntry.fileType = FileType.VIDEO.rawValue
+        localVideoEntry.videoURL = self.videoPath!.absoluteString
         
         var oldEntries = getLocalEntriesFromDisk()
         oldEntries.append(localVideoEntry)
@@ -449,4 +442,22 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         self.navigationController!.popToRootViewController(animated: true)
     }
     
+//    func saveVideoToDisk()
+//    {
+//        fileManager = FileManager.default
+//        let docURL: URL = fileManager!.urls(for: .documentDirectory, in: .userDomainMask).first!
+//        self.videoUrl = docURL.appendingPathComponent("\(String(describing: self.titleBox!.text))" + "/")
+//
+//        do
+//        {
+//            let videoData: Data? = try Data(contentsOf: videoPath! as URL)
+//            fileManager!.createFile(atPath: self.videoUrl!.relativePath, contents: videoData, attributes: nil)
+//        }
+//        catch
+//        {
+//            let alert: UIAlertController = UIAlertController(title: "Error", message: "There was a problem getting the video data for saving the file. Please try again", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+//            self.present(alert, animated: true, completion: nil)
+//        }
+//    }
 }

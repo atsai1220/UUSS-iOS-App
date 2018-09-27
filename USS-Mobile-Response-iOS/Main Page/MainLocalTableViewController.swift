@@ -71,7 +71,7 @@ class MainLocalTableViewController: UITableViewController {
 
 
         let item = self.localEntries[indexPath.row]
-        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localFileName!, fileType: item.fileType!)
+        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localFileName!, fileType: item.fileType!, videoURL: item.videoURL ?? "")
         cell.setting = setting
         cell.separatorInset = .zero
         return cell

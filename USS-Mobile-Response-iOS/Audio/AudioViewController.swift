@@ -181,7 +181,9 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         }
         catch
         {
-            print("Problem saving new file")
+            let alert: UIAlertController = UIAlertController(title: "Error", message: "There was a problem saving the file", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
