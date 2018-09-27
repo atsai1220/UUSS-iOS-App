@@ -12,9 +12,6 @@ import CoreData
 
 class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
 {
-    
-    var floatingButton = FloatingButton()
-    
     func addMap(buttonPressed: Bool)
     {
         let newMapFormVC: NewMapFormViewController = NewMapFormViewController()
@@ -45,9 +42,6 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
         let pageVC: UIViewController
         if setting.name == "Profile" {
             pageVC = ProfileViewController()
-        }
-        else if setting.name == "Settings" {
-            pageVC = SettingsViewController()
         }
         else {
             pageVC = AboutViewController()
@@ -101,7 +95,6 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
         
         do
         {
-            
             try
                 mapTableViewController?.tableData = managedContext.fetch(fetchRequest)
         }
@@ -131,9 +124,6 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
         trashViewController.tabBarItem = UITabBarItem(title: "Trash", image: UIImage(named: "bin"), tag: 2)
         
         self.setViewControllers([localViewCotnroller, mapTableViewController!, trashViewController], animated: true)
-        
-        self.view.insertSubview(self.floatingButton, belowSubview: self.tabBar)
-        
     }
     
     override func viewWillLayoutSubviews()
@@ -145,13 +135,6 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
             sideMenuLauncher.collectionView.frame = CGRect(x: Int(oldRect.origin.x), y: Int(oldRect.origin.y), width: cvWidth, height: Int(window.frame.height))
             sideMenuLauncher.greyView.frame = window.frame
         }
-    
-        NSLayoutConstraint.activate([
-            self.floatingButton.bottomAnchor.constraint(equalTo: self.tabBar.topAnchor, constant: -25),
-            self.floatingButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25),
-            self.floatingButton.widthAnchor.constraint(equalToConstant: 60),
-            self.floatingButton.heightAnchor.constraint(equalToConstant: 60)
-            ])
     }
 }
 

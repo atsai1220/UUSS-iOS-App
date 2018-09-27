@@ -7,13 +7,13 @@
 import Foundation
 import UIKit
 
-class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol {
+class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol, UITextViewDelegate {
     /*
      IBOutlets
      */
     @IBOutlet weak var logoImage: UIImageView!
     @IBOutlet weak var userNameField: UITextField!
-    @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var apiField: UITextView!
     @IBOutlet weak var serverField: UITextField!
     @IBOutlet weak var serverButton: UIButton!
     
@@ -77,10 +77,16 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         loginButton.backgroundColor = UIColor.lightGray
         loginButton.layer.masksToBounds = true
         loginButton.layer.cornerRadius = 5.0
-
+        
         publicButton.backgroundColor = UIColor.lightGray
         publicButton.layer.masksToBounds = true
         publicButton.layer.cornerRadius = 5.0
+        
+        apiField.layer.masksToBounds = true
+        apiField.layer.cornerRadius = 5.0
+        apiField.text = "Enter API key here..."
+        apiField.textColor = .lightGray
+        apiField.delegate = self
         
         selectedServerName = plistController.resources.first?.name
         selectedServerURL = plistController.resources.first?.url
@@ -89,6 +95,21 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if apiField.textColor == UIColor.lightGray && apiField.isFirstResponder {
+            apiField.text = nil
+            apiField.textColor = .black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if apiField.text.isEmpty || apiField.text == "" {
+            apiField.textColor = .lightGray
+            apiField.text = "Enter API key here..."
+        }
+    }
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
@@ -160,9 +181,9 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     }
     
     private func loginToAPI() {
-        // Read values from text fields 
+        // Read values from text fields
         let userName = userNameField.text
-        let userPassword = passwordField.text
+        let userPassword = apiField.text
         // Check if fields are empty
         if (userName?.isEmpty)! || (userPassword?.isEmpty)! {
             displayErrorMessage(title: "Empty fields.", message: "Please input user name and password.")
@@ -180,6 +201,7 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         
         // UserDefaults to save logged in state
         UserDefaults.standard.set(userName!, forKey: "userName")
+        UserDefaults.standard.set(userPassword!, forKey: "userPassword")
         UserDefaults.standard.set(true, forKey: "isLoggedIn")
         UserDefaults.standard.synchronize()
         

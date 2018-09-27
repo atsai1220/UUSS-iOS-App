@@ -23,13 +23,13 @@
                                 <rect key="frame" x="82" y="99" width="250" height="537"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="ofN-51-4kt">
-                                        <rect key="frame" x="0.0" y="0.0" width="250" height="250"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="250" height="205"/>
                                         <accessibility key="accessibilityConfiguration">
                                             <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
                                         </accessibility>
                                     </imageView>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aQg-Zw-f9k">
-                                        <rect key="frame" x="0.0" y="280" width="250" height="30"/>
+                                        <rect key="frame" x="0.0" y="235" width="250" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="YzQ-Y1-2Mm"/>
                                         </constraints>
@@ -37,15 +37,15 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" textContentType="username"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="o0O-kp-5YQ">
-                                        <rect key="frame" x="0.0" y="340" width="250" height="30"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="mfP-D8-A3s">
+                                        <rect key="frame" x="0.0" y="295" width="250" height="75"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="bQD-oS-KOV"/>
+                                            <constraint firstAttribute="height" constant="75" id="SVS-rn-uYY"/>
                                         </constraints>
-                                        <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
-                                    </textField>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                    </textView>
                                     <textField hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Server Selection" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zjo-9M-cnD">
                                         <rect key="frame" x="0.0" y="385" width="250" height="30"/>
                                         <constraints>
@@ -112,9 +112,9 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="apiField" destination="mfP-D8-A3s" id="bRj-Ul-6Lc"/>
                         <outlet property="loginButton" destination="HUa-t2-WWn" id="qfp-UZ-ho1"/>
                         <outlet property="logoImage" destination="ofN-51-4kt" id="eQq-nv-WXB"/>
-                        <outlet property="passwordField" destination="o0O-kp-5YQ" id="ASk-Oz-Ir5"/>
                         <outlet property="publicButton" destination="nG5-Ty-m7G" id="nGa-CP-cXg"/>
                         <outlet property="serverButton" destination="Pkt-gY-mHv" id="rbm-22-1KX"/>
                         <outlet property="serverField" destination="Zjo-9M-cnD" id="mdX-Wj-Ipp"/>

@@ -19,7 +19,6 @@
 		1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B220C159AE00458079 /* LoginViewController.swift */; };
 		1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B420C16ACC00458079 /* MainTabBarController.swift */; };
 		1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76BA20C1826200458079 /* ProfileViewController.swift */; };
-		1C4D76BD20C1826F00458079 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76BC20C1826F00458079 /* SettingsViewController.swift */; };
 		1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C57E50020BF8387004E1270 /* AppDelegate.swift */; };
 		1C57E50620BF8387004E1270 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50420BF8387004E1270 /* Main.storyboard */; };
 		1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50720BF8388004E1270 /* Assets.xcassets */; };
@@ -29,7 +28,6 @@
 		1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB1210BB86400629D6F /* CommonFunctions.swift */; };
 		1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */; };
 		1C601BB7210F821700629D6F /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB6210F821700629D6F /* SettingCell.swift */; };
-		1C6A5FC5215C0974006B5619 /* FloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A5FC4215C0974006B5619 /* FloatingButton.swift */; };
 		1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */; };
 		1C76A8A52113B08000EE51A8 /* MainLocalTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */; };
 		1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */; };
@@ -61,7 +59,6 @@
 		1C4D76B220C159AE00458079 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1C4D76B420C16ACC00458079 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		1C4D76BA20C1826200458079 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
-		1C4D76BC20C1826F00458079 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		1C57E4FD20BF8387004E1270 /* USS-Mobile-Response-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "USS-Mobile-Response-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C57E50020BF8387004E1270 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1C57E50520BF8387004E1270 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -74,7 +71,6 @@
 		1C601BB1210BB86400629D6F /* CommonFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFunctions.swift; sourceTree = "<group>"; };
 		1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardsTableViewController.swift; sourceTree = "<group>"; };
 		1C601BB6210F821700629D6F /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
-		1C6A5FC4215C0974006B5619 /* FloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingButton.swift; sourceTree = "<group>"; };
 		1C76A8A021127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "USS-Mobile-Response-iOS.xcdatamodel"; sourceTree = "<group>"; };
 		1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLocalTableViewController.swift; sourceTree = "<group>"; };
 		1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTrashTableViewController.swift; sourceTree = "<group>"; };
@@ -198,7 +194,6 @@
 				1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */,
 				1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */,
 				1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */,
-				1C6A5FC4215C0974006B5619 /* FloatingButton.swift */,
 			);
 			path = "Main Page";
 			sourceTree = "<group>";
@@ -241,7 +236,6 @@
 			isa = PBXGroup;
 			children = (
 				1C4D76BA20C1826200458079 /* ProfileViewController.swift */,
-				1C4D76BC20C1826F00458079 /* SettingsViewController.swift */,
 				1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */,
 			);
 			path = "Side View Controllers";
@@ -339,7 +333,6 @@
 			files = (
 				1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */,
 				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
-				1C6A5FC5215C0974006B5619 /* FloatingButton.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */,
 				F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */,
@@ -367,7 +360,6 @@
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
 				1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */,
 				1C76A8A52113B08000EE51A8 /* MainLocalTableViewController.swift in Sources */,
-				1C4D76BD20C1826F00458079 /* SettingsViewController.swift in Sources */,
 				F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */,
 				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,
 				1C0DD398212768F900D656F7 /* NewMapFormViewController.swift in Sources */,

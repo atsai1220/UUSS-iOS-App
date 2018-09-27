@@ -14,7 +14,8 @@ class SettingCell: UICollectionViewCell {
         didSet {
             nameLabel.text = setting?.name
             if let imageName = setting?.imageName {
-                iconImageView.image = UIImage(named: imageName)
+                iconImageView.image = UIImage(named: imageName)?.withRenderingMode(.alwaysTemplate)
+                iconImageView.tintColor = tintColor
             }
         }
     }
@@ -48,7 +49,7 @@ class SettingCell: UICollectionViewCell {
     }
     
     func setupViews() {
-   
+        
         addSubview(nameLabel)
         addSubview(iconImageView)
         
