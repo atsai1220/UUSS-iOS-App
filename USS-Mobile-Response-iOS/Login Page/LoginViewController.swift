@@ -194,19 +194,52 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
         activityIndicator.center = view.center
         let activityBackground = UIView(frame: view.frame)
+        activityBackground.tag = 99
         activityBackground.backgroundColor = UIColor(white: 0, alpha: 0.5)
         view.addSubview(activityBackground)
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         
-        // UserDefaults to save logged in state
-        UserDefaults.standard.set(userName!, forKey: "userName")
-        UserDefaults.standard.set(userPassword!, forKey: "userPassword")
-        UserDefaults.standard.set(true, forKey: "isLoggedIn")
-        UserDefaults.standard.synchronize()
-        
         // Debugging delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: { self.navigateToMainInterface() })
+        let urlString = selectedServerURL! + "/api/?"
+        let privateKey = userPassword!
+        let queryString = "user=" + userName!
+        let signature = "&sign=" + (privateKey + queryString).sha256()!
+        let completeURL = URL(string: (urlString + queryString + signature))
+        if completeURL != nil {
+                let task = URLSession.shared.dataTask(with: completeURL!) {(data, response, error) in
+                    guard let data = data else { return }
+                    if (String(data: data, encoding:. utf8)! != "Invalid signature") {
+                        DispatchQueue.main.async {
+                            // UserDefaults to save logged in state
+                            UserDefaults.standard.set(userName!, forKey: "userName")
+                            UserDefaults.standard.set(userPassword!, forKey: "userPassword")
+                            UserDefaults.standard.set(true, forKey: "isLoggedIn")
+                            UserDefaults.standard.synchronize()
+                            print(String(data: data, encoding:. utf8)!)
+                            self.navigateToMainInterface()
+                        }
+                    }
+                    else {
+                        DispatchQueue.main.async {
+                            activityIndicator.stopAnimating()
+                            activityIndicator.isHidden = true
+                            if let viewWithTag = self.view.viewWithTag(99) {
+                                viewWithTag.removeFromSuperview()
+                            }
+                            self.displayErrorMessage(title: "Bad login.", message: "Check user name or API key.")
+                        }
+                    }
+                }
+                task.resume()
+        } else {
+            activityIndicator.stopAnimating()
+            activityIndicator.isHidden = true
+            if let viewWithTag = self.view.viewWithTag(99) {
+                viewWithTag.removeFromSuperview()
+            }
+            displayErrorMessage(title: "Bad login.", message: "Unable to parse for sha-256. Check user format.")
+        }
     }
     
     
