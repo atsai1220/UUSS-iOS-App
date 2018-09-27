@@ -25,6 +25,7 @@ class HazardsTableViewController: UITableViewController {
         self.refreshControl = UIRefreshControl()
         self.refreshControl?.addTarget(self, action: #selector(collectHazards), for: .valueChanged)
         
+        self.tableView.tableFooterView = UIView(frame: .zero)
     }
     
     override func viewDidAppear(_ animated: Bool) {

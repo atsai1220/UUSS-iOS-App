@@ -190,7 +190,8 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
             ])
     }
     
-    func videoIsAvailable(for sourceType: UIImagePickerControllerSourceType) -> Bool
+    
+    func videoIsAvailable(for sourceType: UIImagePickerControllerSourceType ) -> Bool
     {
         let types = UIImagePickerController.availableMediaTypes(for: .camera)
         

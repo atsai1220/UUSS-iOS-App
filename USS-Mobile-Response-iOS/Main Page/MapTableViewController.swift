@@ -31,6 +31,7 @@ class MapTableViewController: UITableViewController
     {
         super.viewDidLoad()
         tableView.register(TableCell.self, forCellReuseIdentifier: "cellId")
+        self.tableView.tableFooterView = UIView(frame: .zero)
 //        tableView.register(TableHeader.self, forHeaderFooterViewReuseIdentifier: "headerId")
     }
     

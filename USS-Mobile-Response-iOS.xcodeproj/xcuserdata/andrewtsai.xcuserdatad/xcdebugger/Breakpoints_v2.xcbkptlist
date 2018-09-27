@@ -202,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "USS-Mobile-Response-iOS/HazardsTableViewController/HazardsTableViewController.swift"
-            timestampString = "557118956.724828"
+            timestampString = "559195907.811988"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
+            startingLineNumber = "112"
+            endingLineNumber = "112"
             landmarkName = "collectHazards()"
             landmarkType = "7">
          </BreakpointContent>
