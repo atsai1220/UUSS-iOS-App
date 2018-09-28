@@ -258,3 +258,9 @@ enum FileType: String
     case AUDIO = "AUDIO"
     case DOCUMENT = "DOCUMENT"
 }
+
+enum SubmissionStatus: String {
+    case LocalOnly = "LOCALONLY"
+    case SuccessfulUpload = "SUCCESSFULUPLOAD"
+    case ErrorUpload = "ERRORUPLOAD"
+}

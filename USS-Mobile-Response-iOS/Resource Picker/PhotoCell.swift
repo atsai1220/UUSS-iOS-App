@@ -13,7 +13,7 @@ class PhotoCell: UICollectionViewCell {
     var iconImageView: UIImageView = {
        let imageView = UIImageView()
         imageView.image = UIImage(named: "item_add")
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .center
         imageView.clipsToBounds = true
         return imageView
     }()
