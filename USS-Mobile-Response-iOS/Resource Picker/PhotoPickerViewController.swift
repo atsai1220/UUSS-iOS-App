@@ -50,7 +50,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     var imageView: UIImageView = {
         var imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "item_add")?.withRenderingMode(.alwaysTemplate)
+        imageView.backgroundColor = UIColor.white
         imageView.tintColor = UIColor.blue
         imageView.contentMode = .center
         imageView.contentScaleFactor = 1.5
@@ -66,6 +66,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     var titleTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.backgroundColor = UIColor.white
         textField.layer.borderColor = UIColor.gray.cgColor
         textField.layer.borderWidth = 1
         textField.layer.cornerRadius = 5
@@ -119,12 +120,12 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         
         scrollView.addSubview(containerView)
         view.addSubview(scrollView)
+        view.backgroundColor = UIColor(red: 211/225, green: 211/225, blue: 211/225, alpha: 1)
     
         titleTextField.delegate = self
         descriptionTextView.delegate = self
         notesTextView.delegate = self
 
-        view.backgroundColor = UIColor.white
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(tapGestureRecognizer)
