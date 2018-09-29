@@ -50,8 +50,10 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     var imageView: UIImageView = {
         var imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "item_add")
-        imageView.contentMode = .scaleAspectFill
+        imageView.image = UIImage(named: "item_add")?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = UIColor.blue
+        imageView.contentMode = .center
+        imageView.contentScaleFactor = 1.5
         imageView.clipsToBounds = true
         imageView.layer.borderWidth = 1
         imageView.layer.borderColor = UIColor.gray.cgColor
@@ -112,7 +114,6 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
-        
         
         navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
         
@@ -252,13 +253,17 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     
     @objc func imageTapped()
     {
-        print("tapped")
         showActionSheet(imageView: self.imageView)
     }
     
     @objc
     func saveAndUpload()
     {
+        // is form complete?
+        if (titleTextField.text?.isEmpty)! || (descriptionTextView.text?.isEmpty)!  || (notesTextView.text?.isEmpty)!{
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+            return
+        }
         print("4-1: Create local device entry")
         let savedName = createLocalEntry()
         print("4-2: HTTP uploading with custom plugin")
@@ -285,6 +290,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         newEntry.collectionRef = self.collectionReference
         newEntry.localFileName = savedImageName
         newEntry.fileType = FileType.PHOTO.rawValue
+        newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
         var oldEntries = getLocalEntriesFromDisk()
         oldEntries.append(newEntry)
         saveLocalEntriesToDisk(entries: oldEntries)
@@ -336,6 +342,14 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         
     }
 
+    private func displayErrorMessage(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let dismissAction = UIAlertAction(title: "Okay", style: .default, handler: {
+            (action) in alert.dismiss(animated: true, completion: nil)
+        })
+        alert.addAction(dismissAction)
+        present(alert, animated: true, completion: nil)
+    }
     
     func showActionSheet(imageView: UIImageView) {
 
@@ -362,6 +376,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         self.imageView.image = image
+        self.imageView.contentMode = .scaleAspectFill
         if let newURL = info[UIImagePickerControllerImageURL] as? URL {
             self.imageURL = newURL
         }

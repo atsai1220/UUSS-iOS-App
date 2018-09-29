@@ -54,7 +54,7 @@ Version: 1.0 2018/08/17
             scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 0),
             scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
             titleText.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
-            titleText.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 16),
+//            titleText.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
             titleText.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.9, constant: 0),
             titleText.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
             titleText.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8),

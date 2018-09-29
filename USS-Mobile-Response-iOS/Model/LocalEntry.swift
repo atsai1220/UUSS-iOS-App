@@ -48,6 +48,7 @@ struct LocalEntry: Codable {
     var fileType: String?
     var metadata: metadataJSON?
     var videoURL: String?
+    var submissionStatus: String?
 }
 
 // field ID to value string pairs.

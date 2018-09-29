@@ -16,14 +16,16 @@ class MainCellSetting: NSObject
     let name: String
     let imageName: String
     let fileType: String
+    let submissionStatus: String
     let videoURL: String?
     
-    init(name: String, imageName: String, fileType: String, videoURL: String)
+    init(name: String, imageName: String, fileType: String, videoURL: String, submissionStatus: String)
     {
         self.name = name
         self.imageName = imageName
         self.fileType = fileType
         self.videoURL = videoURL
+        self.submissionStatus = submissionStatus
     }
 }
 
@@ -51,6 +53,17 @@ class MainTableViewCell: UITableViewCell {
                     self.iconImageView.image = nil
                     self.nameLabel.text = ""
             }
+            
+            switch setting?.submissionStatus {
+                case SubmissionStatus.LocalOnly.rawValue:
+                    self.statusView.backgroundColor = UIColor(red: 0, green: 0.5, blue: 0.7, alpha: 0.5)
+                case SubmissionStatus.SuccessfulUpload.rawValue:
+                    self.statusView.backgroundColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 0.5)
+                case SubmissionStatus.ErrorUpload.rawValue:
+                    self.statusView.backgroundColor = UIColor(red: 0.7, green: 0, blue: 0, alpha: 0.5)
+                default:
+                    print("should never happen")
+            }
         }
     }
     
@@ -68,6 +81,12 @@ class MainTableViewCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
+    }()
+    
+    var statusView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.blue
+        return view
     }()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -88,9 +107,11 @@ class MainTableViewCell: UITableViewCell {
     {
         addSubview(self.nameLabel)
         addSubview(self.iconImageView)
+        addSubview(statusView)
 //        self.iconImageView.frame = CGRect(origin: CGPoint(x: 0, y: self.frame.midY), size: CGSize(width: 100, height: 100))
-        addConstraintsWithFormat(format: "H:|-8-[v0(150)]-16-[v1]|", views: self.iconImageView, self.nameLabel)
+        addConstraintsWithFormat(format: "H:|-8-[v0(150)]-16-[v1][v2(5)]|", views: self.iconImageView, self.nameLabel, self.statusView)
         addConstraintsWithFormat(format: "V:|[v0]|", views: self.nameLabel)
+        addConstraintsWithFormat(format: "V:|[v0]|", views: self.statusView)
         addConstraintsWithFormat(format: "V:|-[v0]-|", views: self.iconImageView)
     }
 

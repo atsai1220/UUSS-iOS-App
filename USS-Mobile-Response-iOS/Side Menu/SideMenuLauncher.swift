@@ -31,10 +31,9 @@ class SideMenuLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
         cv.backgroundColor = UIColor.white
         return cv
     }()
-
-    let settings: [Setting] = {
+    
+    var settings: [Setting] = {
         return [Setting(name: "Profile", imageName: "human"),
-                Setting(name: "Settings", imageName: "cog"),
                 Setting(name: "About", imageName: "about"),
                 Setting(name: "Logout", imageName: "logout")]
     }()
@@ -44,6 +43,7 @@ class SideMenuLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(SettingCell.self, forCellWithReuseIdentifier: cellId)
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -66,8 +66,8 @@ class SideMenuLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                self.greyView.alpha = 0
-                self.collectionView.frame = CGRect(x: -self.collectionView.frame.width, y: 0, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+            self.greyView.alpha = 0
+            self.collectionView.frame = CGRect(x: -self.collectionView.frame.width, y: 0, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
         }) { (completed: Bool) in
             let setting = self.settings[indexPath.item]
             if setting.name != "Logout" {
@@ -99,7 +99,7 @@ class SideMenuLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
         let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         guard let loginViewController =
             mainStoryboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else {
-            return
+                return
         }
         guard let window = UIApplication.shared.keyWindow else {
             return
@@ -124,9 +124,9 @@ class SideMenuLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
             greyView.alpha = 0
             
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                    self.greyView.alpha = 1
-                    self.collectionView.frame = CGRect(x: 0, y: 0, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
-                }, completion: nil)
+                self.greyView.alpha = 1
+                self.collectionView.frame = CGRect(x: 0, y: 0, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+            }, completion: nil)
         }
     }
     
