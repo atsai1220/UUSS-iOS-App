@@ -248,6 +248,10 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
             displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
             return
         }
+        if imageView.image == nil {
+            displayErrorMessage(title: "Empty image.", message: "Please select an image.")
+            return
+        }
         print("4-1: Create local device entry")
         let savedName = createLocalEntry()
         print("4-2: HTTP uploading with custom plugin")
@@ -385,9 +389,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
                     self.present(ac, animated: true)
                 }
             }
-//            UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
         }
-        
         picker.dismiss(animated: true, completion: nil)
     }
     
