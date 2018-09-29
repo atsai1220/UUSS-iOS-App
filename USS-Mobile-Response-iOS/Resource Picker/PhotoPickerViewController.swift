@@ -208,40 +208,24 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         }
         return true
     }
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        let point = CGPoint(x: 0, y: textField.frame.midY - 100)
-        self.scrollView.setContentOffset(point, animated: true)
-    }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView == notesTextView {
-            let point = CGPoint(x: 0, y: textView.frame.minY - 175)
-            self.scrollView.setContentOffset(point, animated: true)
-            return
-        }
-        else {
-            let point = CGPoint(x: 0, y: textView.frame.midY - 125)
-            self.scrollView.setContentOffset(point, animated: true)
-        }
-    }
-    
-    
     
     @objc func keyboardWillShow(notification:NSNotification)
     {
-        var userInfo = notification.userInfo!
-        var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
-        keyboardFrame = self.view.convert(keyboardFrame, from: nil)
-        
-        var contentInset:UIEdgeInsets = self.scrollView.contentInset
-        contentInset.bottom = keyboardFrame.size.height + 50
-        self.scrollView.contentInset = contentInset
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
     }
     
     @objc func keyboardWillHide(notification:NSNotification)
     {
-        let contentInset:UIEdgeInsets = UIEdgeInsets.zero
-        self.scrollView.contentInset = contentInset
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y += keyboardSize.height
+            }
+            self.view.frame.origin.y = 0
+        }
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
@@ -259,7 +243,6 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     @objc
     func saveAndUpload()
     {
-        // is form complete?
         if (titleTextField.text?.isEmpty)! || (descriptionTextView.text?.isEmpty)!  || (notesTextView.text?.isEmpty)!{
             displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
             return
