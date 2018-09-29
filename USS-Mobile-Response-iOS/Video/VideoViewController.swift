@@ -72,27 +72,26 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         return containerView
     }()
     
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
         safeArea = self.view.safeAreaLayoutGuide
         imagePickerController = UIImagePickerController()
         imagePickerController!.delegate = self
-        
+        view.isUserInteractionEnabled = true
         let saveButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveVideoData))
         self.navigationItem.rightBarButtonItem = saveButton
 
         scrollView.backgroundColor = UIColor.lightGray
         scrollView.addSubview(containerView)
 
-        self.view.addSubview(scrollView)
+        view.addSubview(scrollView)
         
 
-        let videoBoxTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(videoBoxTapped))
+        let videoBoxTap = UITapGestureRecognizer(target: self, action: #selector(videoBoxTapped))
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDisplayed), name: Notification.Name.UIKeyboardWillShow, object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHidden), name: Notification.Name.UIKeyboardWillHide, object: nil)
-        
         videoBox.isUserInteractionEnabled = true
         videoBox.addGestureRecognizer(videoBoxTap)
         containerView.addSubview(videoBox)
@@ -121,7 +120,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         titleBox!.layer.shadowOpacity = 1.0
         titleBox!.layer.shadowColor = UIColor.black.cgColor
         containerView.addSubview(titleBox!)
-
+//
         titleLabel = UILabel()
         titleLabel!.translatesAutoresizingMaskIntoConstraints = false
         titleLabel!.text = "Add Title"
@@ -184,13 +183,16 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         containerView.addSubview(logo)
         
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             containerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             containerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            containerView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1),
+            containerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            containerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            containerView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
             logo.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20.0),
             logo.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant: 1.0),
             logo.heightAnchor.constraint(equalToConstant: 50.0),
@@ -218,15 +220,15 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     }
     
     
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool
-    {
-        if(touch.view!.isDescendant(of: videoBox))
-        {
-            return false
-        }
-        
-        return true
-    }
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool
+//    {
+//        if(touch.view!.isDescendant(of: videoBox))
+//        {
+//            return false
+//        }
+//
+//        return true
+//    }
     
     func videoIsAvailable(for sourceType: UIImagePickerControllerSourceType ) -> Bool
     {
