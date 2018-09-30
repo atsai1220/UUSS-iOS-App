@@ -274,7 +274,9 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
         else {
             savedImageName = saveExistingImageAtDocumentDirectory(image: self.imageView.image!)
         }
-        
+        newEntry.name = titleTextField.text!
+        newEntry.description = descriptionTextView.text!
+        newEntry.notes = notesTextView.text
         newEntry.collectionRef = self.collectionReference
         newEntry.localFileName = savedImageName
         newEntry.fileType = FileType.PHOTO.rawValue

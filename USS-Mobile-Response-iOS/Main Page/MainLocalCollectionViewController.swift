@@ -41,6 +41,7 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         myCollectionView.delegate = self
         myCollectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView = myCollectionView
+        myCollectionView.backgroundColor = UIColor(red: 211/225, green: 211/225, blue: 211/225, alpha: 1)
         // Do any additional setup after loading the view.
 //        self.view.addSubview(self.collectionView!)
     }
@@ -104,7 +105,7 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     
         // Configure the cell
         let item = self.localEntries[indexPath.row]
-        let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localFileName!, fileType: item.fileType!, videoURL: item.videoURL ?? "", submissionStatus: item.submissionStatus!)
+        let setting = MainCellSetting(name: item.name!, imageName: item.localFileName!, fileType: item.fileType!, videoURL: item.videoURL ?? "", submissionStatus: item.submissionStatus!)
         cell.setting = setting
         
         // Drop shadow setting
