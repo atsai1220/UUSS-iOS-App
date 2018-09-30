@@ -135,6 +135,13 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
             sideMenuLauncher.collectionView.frame = CGRect(x: Int(oldRect.origin.x), y: Int(oldRect.origin.y), width: cvWidth, height: Int(window.frame.height))
             sideMenuLauncher.greyView.frame = window.frame
         }
+        
+        self.navigationController?.navigationBar.layer.masksToBounds = false
+        self.navigationController?.navigationBar.layer.shadowColor = UIColor.lightGray.cgColor
+        self.navigationController?.navigationBar.layer.shadowOpacity = 0.8
+        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 3)
+        self.navigationController?.navigationBar.layer.shadowRadius = 2
+
     }
 }
 

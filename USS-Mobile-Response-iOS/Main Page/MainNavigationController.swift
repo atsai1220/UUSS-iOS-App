@@ -19,7 +19,7 @@ class MainNavigationController: UINavigationController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-
+  
     }
 
 }
