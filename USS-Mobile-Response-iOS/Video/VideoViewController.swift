@@ -255,21 +255,10 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
             case .camera:
                
                 videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
-                print("path is \(videoPath!.relativePath!)")
                 
-                if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath!.absoluteString!))
-                {
-                    videoThumbnail = createVideoThumbnail(from: videoPath!.absoluteString!)
-                    UISaveVideoAtPathToSavedPhotosAlbum(videoPath!.relativePath!, self, #selector(videoSaved) , nil)
-                    self.videoBox.image = videoThumbnail
-                    self.videoBoxLabel!.removeFromSuperview()
-                }
-                else
-                {
-                    let alert: UIAlertController = UIAlertController(title: "Error", message: "The video could not be saved to your camera roll", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
+                videoThumbnail = createVideoThumbnail(from: videoPath!.absoluteString!)
+                videoBox.image = videoThumbnail
+                videoBoxLabel!.removeFromSuperview()
                 
                 imagePickerController!.dismiss(animated: true, completion: nil)
             
@@ -278,8 +267,8 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
                 videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
                 let image: UIImage = createVideoThumbnail(from: self.videoPath!.absoluteString!)
             
-                self.videoBox.image = image
-                self.videoBoxLabel!.removeFromSuperview()
+                videoBox.image = image
+                videoBoxLabel!.removeFromSuperview()
             
                 imagePickerController!.dismiss(animated: true, completion: nil)
             
@@ -298,7 +287,8 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
             assetImgGenerate.appliesPreferredTrackTransform = true
         
             let time = CMTimeMakeWithSeconds(1.0, 600)
-            do {
+            do
+            {
                 let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
                 let thumbnail = UIImage(cgImage: img)
                 return thumbnail
@@ -376,7 +366,6 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     
     @objc func doneEnteringText()
     {
-        self.activeTextView = nil
         self.view.endEditing(true)
     }
 
@@ -385,16 +374,16 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         switch textView.tag
         {
             case 0:
-                self.titleLabel!.removeFromSuperview()
                 self.activeTextView = textView
+                self.titleLabel!.removeFromSuperview()
                 return true
             case 1:
-                self.descriptionLabel!.removeFromSuperview()
                 self.activeTextView = textView
+                self.descriptionLabel!.removeFromSuperview()
                 return true
             case 2:
-                self.notesLabel!.removeFromSuperview()
                 self.activeTextView = textView
+                self.notesLabel!.removeFromSuperview()
                 return true
             default:
                 return false
@@ -445,6 +434,11 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     
     @objc func keyboardDisplayed(notification: Notification)
     {
+        if(activeTextView == nil)
+        {
+            return
+        }
+        
         let infoDict: NSDictionary = notification.userInfo! as NSDictionary
         let keyboardSize: CGRect = (infoDict[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
 
@@ -472,29 +466,43 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     
     @objc func saveVideoData()
     {
-        saveVideoToDisk()
-        var localVideoEntry: LocalEntry = LocalEntry()
-      
-        localVideoEntry.localFileName = self.titleBox!.text
-        localVideoEntry.collectionRef = self.collectionReference
-        localVideoEntry.description = self.descriptionBox!.text
-        localVideoEntry.notes = self.notesBox!.text
-        localVideoEntry.fileType = FileType.VIDEO.rawValue
-        localVideoEntry.videoURL = self.videoPath!.absoluteString
-        
-        var oldEntries = getLocalEntriesFromDisk()
-        oldEntries.append(localVideoEntry)
-        saveLocalEntriesToDisk(entries: oldEntries)
-        self.navigationController!.popToRootViewController(animated: true)
+        if(self.titleBox!.text.count == 0)
+        {
+            let alert: UIAlertController = UIAlertController(title: "Title Empty", message: "Please enter a title to save the video", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else if(self.videoBox.image == nil)
+        {
+            let alert: UIAlertController = UIAlertController(title: "No Video", message: "You must select a video to save", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else
+        {
+            saveVideoToDisk()
+            var localVideoEntry: LocalEntry = LocalEntry()
+          
+            localVideoEntry.localFileName = self.titleBox!.text
+            localVideoEntry.collectionRef = self.collectionReference
+            localVideoEntry.description = self.descriptionBox!.text
+            localVideoEntry.notes = self.notesBox!.text
+            localVideoEntry.fileType = FileType.VIDEO.rawValue
+            localVideoEntry.videoURL = self.videoUrl!.absoluteString
+            
+            var oldEntries = getLocalEntriesFromDisk()
+            oldEntries.append(localVideoEntry)
+            saveLocalEntriesToDisk(entries: oldEntries)
+            self.navigationController!.popToRootViewController(animated: true)
+        }
     }
     
     func saveVideoToDisk()
     {
         fileManager = FileManager.default
         let docURL: [URL] = fileManager!.urls(for: .documentDirectory, in: .userDomainMask)
-        self.videoUrl = docURL[0].appendingPathComponent("\(self.titleBox!.text)" + "/")
-        print(videoUrl!.relativeString)
-        
+        self.videoUrl = docURL[0].appendingPathComponent("\(String(describing: self.titleBox!.text))" + "/")
+    
         do
         {
             let videoData: Data? = try Data(contentsOf: videoPath! as URL)
