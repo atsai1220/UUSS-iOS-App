@@ -69,27 +69,12 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
             
         } else {
             return CGSize(width: myCollectionView.frame.width * 0.9, height: myCollectionView.frame.height * 0.30)
-            
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
-    
-//    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-//        if UIDevice.current.orientation.isLandscape,
-//            let layout = myCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-//            let width = view.frame.height - 22
-//            layout.itemSize = CGSize(width: 200, height: 300)
-//            layout.invalidateLayout()
-//        } else if UIDevice.current.orientation.isPortrait,
-//            let layout = myCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-//            let width = view.frame.width - 22
-//            layout.itemSize = CGSize(width: myCollectionView.frame.width * 0.9, height: myCollectionView.frame.height * 0.30)
-//            layout.invalidateLayout()
-//        }
-//    }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -121,9 +106,21 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         let item = self.localEntries[indexPath.row]
         let setting = MainCellSetting(name: item.collectionRef!, imageName: item.localFileName!, fileType: item.fileType!, videoURL: item.videoURL ?? "", submissionStatus: item.submissionStatus!)
         cell.setting = setting
+        
+        // Drop shadow setting
+  
         return cell
     }
     
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+            super.viewWillTransition(to: size, with: coordinator)
+            guard let flowLayout = myCollectionView.collectionViewLayout as? UICollectionViewLayout else {
+                return
+            }
+            flowLayout.invalidateLayout()
+    }
+
 
     // MARK: UICollectionViewDelegate
 

@@ -67,7 +67,6 @@ class MainCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = UIColor.red
         return label
     }()
     
@@ -91,7 +90,7 @@ class MainCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.green
+        backgroundColor = UIColor.white
         setupViews()
     }
     
@@ -118,5 +117,20 @@ class MainCollectionViewCell: UICollectionViewCell {
             statusView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
             statusView.widthAnchor.constraint(equalToConstant: 10)
             ])
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        contentView.layer.cornerRadius = 5.0
+        contentView.layer.borderWidth = 1.0
+        contentView.layer.borderColor = UIColor.clear.cgColor
+        contentView.layer.masksToBounds = false
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowOffset = CGSize(width: 5, height: 5)
+        layer.shadowRadius = 4.0
+        layer.shadowOpacity = 1.0
+        layer.masksToBounds = false
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: contentView.layer.cornerRadius).cgPath
     }
 }
