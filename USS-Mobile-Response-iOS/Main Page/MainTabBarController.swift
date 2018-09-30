@@ -111,7 +111,7 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
         navigationItem.title = "Main"
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        let localViewCotnroller: MainLocalTableViewController = MainLocalTableViewController()
+        let localViewCotnroller: MainLocalCollectionViewController = MainLocalCollectionViewController(collectionViewLayout: UICollectionViewLayout())
         
         let trashViewController: MainTrashTableViewController = MainTrashTableViewController()
         

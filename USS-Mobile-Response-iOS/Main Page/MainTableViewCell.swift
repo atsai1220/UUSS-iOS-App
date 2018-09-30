@@ -11,23 +11,24 @@ import Foundation
 import Photos
 import MobileCoreServices
 
-class MainCellSetting: NSObject
-{
-    let name: String
-    let imageName: String
-    let fileType: String
-    let submissionStatus: String
-    let videoURL: String?
-    
-    init(name: String, imageName: String, fileType: String, videoURL: String, submissionStatus: String)
-    {
-        self.name = name
-        self.imageName = imageName
-        self.fileType = fileType
-        self.videoURL = videoURL
-        self.submissionStatus = submissionStatus
-    }
-}
+//class MainCellSetting: NSObject
+//{
+//    let name: String
+//    let imageName: String
+//    let fileType: String
+//    let submissionStatus: String
+//    let videoURL: String?
+//
+//    init(name: String, imageName: String, fileType: String, videoURL: String, submissionStatus: String)
+//    {
+//        self.name = name
+//        self.imageName = imageName
+//        self.fileType = fileType
+//        self.videoURL = videoURL
+//        self.submissionStatus = submissionStatus
+//    }
+//}
+
 
 class MainTableViewCell: UITableViewCell {
     
