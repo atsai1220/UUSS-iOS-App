@@ -64,7 +64,10 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
      */
     var plistController: PlistController!
     var plistSource = [ResourceSpace]()
-    
+    let shadowColor = UIColor.black.cgColor
+    let shadowOpacity: Float = 0.5
+    let shadowOffset = CGSize(width: 2, height: 2)
+    let shadowRadius = 10
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -82,7 +85,13 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         publicButton.layer.masksToBounds = true
         publicButton.layer.cornerRadius = 5.0
         
+        userNameField.layer.borderColor = UIColor.lightGray.cgColor
+        userNameField.layer.borderWidth = 1.0
+        userNameField.layer.cornerRadius = 5.0
+        
         apiField.layer.masksToBounds = true
+        apiField.layer.borderColor = UIColor.lightGray.cgColor
+        apiField.layer.borderWidth = 1.0
         apiField.layer.cornerRadius = 5.0
         apiField.text = "Enter API key here..."
         apiField.textColor = .lightGray
@@ -91,9 +100,6 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         selectedServerName = plistController.resources.first?.name
         selectedServerURL = plistController.resources.first?.url
         serverButton.setTitle(selectedServerName!.truncated(length: 19), for: .normal)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -114,6 +120,11 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     @objc
@@ -140,7 +151,6 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        //
         if isLoggedIn() {
             DispatchQueue.main.asyncAfter(deadline: .now(), execute: { self.navigateToMainInterface() })
         }
@@ -184,6 +194,7 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         // Read values from text fields
         let userName = userNameField.text
         let userPassword = apiField.text
+        
         // Check if fields are empty
         if (userName?.isEmpty)! || (userPassword?.isEmpty)! {
             displayErrorMessage(title: "Empty fields.", message: "Please input user name and password.")
@@ -200,7 +211,6 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         
-        // Debugging delay
         let urlString = selectedServerURL! + "/api/?"
         let privateKey = userPassword!
         let queryString = "user=" + userName!

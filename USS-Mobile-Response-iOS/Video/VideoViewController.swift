@@ -75,23 +75,22 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         return containerView
     }()
     
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
         safeArea = self.view.safeAreaLayoutGuide
         imagePickerController = UIImagePickerController()
         imagePickerController!.delegate = self
-        
+        view.isUserInteractionEnabled = true
         let saveButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveVideoData))
         self.navigationItem.rightBarButtonItem = saveButton
 
         scrollView.backgroundColor = UIColor.lightGray
         scrollView.addSubview(containerView)
 
-        self.view.addSubview(scrollView)
+        view.addSubview(scrollView)
         
-
         let videoBoxTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(videoBoxTapped))
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDisplayed), name: Notification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHidden), name: Notification.Name.UIKeyboardWillHide, object: nil)
@@ -124,7 +123,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         titleBox!.layer.shadowOpacity = 1.0
         titleBox!.layer.shadowColor = UIColor.black.cgColor
         containerView.addSubview(titleBox!)
-
+//
         titleLabel = UILabel()
         titleLabel!.translatesAutoresizingMaskIntoConstraints = false
         titleLabel!.text = "Add Title"
@@ -187,7 +186,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         containerView.addSubview(logo)
         
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),

@@ -24,6 +24,7 @@ class MainLocalTableViewController: UITableViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
 
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
