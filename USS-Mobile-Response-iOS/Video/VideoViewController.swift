@@ -29,6 +29,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     var fileManager: FileManager?
     var videoPath: NSURL?
     var activeTextView: UITextView?
+    var origInsets: UIEdgeInsets?
     
     let videoBox: UIImageView =
     {
@@ -62,6 +63,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.isUserInteractionEnabled = true
         return scrollView
     }()
     
@@ -69,6 +71,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.isUserInteractionEnabled = true
         return containerView
     }()
     
@@ -90,8 +93,8 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         
 
         let videoBoxTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(videoBoxTapped))
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDisplayed), name: Notification.Name.UIKeyboardWillShow, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHidden), name: Notification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDisplayed), name: Notification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHidden), name: Notification.Name.UIKeyboardWillHide, object: nil)
         
         videoBox.isUserInteractionEnabled = true
         videoBox.addGestureRecognizer(videoBoxTap)
@@ -128,54 +131,54 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         titleLabel!.font = UIFont.boldSystemFont(ofSize: 25.0)
         titleLabel!.textColor = UIColor.black
         titleBox!.addSubview(titleLabel!)
-//
-//        descriptionBox = UITextView()
-//        descriptionBox!.delegate = self
-//        descriptionBox!.tag = 1
-//        descriptionBox!.textContainerInset = UIEdgeInsets(top: 25.0, left: 20.0, bottom: 10.0, right: 20.0)
-//        descriptionBox!.font = UIFont.boldSystemFont(ofSize: 25.0)
-//        descriptionBox!.inputAccessoryView = toolBar
-//        descriptionBox!.translatesAutoresizingMaskIntoConstraints = false
-//        descriptionBox!.backgroundColor = UIColor.white
-//        descriptionBox!.layer.borderColor = UIColor.black.cgColor
-//        descriptionBox!.layer.borderWidth = 5.0
-//        descriptionBox!.layer.cornerRadius = 5.0
-//        descriptionBox!.layer.shadowRadius = 3.0
-//        descriptionBox!.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
-//        descriptionBox!.layer.shadowOpacity = 1.0
-//        descriptionBox!.layer.shadowColor = UIColor.black.cgColor
-//        scrollView!.addSubview(descriptionBox!)
-//
-//        descriptionLabel = UILabel()
-//        descriptionLabel!.translatesAutoresizingMaskIntoConstraints = false
-//        descriptionLabel!.text = "Add Description"
-//        descriptionLabel!.font = UIFont.boldSystemFont(ofSize: 25.0)
-//        descriptionLabel!.textColor = UIColor.black
-//        descriptionBox!.addSubview(descriptionLabel!)
-//
-//        notesBox = UITextView()
-//        notesBox!.delegate = self
-//        notesBox!.tag = 2
-//        notesBox!.textContainerInset = UIEdgeInsets(top: 25.0, left: 20.0, bottom: 10.0, right: 20.0)
-//        notesBox!.font = UIFont.boldSystemFont(ofSize: 25.0)
-//        notesBox!.inputAccessoryView = toolBar
-//        notesBox!.translatesAutoresizingMaskIntoConstraints = false
-//        notesBox!.backgroundColor = UIColor.white
-//        notesBox!.layer.borderColor = UIColor.black.cgColor
-//        notesBox!.layer.borderWidth = 5.0
-//        notesBox!.layer.cornerRadius = 5.0
-//        notesBox!.layer.shadowRadius = 3.0
-//        notesBox!.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
-//        notesBox!.layer.shadowOpacity = 1.0
-//        notesBox!.layer.shadowColor = UIColor.black.cgColor
-//        scrollView!.addSubview(notesBox!)
-//
-//        notesLabel = UILabel()
-//        notesLabel!.translatesAutoresizingMaskIntoConstraints = false
-//        notesLabel!.text = "Add Notes"
-//        notesLabel!.font = UIFont.boldSystemFont(ofSize: 25.0)
-//        notesLabel!.textColor = UIColor.black
-//        notesBox!.addSubview(notesLabel!)
+
+        descriptionBox = UITextView()
+        descriptionBox!.delegate = self
+        descriptionBox!.tag = 1
+        descriptionBox!.textContainerInset = UIEdgeInsets(top: 25.0, left: 20.0, bottom: 10.0, right: 20.0)
+        descriptionBox!.font = UIFont.boldSystemFont(ofSize: 25.0)
+        descriptionBox!.inputAccessoryView = toolBar
+        descriptionBox!.translatesAutoresizingMaskIntoConstraints = false
+        descriptionBox!.backgroundColor = UIColor.white
+        descriptionBox!.layer.borderColor = UIColor.black.cgColor
+        descriptionBox!.layer.borderWidth = 5.0
+        descriptionBox!.layer.cornerRadius = 5.0
+        descriptionBox!.layer.shadowRadius = 3.0
+        descriptionBox!.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+        descriptionBox!.layer.shadowOpacity = 1.0
+        descriptionBox!.layer.shadowColor = UIColor.black.cgColor
+        scrollView.addSubview(descriptionBox!)
+
+        descriptionLabel = UILabel()
+        descriptionLabel!.translatesAutoresizingMaskIntoConstraints = false
+        descriptionLabel!.text = "Add Description"
+        descriptionLabel!.font = UIFont.boldSystemFont(ofSize: 25.0)
+        descriptionLabel!.textColor = UIColor.black
+        descriptionBox!.addSubview(descriptionLabel!)
+
+        notesBox = UITextView()
+        notesBox!.delegate = self
+        notesBox!.tag = 2
+        notesBox!.textContainerInset = UIEdgeInsets(top: 25.0, left: 20.0, bottom: 10.0, right: 20.0)
+        notesBox!.font = UIFont.boldSystemFont(ofSize: 25.0)
+        notesBox!.inputAccessoryView = toolBar
+        notesBox!.translatesAutoresizingMaskIntoConstraints = false
+        notesBox!.backgroundColor = UIColor.white
+        notesBox!.layer.borderColor = UIColor.black.cgColor
+        notesBox!.layer.borderWidth = 5.0
+        notesBox!.layer.cornerRadius = 5.0
+        notesBox!.layer.shadowRadius = 3.0
+        notesBox!.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+        notesBox!.layer.shadowOpacity = 1.0
+        notesBox!.layer.shadowColor = UIColor.black.cgColor
+        scrollView.addSubview(notesBox!)
+
+        notesLabel = UILabel()
+        notesLabel!.translatesAutoresizingMaskIntoConstraints = false
+        notesLabel!.text = "Add Notes"
+        notesLabel!.font = UIFont.boldSystemFont(ofSize: 25.0)
+        notesLabel!.textColor = UIColor.black
+        notesBox!.addSubview(notesLabel!)
         
         
         let logo: UIImageView = UIImageView(image: UIImage(named: "DNR"))
@@ -190,7 +193,10 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
             scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             containerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             containerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            containerView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1),
+            containerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            containerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            containerView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
             logo.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20.0),
             logo.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant: 1.0),
             logo.heightAnchor.constraint(equalToConstant: 50.0),
@@ -206,26 +212,20 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
             titleBox!.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.9),
             titleBox!.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             titleLabel!.centerXAnchor.constraint(equalTo: titleBox!.centerXAnchor),
-            titleLabel!.centerYAnchor.constraint(equalTo: titleBox!.centerYAnchor)
-//            descriptionBox!.topAnchor.constraintEqualToSystemSpacingBelow(titleBox!.bottomAnchor, multiplier: 2.0),
-//            descriptionLabel!.centerXAnchor.constraintEqualToSystemSpacingAfter(descriptionBox!.centerXAnchor, multiplier: 1.0),
-//            descriptionLabel!.centerYAnchor.constraintEqualToSystemSpacingBelow(descriptionBox!.centerYAnchor, multiplier: 1.0),
-//            notesBox!.topAnchor.constraintEqualToSystemSpacingBelow(descriptionBox!.bottomAnchor, multiplier: 2.0),
-//            notesBox!.bottomAnchor.constraintEqualToSystemSpacingBelow(scrollView!.bottomAnchor, multiplier: 1.0),
-//            notesLabel!.centerXAnchor.constraintEqualToSystemSpacingAfter(notesBox!.centerXAnchor, multiplier: 1.0),
-//            notesLabel!.centerYAnchor.constraintEqualToSystemSpacingBelow(notesBox!.centerYAnchor, multiplier: 1.0)
+            titleLabel!.centerYAnchor.constraint(equalTo: titleBox!.centerYAnchor),
+            descriptionBox!.topAnchor.constraint(equalTo: titleBox!.bottomAnchor, constant: 15.0),
+            descriptionBox!.heightAnchor.constraint(equalToConstant: 150.0),
+            descriptionBox!.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.9),
+            descriptionBox!.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            descriptionLabel!.centerXAnchor.constraintEqualToSystemSpacingAfter(descriptionBox!.centerXAnchor, multiplier: 1.0),
+            descriptionLabel!.centerYAnchor.constraintEqualToSystemSpacingBelow(descriptionBox!.centerYAnchor, multiplier: 1.0),
+            notesBox!.topAnchor.constraint(equalTo: descriptionBox!.bottomAnchor, constant: 15.0),
+            notesBox!.heightAnchor.constraint(equalToConstant: 175.0),
+            notesBox!.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.9),
+            notesBox!.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            notesLabel!.centerXAnchor.constraintEqualToSystemSpacingAfter(notesBox!.centerXAnchor, multiplier: 1.0),
+            notesLabel!.centerYAnchor.constraintEqualToSystemSpacingBelow(notesBox!.centerYAnchor, multiplier: 1.0)
             ])
-    }
-    
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool
-    {
-        if(touch.view!.isDescendant(of: videoBox))
-        {
-            return false
-        }
-        
-        return true
     }
     
     func videoIsAvailable(for sourceType: UIImagePickerControllerSourceType ) -> Bool
@@ -377,31 +377,33 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     
     @objc func doneEnteringText()
     {
+        self.activeTextView = nil
         self.view.endEditing(true)
     }
 
-    func textViewDidBeginEditing(_ textView: UITextView)
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool
     {
         switch textView.tag
         {
             case 0:
                 self.titleLabel!.removeFromSuperview()
                 self.activeTextView = textView
+                return true
             case 1:
                 self.descriptionLabel!.removeFromSuperview()
                 self.activeTextView = textView
+                return true
             case 2:
                 self.notesLabel!.removeFromSuperview()
                 self.activeTextView = textView
+                return true
             default:
-                break
+                return false
         }
     }
     
     func textViewDidEndEditing(_ textView: UITextView)
     {
-        self.activeTextView = nil
-
         switch textView.tag
         {
             case 0:
@@ -442,23 +444,36 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         showActionSheet()
     }
     
-//    @objc func keyboardDisplayed(notification: Notification)
-//    {
-//        let infoDict: NSDictionary = notification.userInfo! as NSDictionary
-//        let keyboardSize: CGRect = (infoDict[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-//
-//        let contentInsets: UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, keyboardSize.height, 0.0)
-//
-//    }
+    @objc func keyboardDisplayed(notification: Notification)
+    {
+        let infoDict: NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardSize: CGRect = (infoDict[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+
+        let contentInsets: UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, keyboardSize.height, 0.0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+
+        let rect: CGRect = self.view.frame
+    
+        if(rect.contains(activeTextView!.frame.origin))
+        {
+            scrollView.scrollRectToVisible(activeTextView!.frame, animated: true)
+        }
+    }
     
     @objc func keyboardHidden(notification: Notification)
     {
-        print("keyboard hidden")
+        let infoDict: NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardSize: CGRect = (infoDict[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+
+        let contentInsets: UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, 0.0 - keyboardSize.height, 0.0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
     }
     
     @objc func saveVideoData()
     {
-//        saveVideoToDisk()
+        saveVideoToDisk()
         var localVideoEntry: LocalEntry = LocalEntry()
       
         localVideoEntry.localFileName = self.titleBox!.text
@@ -474,22 +489,23 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         self.navigationController!.popToRootViewController(animated: true)
     }
     
-//    func saveVideoToDisk()
-//    {
-//        fileManager = FileManager.default
-//        let docURL: URL = fileManager!.urls(for: .documentDirectory, in: .userDomainMask).first!
-//        self.videoUrl = docURL.appendingPathComponent("\(String(describing: self.titleBox!.text))" + "/")
-//
-//        do
-//        {
-//            let videoData: Data? = try Data(contentsOf: videoPath! as URL)
-//            fileManager!.createFile(atPath: self.videoUrl!.relativePath, contents: videoData, attributes: nil)
-//        }
-//        catch
-//        {
-//            let alert: UIAlertController = UIAlertController(title: "Error", message: "There was a problem getting the video data for saving the file. Please try again", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-//            self.present(alert, animated: true, completion: nil)
-//        }
-//    }
+    func saveVideoToDisk()
+    {
+        fileManager = FileManager.default
+        let docURL: [URL] = fileManager!.urls(for: .documentDirectory, in: .userDomainMask)
+        self.videoUrl = docURL[0].appendingPathComponent("\(self.titleBox!.text)" + "/")
+        print(videoUrl!.relativeString)
+        
+        do
+        {
+            let videoData: Data? = try Data(contentsOf: videoPath! as URL)
+            fileManager!.createFile(atPath: self.videoUrl!.relativePath, contents: videoData, attributes: nil)
+        }
+        catch
+        {
+            let alert: UIAlertController = UIAlertController(title: "Error", message: "There was a problem getting the video data for saving the file. Please try again", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 }
