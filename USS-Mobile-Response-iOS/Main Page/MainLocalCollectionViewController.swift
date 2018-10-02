@@ -123,6 +123,31 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     }
 
 
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+    {
+        let localMedia: LocalEntry = localEntries[indexPath.row]
+        
+        switch localMedia.fileType
+        {
+            case FileType.PHOTO.rawValue:
+                break
+            case FileType.VIDEO.rawValue:
+                
+                let videoPLaybackController: VideoPlaybackViewController = VideoPlaybackViewController()
+                let url: String = Bundle.main.path(forResource: "simpson", ofType: "mov") ?? "temp"
+                videoPLaybackController.videoUrl = URL(fileURLWithPath: url)
+//                videoPLaybackController.videoUrl = URL(fileURLWithPath: localMedia.videoURL!)
+                navigationController?.pushViewController(videoPLaybackController, animated: true)
+            
+            case FileType.AUDIO.rawValue:
+                break
+            case FileType.DOCUMENT.rawValue:
+                break
+            default:
+                break
+        }
+    }
+    
     // MARK: UICollectionViewDelegate
 
     /*

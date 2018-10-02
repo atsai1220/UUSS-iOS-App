@@ -42,6 +42,8 @@
 		1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */; };
 		F6028FED2143303700429805 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6028FEC2143303700429805 /* AnnotationView.swift */; };
 		F60773672135F38A009F6962 /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60773662135F38A009F6962 /* AudioViewController.swift */; };
+		F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */; };
+		F628AB492162CA5300E7C561 /* simpson.mov in Resources */ = {isa = PBXBuildFile; fileRef = F628AB482162CA5300E7C561 /* simpson.mov */; };
 		F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */; };
 		F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */; };
 		F6CDB5B72134BCCD0016C036 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B62134BCCC0016C036 /* MapViewController.swift */; };
@@ -87,6 +89,9 @@
 		1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		F6028FEC2143303700429805 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		F60773662135F38A009F6962 /* AudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewController.swift; sourceTree = "<group>"; };
+		F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackViewController.swift; sourceTree = "<group>"; };
+		F628AB452162C83000E7C561 /* IMG_4950.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = IMG_4950.mov; path = ../../../IMG_4950.mov; sourceTree = "<group>"; };
+		F628AB482162CA5300E7C561 /* simpson.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = simpson.mov; path = ../../../simpson.mov; sourceTree = "<group>"; };
 		F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackViewController.swift; sourceTree = "<group>"; };
 		F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAnnotation.swift; sourceTree = "<group>"; };
 		F6CDB5B62134BCCC0016C036 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -207,6 +212,8 @@
 		9C5E159820EF69CD00BFD0F3 /* Login Page */ = {
 			isa = PBXGroup;
 			children = (
+				F628AB482162CA5300E7C561 /* simpson.mov */,
+				F628AB452162C83000E7C561 /* IMG_4950.mov */,
 				1C4D76B220C159AE00458079 /* LoginViewController.swift */,
 			);
 			path = "Login Page";
@@ -260,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				F6D2785C214C6DE800490350 /* VideoViewController.swift */,
+				F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -325,6 +333,7 @@
 			files = (
 				1C57E50B20BF8388004E1270 /* LaunchScreen.storyboard in Resources */,
 				1C043CA020CAA90E006A9D69 /* ServerList.plist in Resources */,
+				F628AB492162CA5300E7C561 /* simpson.mov in Resources */,
 				1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */,
 				1C57E50620BF8387004E1270 /* Main.storyboard in Resources */,
 			);
@@ -344,6 +353,7 @@
 				F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */,
 				1C5F8E9A21604135002773AA /* MainCollectionViewCell.swift in Sources */,
 				1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */,
+				F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */,
 				1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
 				F6D2785D214C6DE800490350 /* VideoViewController.swift in Sources */,

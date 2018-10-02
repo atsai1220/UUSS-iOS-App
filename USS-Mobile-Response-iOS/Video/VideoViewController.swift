@@ -28,8 +28,10 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     var videoThumbnail: UIImage?
     var fileManager: FileManager?
     var videoPath: NSURL?
+    var videoFile: String?
     var activeTextView: UITextView?
     var origInsets: UIEdgeInsets?
+    var localFileName: String?
     
     let videoBox: UIImageView =
     {
@@ -257,19 +259,23 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
                 videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
                 
                 videoThumbnail = createVideoThumbnail(from: videoPath!.absoluteString!)
+                localFileName = saveExistingImageAtDocumentDirectory(image: videoThumbnail!)
                 videoBox.image = videoThumbnail
                 videoBoxLabel!.removeFromSuperview()
+                videoFile = videoPath!.lastPathComponent
                 
                 imagePickerController!.dismiss(animated: true, completion: nil)
             
             case .savedPhotosAlbum:
             
                 videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
-                let image: UIImage = createVideoThumbnail(from: self.videoPath!.absoluteString!)
-            
-                videoBox.image = image
+                videoThumbnail = createVideoThumbnail(from: self.videoPath!.absoluteString!)
+                localFileName = saveExistingImageAtDocumentDirectory(image: videoThumbnail!)
+                
+                videoBox.image = videoThumbnail
                 videoBoxLabel!.removeFromSuperview()
-            
+                videoFile = videoPath!.lastPathComponent
+                
                 imagePickerController!.dismiss(animated: true, completion: nil)
             
             case .photoLibrary:
@@ -483,12 +489,14 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
             saveVideoToDisk()
             var localVideoEntry: LocalEntry = LocalEntry()
           
-            localVideoEntry.localFileName = self.titleBox!.text
+            localVideoEntry.name = self.titleBox!.text
+            localVideoEntry.localFileName = localFileName
             localVideoEntry.collectionRef = self.collectionReference
             localVideoEntry.description = self.descriptionBox!.text
             localVideoEntry.notes = self.notesBox!.text
             localVideoEntry.fileType = FileType.VIDEO.rawValue
             localVideoEntry.videoURL = self.videoUrl!.absoluteString
+            localVideoEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
             
             var oldEntries = getLocalEntriesFromDisk()
             oldEntries.append(localVideoEntry)
@@ -501,18 +509,9 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     {
         fileManager = FileManager.default
         let docURL: [URL] = fileManager!.urls(for: .documentDirectory, in: .userDomainMask)
-        self.videoUrl = docURL[0].appendingPathComponent("\(String(describing: self.titleBox!.text))" + "/")
-    
-        do
-        {
-            let videoData: Data? = try Data(contentsOf: videoPath! as URL)
-            fileManager!.createFile(atPath: self.videoUrl!.relativePath, contents: videoData, attributes: nil)
-        }
-        catch
-        {
-            let alert: UIAlertController = UIAlertController(title: "Error", message: "There was a problem getting the video data for saving the file. Please try again", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
+        videoUrl = docURL[0].appendingPathComponent("\(titleBox!.text!)/\(videoFile!)")
+        
+        fileManager!.createFile(atPath: self.videoUrl!.relativePath, contents: nil, attributes: nil)
+     
     }
 }
