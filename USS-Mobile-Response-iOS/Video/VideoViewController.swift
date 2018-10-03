@@ -16,7 +16,6 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     var imagePickerController: UIImagePickerController?
     var collectionReference: String = ""
     var safeArea: UILayoutGuide?
-//    var videoBox: UIImageView?
     var videoBoxLabel: UILabel?
     var titleBox: UITextView?
     var titleLabel: UILabel?
@@ -24,15 +23,16 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     var descriptionLabel: UILabel?
     var notesBox: UITextView?
     var notesLabel: UILabel?
-    var videoUrl: URL?
     var videoThumbnail: UIImage?
     var fileManager: FileManager?
-    var videoPath: NSURL?
     var videoFile: String?
     var activeTextView: UITextView?
     var origInsets: UIEdgeInsets?
     var localFileName: String?
-    
+    var pathFromImagePicker: NSURL?
+    var videoUrl: URL?
+    var videoData: Data?
+
     let videoBox: UIImageView =
     {
         var videoBox: UIImageView = UIImageView()
@@ -256,25 +256,69 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         {
             case .camera:
                
-                videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
+//                let url = info[UIImagePickerControllerMediaURL] as? URL
+//                do
+//                {
+//                    videoData = try Data(contentsOf: url!)
+//                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+//                    videoUrl = documentsDirectory!.appendingPathComponent("movie.mov")
+//
+//                    do
+//                    {
+//                        try videoData!.write(to: videoUrl!)
+//                    }
+//                    catch
+//                    {
+//                        let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
+//                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+//                        self.present(alert, animated: true, completion: nil)
+//                    }
+//                }
+//                catch
+//                {
+//                    let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not save video data", preferredStyle: .alert)
+//                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+//                    self.present(alert, animated: true, completion: nil)
+//                }
                 
-                videoThumbnail = createVideoThumbnail(from: videoPath!.absoluteString!)
+                let url = info[UIImagePickerControllerMediaURL] as? URL
+                do
+                {
+                    videoData = try Data(contentsOf: url!)
+                }
+                catch
+                {
+                    let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not save video data", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+                
+                videoThumbnail = createVideoThumbnail(from: url!.absoluteString)
                 localFileName = saveExistingImageAtDocumentDirectory(image: videoThumbnail!)
                 videoBox.image = videoThumbnail
                 videoBoxLabel!.removeFromSuperview()
-                videoFile = videoPath!.lastPathComponent
                 
                 imagePickerController!.dismiss(animated: true, completion: nil)
             
             case .savedPhotosAlbum:
             
-                videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
-                videoThumbnail = createVideoThumbnail(from: self.videoPath!.absoluteString!)
+                let url = info[UIImagePickerControllerMediaURL] as? URL
+                do
+                {
+                    videoData = try Data(contentsOf: url!)
+                }
+                catch
+                {
+                    let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not save video data", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+                
+                videoThumbnail = createVideoThumbnail(from: url!.absoluteString)
                 localFileName = saveExistingImageAtDocumentDirectory(image: videoThumbnail!)
                 
                 videoBox.image = videoThumbnail
                 videoBoxLabel!.removeFromSuperview()
-                videoFile = videoPath!.lastPathComponent
                 
                 imagePickerController!.dismiss(animated: true, completion: nil)
             
@@ -472,6 +516,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     
     @objc func saveVideoData()
     {
+        saveVideoToDisk()
         if(self.titleBox!.text.count == 0)
         {
             let alert: UIAlertController = UIAlertController(title: "Title Empty", message: "Please enter a title to save the video", preferredStyle: .alert)
@@ -486,16 +531,15 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
         }
         else
         {
-            saveVideoToDisk()
             var localVideoEntry: LocalEntry = LocalEntry()
           
-            localVideoEntry.name = self.titleBox!.text
+            localVideoEntry.name = titleBox!.text
             localVideoEntry.localFileName = localFileName
-            localVideoEntry.collectionRef = self.collectionReference
-            localVideoEntry.description = self.descriptionBox!.text
-            localVideoEntry.notes = self.notesBox!.text
+            localVideoEntry.collectionRef = collectionReference
+            localVideoEntry.description = descriptionBox!.text
+            localVideoEntry.notes = notesBox!.text
             localVideoEntry.fileType = FileType.VIDEO.rawValue
-            localVideoEntry.videoURL = self.videoUrl!.absoluteString
+            localVideoEntry.videoURL = videoUrl!.relativePath
             localVideoEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
             
             var oldEntries = getLocalEntriesFromDisk()
@@ -507,11 +551,18 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     
     func saveVideoToDisk()
     {
-        fileManager = FileManager.default
-        let docURL: [URL] = fileManager!.urls(for: .documentDirectory, in: .userDomainMask)
-        videoUrl = docURL[0].appendingPathComponent("\(titleBox!.text!)/\(videoFile!)")
-        
-        fileManager!.createFile(atPath: self.videoUrl!.relativePath, contents: nil, attributes: nil)
-     
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        videoUrl = documentsDirectory!.appendingPathComponent("\(titleBox!.text!).mov")
+    
+        do
+        {
+            try videoData!.write(to: videoUrl!)
+        }
+        catch
+        {
+            let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }

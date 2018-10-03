@@ -134,9 +134,7 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
             case FileType.VIDEO.rawValue:
                 
                 let videoPLaybackController: VideoPlaybackViewController = VideoPlaybackViewController()
-                let url: String = Bundle.main.path(forResource: "simpson", ofType: "mov") ?? "temp"
-                videoPLaybackController.videoUrl = URL(fileURLWithPath: url)
-//                videoPLaybackController.videoUrl = URL(fileURLWithPath: localMedia.videoURL!)
+                videoPLaybackController.videoUrl = URL(fileURLWithPath: localMedia.videoURL!)
                 navigationController?.pushViewController(videoPLaybackController, animated: true)
             
             case FileType.AUDIO.rawValue:
