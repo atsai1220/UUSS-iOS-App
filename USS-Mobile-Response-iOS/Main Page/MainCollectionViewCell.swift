@@ -51,7 +51,8 @@ class MainCollectionViewCell: UICollectionViewCell {
                 self.nameLabel.text = ""
             }
             
-            switch setting?.submissionStatus {
+            switch setting?.submissionStatus
+            {
             case SubmissionStatus.LocalOnly.rawValue:
                 self.statusView.backgroundColor = UIColor(red: 0, green: 0.5, blue: 0.7, alpha: 0.5)
             case SubmissionStatus.SuccessfulUpload.rawValue:
@@ -63,6 +64,16 @@ class MainCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+    
+    let deleteViewIcon: RoundedImageView =
+    {
+        let icon: RoundedImageView = RoundedImageView()
+        icon.translatesAutoresizingMaskIntoConstraints = false
+//        icon.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
+        icon.backgroundColor = UIColor.red
+        icon.image = UIImage(named: "minus")
+        return icon
+    }()
     
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -89,6 +100,16 @@ class MainCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
+    var editView: UIImageView =
+    {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "edit")
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(editTapped))
+        imageView.addGestureRecognizer(tapGesture)
+        return imageView
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.white
@@ -103,6 +124,8 @@ class MainCollectionViewCell: UICollectionViewCell {
         addSubview(nameLabel)
         addSubview(iconImageView)
         addSubview(statusView)
+//        addSubview(editView)
+        addSubview(deleteViewIcon)
         
         NSLayoutConstraint.activate([
             iconImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
@@ -116,7 +139,11 @@ class MainCollectionViewCell: UICollectionViewCell {
             statusView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             statusView.trailingAnchor.constraint(equalTo: nameLabel.leadingAnchor, constant: -10),
             statusView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            statusView.widthAnchor.constraint(equalToConstant: 10)
+            statusView.widthAnchor.constraint(equalToConstant: 10),
+            deleteViewIcon.topAnchor.constraint(equalTo: topAnchor, constant: -10.0),
+            deleteViewIcon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10.0),
+            deleteViewIcon.heightAnchor.constraint(equalToConstant: 20.0),
+            deleteViewIcon.widthAnchor.constraint(equalToConstant: 20.0)
             ])
     }
     
@@ -133,5 +160,10 @@ class MainCollectionViewCell: UICollectionViewCell {
         layer.shadowOpacity = 0.8
         layer.masksToBounds = false
         layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: contentView.layer.cornerRadius).cgPath
+    }
+    
+    @objc func editTapped()
+    {
+        print("edit tapped")
     }
 }

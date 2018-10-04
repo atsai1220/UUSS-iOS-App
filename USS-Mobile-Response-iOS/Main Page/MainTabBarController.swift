@@ -12,6 +12,19 @@ import CoreData
 
 class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
 {
+    let doneEditingButton: UIButton =
+    {
+        let button: UIButton = UIButton(type: .system)
+        button.backgroundColor = UIColor.white
+        button.titleLabel!.text = "Done"
+        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.layer.borderWidth = 1.0
+        button.layer.cornerRadius = 5.0
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowRadius = 3.0
+        return button
+    }()
+    
     func addMap(buttonPressed: Bool)
     {
         let newMapFormVC: NewMapFormViewController = NewMapFormViewController()

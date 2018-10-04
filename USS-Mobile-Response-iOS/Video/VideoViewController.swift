@@ -81,6 +81,7 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        fileManager = FileManager.default
         safeArea = self.view.safeAreaLayoutGuide
         imagePickerController = UIImagePickerController()
         imagePickerController!.delegate = self
@@ -252,35 +253,6 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
     {
-        switch picker.sourceType
-        {
-            case .camera:
-               
-//                let url = info[UIImagePickerControllerMediaURL] as? URL
-//                do
-//                {
-//                    videoData = try Data(contentsOf: url!)
-//                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-//                    videoUrl = documentsDirectory!.appendingPathComponent("movie.mov")
-//
-//                    do
-//                    {
-//                        try videoData!.write(to: videoUrl!)
-//                    }
-//                    catch
-//                    {
-//                        let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
-//                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-//                        self.present(alert, animated: true, completion: nil)
-//                    }
-//                }
-//                catch
-//                {
-//                    let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not save video data", preferredStyle: .alert)
-//                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-//                    self.present(alert, animated: true, completion: nil)
-//                }
-                
                 let url = info[UIImagePickerControllerMediaURL] as? URL
                 do
                 {
@@ -299,33 +271,6 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
                 videoBoxLabel!.removeFromSuperview()
                 
                 imagePickerController!.dismiss(animated: true, completion: nil)
-            
-            case .savedPhotosAlbum:
-            
-                let url = info[UIImagePickerControllerMediaURL] as? URL
-                do
-                {
-                    videoData = try Data(contentsOf: url!)
-                }
-                catch
-                {
-                    let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not save video data", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
-                
-                videoThumbnail = createVideoThumbnail(from: url!.absoluteString)
-                localFileName = saveExistingImageAtDocumentDirectory(image: videoThumbnail!)
-                
-                videoBox.image = videoThumbnail
-                videoBoxLabel!.removeFromSuperview()
-                
-                imagePickerController!.dismiss(animated: true, completion: nil)
-            
-            case .photoLibrary:
-                break
-        }
-        
     }
     
     
@@ -516,53 +461,78 @@ class VideoViewController: UIViewController, UIImagePickerControllerDelegate, UI
     
     @objc func saveVideoData()
     {
-        saveVideoToDisk()
-        if(self.titleBox!.text.count == 0)
+        if(videoBox.image != nil && titleBox!.text.count == 0)
         {
-            let alert: UIAlertController = UIAlertController(title: "Title Empty", message: "Please enter a title to save the video", preferredStyle: .alert)
+            
+            let alert: UIAlertController = UIAlertController(title: "No Title", message: "Please enter a title to save the video", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+           
         }
-        else if(self.videoBox.image == nil)
+        else if(titleBox!.text.count != 0 && videoBox.image == nil)
         {
-            let alert: UIAlertController = UIAlertController(title: "No Video", message: "You must select a video to save", preferredStyle: .alert)
+           
+            let alert: UIAlertController = UIAlertController(title: "No Video Selected", message: "Please select a video to save", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
+        }
+        else if(titleBox!.text.count == 0 && videoBox.image == nil)
+        {
+            let alert: UIAlertController = UIAlertController(title: "Error", message: "Please select a video to save and enter a title for the video", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
         else
         {
-            var localVideoEntry: LocalEntry = LocalEntry()
-          
-            localVideoEntry.name = titleBox!.text
-            localVideoEntry.localFileName = localFileName
-            localVideoEntry.collectionRef = collectionReference
-            localVideoEntry.description = descriptionBox!.text
-            localVideoEntry.notes = notesBox!.text
-            localVideoEntry.fileType = FileType.VIDEO.rawValue
-            localVideoEntry.videoURL = videoUrl!.relativePath
-            localVideoEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-            
-            var oldEntries = getLocalEntriesFromDisk()
-            oldEntries.append(localVideoEntry)
-            saveLocalEntriesToDisk(entries: oldEntries)
-            self.navigationController!.popToRootViewController(animated: true)
+            if(saveVideoToDisk())
+            {
+                var localVideoEntry: LocalEntry = LocalEntry()
+              
+                localVideoEntry.name = titleBox!.text
+                localVideoEntry.localFileName = localFileName
+                localVideoEntry.collectionRef = collectionReference
+                localVideoEntry.description = descriptionBox!.text
+                localVideoEntry.notes = notesBox!.text
+                localVideoEntry.fileType = FileType.VIDEO.rawValue
+                localVideoEntry.videoURL = videoUrl!.relativePath
+                localVideoEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+                
+                var oldEntries = getLocalEntriesFromDisk()
+                oldEntries.append(localVideoEntry)
+                saveLocalEntriesToDisk(entries: oldEntries)
+                self.navigationController!.popToRootViewController(animated: true)
+            }
         }
     }
     
-    func saveVideoToDisk()
+    func saveVideoToDisk() -> Bool
     {
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        
         videoUrl = documentsDirectory!.appendingPathComponent("\(titleBox!.text!).mov")
     
-        do
+        if(fileManager!.fileExists(atPath: videoUrl!.relativePath))
         {
-            try videoData!.write(to: videoUrl!)
-        }
-        catch
-        {
-            let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
+            let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+            return false
         }
+        else
+        {
+        
+            do
+            {
+                try videoData!.write(to: videoUrl!)
+            }
+            catch
+            {
+                let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+        return true
     }
 }

@@ -44,6 +44,7 @@
 		F60773672135F38A009F6962 /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60773662135F38A009F6962 /* AudioViewController.swift */; };
 		F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */; };
 		F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */; };
+		F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6340E7721658C8900A3168E /* RoundedImageView.swift */; };
 		F6BE126C216426E1006A24E7 /* simpson.mov in Resources */ = {isa = PBXBuildFile; fileRef = F6BE126B216426E1006A24E7 /* simpson.mov */; };
 		F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */; };
 		F6CDB5B72134BCCD0016C036 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B62134BCCC0016C036 /* MapViewController.swift */; };
@@ -93,6 +94,7 @@
 		F628AB452162C83000E7C561 /* IMG_4950.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = IMG_4950.mov; path = ../../../IMG_4950.mov; sourceTree = "<group>"; };
 		F628AB482162CA5300E7C561 /* simpson.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = simpson.mov; path = ../../../simpson.mov; sourceTree = "<group>"; };
 		F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackViewController.swift; sourceTree = "<group>"; };
+		F6340E7721658C8900A3168E /* RoundedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedImageView.swift; sourceTree = "<group>"; };
 		F6BE126B216426E1006A24E7 /* simpson.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = simpson.mov; path = ../../simpson.mov; sourceTree = "<group>"; };
 		F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAnnotation.swift; sourceTree = "<group>"; };
 		F6CDB5B62134BCCC0016C036 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 				1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */,
 				1C5F8E9921604135002773AA /* MainCollectionViewCell.swift */,
 				1C5F8E9B21604175002773AA /* MainLocalCollectionViewController.swift */,
+				F6340E7721658C8900A3168E /* RoundedImageView.swift */,
 			);
 			path = "Main Page";
 			sourceTree = "<group>";
@@ -362,6 +365,7 @@
 				1C1AE27D212FBEDD00F436FD /* Reachability.swift in Sources */,
 				1C76A8AE2113CC8300EE51A8 /* PhotoCell.swift in Sources */,
 				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
+				F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,

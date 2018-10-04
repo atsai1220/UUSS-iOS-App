@@ -24,6 +24,24 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         return cv
     }()
     
+    let doneEditingButton: UIButton =
+    {
+        let button: UIButton = UIButton(type: .roundedRect)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 12
+        button.layer.borderWidth = 2
+        button.backgroundColor = UIColor.white
+        button.layer.shadowOpacity = 0.5
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0.0, height:3.0)
+        button.layer.shadowRadius = 3.0
+        button.layer.borderColor = UIColor.black.cgColor
+        button.setTitle("Done", for: .normal)
+        
+        return button
+        
+    }()
+    
     override init(collectionViewLayout layout: UICollectionViewLayout) {
         super.init(collectionViewLayout: layout)
         
@@ -35,7 +53,11 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        let holdGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(cellPressedAndHeld))
+        holdGesture.minimumPressDuration = TimeInterval(exactly: 1.0)!
+        view.addGestureRecognizer(holdGesture)
+        
         // Register cell classes
         myCollectionView.dataSource = self
         myCollectionView.delegate = self
@@ -44,6 +66,16 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         myCollectionView.backgroundColor = UIColor(red: 211/225, green: 211/225, blue: 211/225, alpha: 1)
         // Do any additional setup after loading the view.
 //        self.view.addSubview(self.collectionView!)
+        
+        view.addSubview(doneEditingButton)
+        
+        NSLayoutConstraint.activate([
+            doneEditingButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0),
+            doneEditingButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0),
+            doneEditingButton.heightAnchor.constraint(equalToConstant: 25.0),
+            doneEditingButton.widthAnchor.constraint(equalToConstant: 70.0)
+            ])
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -100,7 +132,8 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         return localEntries.count
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! MainCollectionViewCell
     
         // Configure the cell
@@ -111,6 +144,11 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         // Drop shadow setting
   
         return cell
+    }
+    
+    @objc func cellPressed()
+    {
+        print("Cell pressed")
     }
     
     
@@ -126,6 +164,12 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
         let localMedia: LocalEntry = localEntries[indexPath.row]
+        
+        let holdGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: collectionView, action: #selector(cellPressed))
+        holdGesture.minimumPressDuration = TimeInterval(exactly: 2.0)!
+        collectionView.addGestureRecognizer(holdGesture)
+        
+        
         
         switch localMedia.fileType
         {
@@ -177,4 +221,17 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     }
     */
 
+    @objc func cellPressedAndHeld(gesture: UILongPressGestureRecognizer)
+    {
+        if(gesture.state == .ended)
+        {
+            return
+        }
+        
+        let locationPointInView: CGPoint = gesture.location(in: self.myCollectionView)
+        let indexPath: IndexPath = myCollectionView.indexPathForItem(at: locationPointInView)!
+        let cell: UICollectionViewCell = myCollectionView.cellForItem(at: indexPath)!
+        
+        
+    }
 }

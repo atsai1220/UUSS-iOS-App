@@ -55,7 +55,8 @@ class MainTableViewCell: UITableViewCell {
                     self.nameLabel.text = ""
             }
             
-            switch setting?.submissionStatus {
+            switch setting?.submissionStatus
+            {
                 case SubmissionStatus.LocalOnly.rawValue:
                     self.statusView.backgroundColor = UIColor(red: 0, green: 0.5, blue: 0.7, alpha: 0.5)
                 case SubmissionStatus.SuccessfulUpload.rawValue:
