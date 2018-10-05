@@ -45,7 +45,6 @@
 		F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */; };
 		F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */; };
 		F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6340E7721658C8900A3168E /* RoundedImageView.swift */; };
-		F6BE126C216426E1006A24E7 /* simpson.mov in Resources */ = {isa = PBXBuildFile; fileRef = F6BE126B216426E1006A24E7 /* simpson.mov */; };
 		F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */; };
 		F6CDB5B72134BCCD0016C036 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B62134BCCC0016C036 /* MapViewController.swift */; };
 		F6D2785D214C6DE800490350 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D2785C214C6DE800490350 /* VideoViewController.swift */; };
@@ -95,7 +94,6 @@
 		F628AB482162CA5300E7C561 /* simpson.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = simpson.mov; path = ../../../simpson.mov; sourceTree = "<group>"; };
 		F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackViewController.swift; sourceTree = "<group>"; };
 		F6340E7721658C8900A3168E /* RoundedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedImageView.swift; sourceTree = "<group>"; };
-		F6BE126B216426E1006A24E7 /* simpson.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = simpson.mov; path = ../../simpson.mov; sourceTree = "<group>"; };
 		F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAnnotation.swift; sourceTree = "<group>"; };
 		F6CDB5B62134BCCC0016C036 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		F6D2785C214C6DE800490350 /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
@@ -161,7 +159,6 @@
 				1C57E50920BF8388004E1270 /* LaunchScreen.storyboard */,
 				1C57E50C20BF8388004E1270 /* Info.plist */,
 				1C601BAE210BB4C000629D6F /* USS-Mobile-Response-iOS-Bridging-Header.h */,
-				F6BE126B216426E1006A24E7 /* simpson.mov */,
 				1C601BB1210BB86400629D6F /* CommonFunctions.swift */,
 			);
 			path = "USS-Mobile-Response-iOS";
@@ -338,7 +335,6 @@
 			files = (
 				1C57E50B20BF8388004E1270 /* LaunchScreen.storyboard in Resources */,
 				1C043CA020CAA90E006A9D69 /* ServerList.plist in Resources */,
-				F6BE126C216426E1006A24E7 /* simpson.mov in Resources */,
 				1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */,
 				1C57E50620BF8387004E1270 /* Main.storyboard in Resources */,
 			);

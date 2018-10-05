@@ -55,8 +55,8 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         super.viewDidLoad()
         
         let holdGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(cellPressedAndHeld))
-        holdGesture.minimumPressDuration = TimeInterval(exactly: 1.0)!
-        view.addGestureRecognizer(holdGesture)
+        holdGesture.minimumPressDuration = 1.0
+        myCollectionView.addGestureRecognizer(holdGesture)
         
         // Register cell classes
         myCollectionView.dataSource = self
@@ -64,8 +64,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         myCollectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView = myCollectionView
         myCollectionView.backgroundColor = UIColor(red: 211/225, green: 211/225, blue: 211/225, alpha: 1)
-        // Do any additional setup after loading the view.
-//        self.view.addSubview(self.collectionView!)
         
         view.addSubview(doneEditingButton)
         
@@ -75,7 +73,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
             doneEditingButton.heightAnchor.constraint(equalToConstant: 25.0),
             doneEditingButton.widthAnchor.constraint(equalToConstant: 70.0)
             ])
-       
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -140,9 +137,7 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         let item = self.localEntries[indexPath.row]
         let setting = MainCellSetting(name: item.name!, imageName: item.localFileName!, fileType: item.fileType!, videoURL: item.videoURL ?? "", submissionStatus: item.submissionStatus!)
         cell.setting = setting
-        
-        // Drop shadow setting
-  
+
         return cell
     }
     
@@ -177,9 +172,9 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
                 break
             case FileType.VIDEO.rawValue:
                 
-                let videoPLaybackController: VideoPlaybackViewController = VideoPlaybackViewController()
-                videoPLaybackController.videoUrl = URL(fileURLWithPath: localMedia.videoURL!)
-                navigationController?.pushViewController(videoPLaybackController, animated: true)
+                let videoPlaybackController: VideoPlaybackViewController = VideoPlaybackViewController()
+                videoPlaybackController.videoUrl = URL(fileURLWithPath: localMedia.videoURL!)
+                navigationController?.pushViewController(videoPlaybackController, animated: true)
             
             case FileType.AUDIO.rawValue:
                 break
@@ -223,15 +218,15 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 
     @objc func cellPressedAndHeld(gesture: UILongPressGestureRecognizer)
     {
-        if(gesture.state == .ended)
+        if(gesture.state != .began)
         {
             return
         }
-        
+        print("cell pressed and held")
         let locationPointInView: CGPoint = gesture.location(in: self.myCollectionView)
-        let indexPath: IndexPath = myCollectionView.indexPathForItem(at: locationPointInView)!
-        let cell: UICollectionViewCell = myCollectionView.cellForItem(at: indexPath)!
-        
+        if let indexPath = (self.myCollectionView.indexPathForItem(at: locationPointInView)){
+            var cell = myCollectionView.cellForItem(at: indexPath)
+        }
         
     }
 }
