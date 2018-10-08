@@ -12,17 +12,19 @@ class MainCellSetting: NSObject
 {
     let name: String
     let imageName: String
-    let fileType: String
+let fileType: String
     let submissionStatus: String
     let videoURL: String?
+    var isEditing: Bool
     
     init(name: String, imageName: String, fileType: String, videoURL: String, submissionStatus: String)
-    {
+{
         self.name = name
         self.imageName = imageName
         self.fileType = fileType
         self.videoURL = videoURL
         self.submissionStatus = submissionStatus
+        self.isEditing = false
     }
 }
 
@@ -69,7 +71,6 @@ class MainCollectionViewCell: UICollectionViewCell {
     {
         let icon: RoundedImageView = RoundedImageView()
         icon.translatesAutoresizingMaskIntoConstraints = false
-//        icon.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
         icon.backgroundColor = UIColor.red
         icon.image = UIImage(named: "minus")
         return icon

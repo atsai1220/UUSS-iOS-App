@@ -19,6 +19,8 @@
 		1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B220C159AE00458079 /* LoginViewController.swift */; };
 		1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B420C16ACC00458079 /* MainTabBarController.swift */; };
 		1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76BA20C1826200458079 /* ProfileViewController.swift */; };
+		1C50100B2168210300BBAF38 /* LocalEntryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C50100A2168210300BBAF38 /* LocalEntryTableViewController.swift */; };
+		1C50100D216830AB00BBAF38 /* LocalEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C50100C216830AB00BBAF38 /* LocalEntryTableViewCell.swift */; };
 		1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C57E50020BF8387004E1270 /* AppDelegate.swift */; };
 		1C57E50620BF8387004E1270 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50420BF8387004E1270 /* Main.storyboard */; };
 		1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50720BF8388004E1270 /* Assets.xcassets */; };
@@ -31,7 +33,6 @@
 		1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */; };
 		1C601BB7210F821700629D6F /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB6210F821700629D6F /* SettingCell.swift */; };
 		1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */; };
-		1C76A8A52113B08000EE51A8 /* MainLocalTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */; };
 		1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */; };
 		1C76A8AC2113C5A700EE51A8 /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */; };
 		1C76A8AE2113CC8300EE51A8 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */; };
@@ -63,6 +64,8 @@
 		1C4D76B220C159AE00458079 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1C4D76B420C16ACC00458079 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		1C4D76BA20C1826200458079 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		1C50100A2168210300BBAF38 /* LocalEntryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEntryTableViewController.swift; sourceTree = "<group>"; };
+		1C50100C216830AB00BBAF38 /* LocalEntryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEntryTableViewCell.swift; sourceTree = "<group>"; };
 		1C57E4FD20BF8387004E1270 /* USS-Mobile-Response-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "USS-Mobile-Response-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C57E50020BF8387004E1270 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1C57E50520BF8387004E1270 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -78,7 +81,6 @@
 		1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardsTableViewController.swift; sourceTree = "<group>"; };
 		1C601BB6210F821700629D6F /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
 		1C76A8A021127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "USS-Mobile-Response-iOS.xcdatamodel"; sourceTree = "<group>"; };
-		1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLocalTableViewController.swift; sourceTree = "<group>"; };
 		1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTrashTableViewController.swift; sourceTree = "<group>"; };
 		1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerViewController.swift; sourceTree = "<group>"; };
 		1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
@@ -185,6 +187,8 @@
 		1C76A8AA2113C58400EE51A8 /* Resource Picker */ = {
 			isa = PBXGroup;
 			children = (
+				1C50100A2168210300BBAF38 /* LocalEntryTableViewController.swift */,
+				1C50100C216830AB00BBAF38 /* LocalEntryTableViewCell.swift */,
 				1C76A8AB2113C5A700EE51A8 /* PhotoPickerViewController.swift */,
 				1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */,
 			);
@@ -201,7 +205,6 @@
 				1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */,
 				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
 				1C4D76B420C16ACC00458079 /* MainTabBarController.swift */,
-				1C76A8A42113B08000EE51A8 /* MainLocalTableViewController.swift */,
 				1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */,
 				1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */,
 				1C5F8E9921604135002773AA /* MainCollectionViewCell.swift */,
@@ -361,11 +364,13 @@
 				1C1AE27D212FBEDD00F436FD /* Reachability.swift in Sources */,
 				1C76A8AE2113CC8300EE51A8 /* PhotoCell.swift in Sources */,
 				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
+				1C50100D216830AB00BBAF38 /* LocalEntryTableViewCell.swift in Sources */,
 				F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
 				F6CDB5B72134BCCD0016C036 /* MapViewController.swift in Sources */,
+				1C50100B2168210300BBAF38 /* LocalEntryTableViewController.swift in Sources */,
 				1C76A8AC2113C5A700EE51A8 /* PhotoPickerViewController.swift in Sources */,
 				F6028FED2143303700429805 /* AnnotationView.swift in Sources */,
 				1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */,
@@ -378,7 +383,6 @@
 				F60773672135F38A009F6962 /* AudioViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
 				1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */,
-				1C76A8A52113B08000EE51A8 /* MainLocalTableViewController.swift in Sources */,
 				F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */,
 				1C5F8E9C21604175002773AA /* MainLocalCollectionViewController.swift in Sources */,
 				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,

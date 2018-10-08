@@ -201,12 +201,13 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     }
     */
 
-    /*
+    
     // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
     override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
-
+    
+    /*
     override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
         return false
     }
@@ -225,7 +226,9 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         print("cell pressed and held")
         let locationPointInView: CGPoint = gesture.location(in: self.myCollectionView)
         if let indexPath = (self.myCollectionView.indexPathForItem(at: locationPointInView)){
-            var cell = myCollectionView.cellForItem(at: indexPath)
+            let cell = myCollectionView.cellForItem(at: indexPath) as! MainCollectionViewCell
+            cell.setting?.isEditing = true
+            
         }
         
     }

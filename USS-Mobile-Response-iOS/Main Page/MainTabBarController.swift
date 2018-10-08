@@ -47,9 +47,10 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
     }
     
     @IBAction func newTapped(_ sender: Any) {
-        performSegue(withIdentifier: "hazardSegue", sender: self)
-        
+        let localEntryVC = LocalEntryTableViewController()
+        self.navigationController?.pushViewController(localEntryVC, animated: true)
     }
+    
     
     func showControllerFor(setting: Setting) {
         let pageVC: UIViewController
