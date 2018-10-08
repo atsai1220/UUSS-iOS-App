@@ -49,6 +49,8 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
     @IBAction func newTapped(_ sender: Any) {
         let localEntryVC = LocalEntryTableViewController()
         self.navigationController?.pushViewController(localEntryVC, animated: true)
+//        let ew = PhotoPickerViewController()
+//        self.navigationController?.pushViewController(ew, animated: true)
     }
     
     

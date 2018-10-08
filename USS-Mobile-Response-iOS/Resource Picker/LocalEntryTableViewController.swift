@@ -7,72 +7,49 @@
 //
 
 import UIKit
+import Photos
+import CoreLocation
 
-class LocalEntryTableViewController: UITableViewController, UITextViewDelegate {
+class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate {
     
-    let cellId = "cellId"
+    let infoCellId = "infoCellId"
+    let resourceCellId = "resourceCellId"
+    let resourceTypeCellId = "resourceTypeCellId"
+    let locationManager = CLLocationManager()
+    let imagePickerController = UIImagePickerController()
     
-    var resourceLabel: UILabel = {
-       let label = UILabel()
-        label.text = "Resource"
-        return label
-    }()
-    var hazardLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Hazard"
-        return label
-    }()
-    var subcategoryLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Subcategory"
-        return label
-    }()
-    var collectionLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Collection"
-        return label
-    }()
+    var testImage: UIImage?
     
-    var titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Title"
-        return label
-    }()
-    var descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Description"
-        return label
-    }()
-    var notesLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Notes"
-        return label
-    }()
-    
-    var allLabels: [UILabel]!
-    var entryLabels: [UILabel]!
-    var infoLabels: [UILabel]!
-    
-    private func calculateLabelWidth(label: UILabel) -> CGFloat {
-        let labelSize = label.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: label.frame.height))
-        return labelSize.width
+    @objc private func showActionSheet(sender: UIButton) {
+        checkPhotoPermission()
+        // Create and modify an UIAlertController.actionSheet to allow option between Camera or Photo Library.
+        let actionSheet = UIAlertController(title: "Photo Source", message: "Please choose a source for image upload.", preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                self.imagePickerController.sourceType = .camera
+                self.present(self.imagePickerController, animated: true, completion: nil)
+            }
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
+            self.imagePickerController.sourceType = .photoLibrary
+            self.present(self.imagePickerController, animated: true, completion: nil)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        self.present(actionSheet, animated: true, completion: nil)
     }
     
-    private func calculateMaxLabelWidth(labels: [UILabel]) -> CGFloat {
-        let fittedLabels = labels.map { calculateLabelWidth(label: $0) }
-        let maxLabelWidth = fittedLabels.reduce(0, { max($0, $1) })
-        return maxLabelWidth
-    }
-    
-    private func updateWidthForLabels(labels: [UILabel]) {
-        let maxLabelWidth = calculateMaxLabelWidth(labels: labels)
-        for label in labels {
-            let constraint = NSLayoutConstraint(item: label, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: maxLabelWidth)
-            label.addConstraint(constraint)
+    @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            print("did get image")
+            testImage = pickedImage
+            let set = IndexSet(arrayLiteral: 0)
+            tableView.reloadSections(set, with: .automatic)
         }
+        picker.dismiss(animated: true, completion: nil)
     }
     
-    func textViewDidChange(_ textView: UITextView) {
+    private func textViewDidChange(_ textView: UITextView) {
         
         let size = textView.bounds.size
         let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
@@ -80,31 +57,58 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate {
         if size.height != newSize.height {
             tableView?.beginUpdates()
             tableView?.endUpdates()
-            
-            
-//
-//            if let thisIndexPath = tableView.indexPath(for: self) {
-//                tableView?.scrollToRow(at: thisIndexPath, at: .bottom, animated: false)
-//            }
+        }
+    }
+    
+    private func displayErrorMessage(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let dismissAction = UIAlertAction(title: "Okay", style: .default, handler: {
+            (action) in alert.dismiss(animated: true, completion: nil)
+        })
+        alert.addAction(dismissAction)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func checkPhotoPermission() {
+        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+        switch photoAuthorizationStatus {
+        case .authorized:
+            print("Access is granted by user")
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization({
+                (newStatus) in
+                print("status is \(newStatus)")
+                if newStatus ==  PHAuthorizationStatus.authorized {
+                    /* do stuff here */
+                    print("success")
+                }
+            })
+            print("It is not determined until now")
+        case .restricted:
+            // same same
+            print("User do not have access to photo album.")
+        case .denied:
+            // same same
+            print("User has denied the permission.")
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.allLabels = [resourceLabel, hazardLabel, subcategoryLabel, collectionLabel, titleLabel, descriptionLabel, notesLabel]
-        self.entryLabels = [resourceLabel, hazardLabel, subcategoryLabel, collectionLabel]
-        self.infoLabels = [titleLabel, descriptionLabel, notesLabel]
         
-        updateWidthForLabels(labels: self.allLabels)
+        
+        
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        
+        imagePickerController.delegate = self
+        
         navigationItem.title = "New Local Entry"
         navigationController?.navigationBar.prefersLargeTitles = false
-        self.tableView.register(LocalEntryTableViewCell.self, forCellReuseIdentifier: cellId)
+        self.tableView.register(LocalEntryTableViewCell.self, forCellReuseIdentifier: infoCellId)
+        self.tableView.register(LocalResourceTableViewCell.self, forCellReuseIdentifier: resourceCellId)
+        self.tableView.register(LocalResourceTypeTableViewCell.self, forCellReuseIdentifier: resourceTypeCellId)
         self.tableView.tableFooterView = UIView(frame: .zero)
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     // MARK: - Table view data source
@@ -115,10 +119,10 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return self.entryLabels.count
+            return 4
         }
         else {
-            return self.infoLabels.count
+            return 3
         }
     }
     
@@ -138,33 +142,59 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! LocalEntryTableViewCell
-        cell.textView.delegate = self
         if indexPath.section == 0 {
             if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
+                
+                cell.contentView.isUserInteractionEnabled = true
+                cell.insertButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
+                cell.tag = indexPath.row
+                cell.selectionStyle = .none
                 cell.cellLabel.text = "Resource"
+                if (testImage != nil) {
+                    cell.insertButton.setImage(testImage, for: .normal)
+                }
+                
+                return cell
             }
             if indexPath.row == 1 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
+                cell.textView.delegate = self
                 cell.cellLabel.text = "Hazard"
+                return cell
             }
             if indexPath.row == 2 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
+                cell.textView.delegate = self
                 cell.cellLabel.text = "Subcategory"
+                return cell
             }
             if indexPath.row == 3 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
+                cell.textView.delegate = self
                 cell.cellLabel.text = "Collection"
+                return cell
             }
         }
         else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
+            cell.textView.delegate = self
+            
             if indexPath.row == 0 {
                 cell.cellLabel.text = "Title"
+                return cell
             }
             if indexPath.row == 1 {
                 cell.cellLabel.text = "Description"
+                return cell
             }
             if indexPath.row == 2 {
                 cell.cellLabel.text = "Notes"
+                return cell
             }
         }
+        let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
+        cell.textView.delegate = self
         return cell
     }
     

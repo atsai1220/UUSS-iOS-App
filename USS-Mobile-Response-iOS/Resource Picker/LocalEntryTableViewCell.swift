@@ -25,10 +25,12 @@ class LocalEntryTableViewCell: UITableViewCell, UITextViewDelegate {
 //
 //        }
 //    }
+    var hasImage: Bool = false
     
     var cellLabel: UILabel = {
         let label = UILabel()
         label.text = ""
+        label.textColor = UIColor.blue
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.preferredFont(forTextStyle: .caption1)
         label.textAlignment = .right
@@ -49,16 +51,6 @@ class LocalEntryTableViewCell: UITableViewCell, UITextViewDelegate {
         text.layer.borderWidth = 0
         return text
     }()
-    
-    var tableView: UITableView? {
-        get {
-            var table: UIView? = superview
-            while !(table is UITableView) && table != nil {
-                table = table?.superview
-            }
-            return table as? UITableView
-        }
-    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
