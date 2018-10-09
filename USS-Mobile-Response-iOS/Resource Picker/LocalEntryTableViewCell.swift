@@ -25,7 +25,6 @@ class LocalEntryTableViewCell: UITableViewCell, UITextViewDelegate {
 //
 //        }
 //    }
-    var hasImage: Bool = false
     
     var cellLabel: UILabel = {
         let label = UILabel()

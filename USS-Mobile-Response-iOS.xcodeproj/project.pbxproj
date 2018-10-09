@@ -23,6 +23,7 @@
 		1C50100D216830AB00BBAF38 /* LocalEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C50100C216830AB00BBAF38 /* LocalEntryTableViewCell.swift */; };
 		1C50100F216BFD3D00BBAF38 /* LocalResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C50100E216BFD3D00BBAF38 /* LocalResourceTableViewCell.swift */; };
 		1C501011216BFD5200BBAF38 /* LocalResourceTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C501010216BFD5200BBAF38 /* LocalResourceTypeTableViewCell.swift */; };
+		1C501013216D331200BBAF38 /* ActionSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C501012216D331200BBAF38 /* ActionSheetController.swift */; };
 		1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C57E50020BF8387004E1270 /* AppDelegate.swift */; };
 		1C57E50620BF8387004E1270 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50420BF8387004E1270 /* Main.storyboard */; };
 		1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50720BF8388004E1270 /* Assets.xcassets */; };
@@ -70,6 +71,7 @@
 		1C50100C216830AB00BBAF38 /* LocalEntryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEntryTableViewCell.swift; sourceTree = "<group>"; };
 		1C50100E216BFD3D00BBAF38 /* LocalResourceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalResourceTableViewCell.swift; sourceTree = "<group>"; };
 		1C501010216BFD5200BBAF38 /* LocalResourceTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalResourceTypeTableViewCell.swift; sourceTree = "<group>"; };
+		1C501012216D331200BBAF38 /* ActionSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionSheetController.swift; sourceTree = "<group>"; };
 		1C57E4FD20BF8387004E1270 /* USS-Mobile-Response-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "USS-Mobile-Response-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C57E50020BF8387004E1270 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1C57E50520BF8387004E1270 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				1C76A8AD2113CC8300EE51A8 /* PhotoCell.swift */,
 				1C50100E216BFD3D00BBAF38 /* LocalResourceTableViewCell.swift */,
 				1C501010216BFD5200BBAF38 /* LocalResourceTypeTableViewCell.swift */,
+				1C501012216D331200BBAF38 /* ActionSheetController.swift */,
 			);
 			path = "Resource Picker";
 			sourceTree = "<group>";
@@ -358,6 +361,7 @@
 			files = (
 				1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */,
 				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
+				1C501013216D331200BBAF38 /* ActionSheetController.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */,
 				F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */,

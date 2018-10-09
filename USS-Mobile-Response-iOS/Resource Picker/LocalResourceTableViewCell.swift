@@ -36,26 +36,9 @@ class LocalResourceTableViewCell: UITableViewCell {
         button.clipsToBounds = true
         button.setTitle("Tap to select resource...", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        
+        button.invalidateIntrinsicContentSize()
         return button
     }()
-    
-    var resourceView: UIImageView = {
-        let view = UIImageView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.contentMode = .center
-        view.backgroundColor = UIColor.blue
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 5
-        return view
-    }()
-    
-//    @objc private func showActionSheet(_ sender: UIButton) {
-//        print("tapped")
-//        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-//        let navigationController = storyBoard.instantiateViewController(withIdentifier: "MainNavigationController") as! MainNavigationController
-//        navigationController.showActionSheet()
-//    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -68,13 +51,15 @@ class LocalResourceTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    override func updateConstraints() {
+        super.updateConstraints()
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        
         addSubview(cellLabel)
         addSubview(cellDivider)
         addSubview(insertButton)
-        
         
         if !resourceSet {
             NSLayoutConstraint.activate([
@@ -89,13 +74,10 @@ class LocalResourceTableViewCell: UITableViewCell {
                 insertButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
                 insertButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
                 insertButton.leadingAnchor.constraint(equalTo: cellDivider.trailingAnchor, constant: 8),
-                insertButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
+                insertButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
                 ])
         }
         else {
-            insertButton.removeFromSuperview()
-            addSubview(resourceView)
-            
             NSLayoutConstraint.activate([
             cellLabel.topAnchor.constraint(equalTo: self.topAnchor),
             cellLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
@@ -105,12 +87,12 @@ class LocalResourceTableViewCell: UITableViewCell {
             cellDivider.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             cellDivider.leadingAnchor.constraint(equalTo: cellLabel.trailingAnchor, constant: 8),
             cellDivider.widthAnchor.constraint(equalToConstant: 1),
-        
-            resourceView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            resourceView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            resourceView.leadingAnchor.constraint(equalTo: cellDivider.trailingAnchor, constant: 8),
-            resourceView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-//            resourceView.heightAnchor.constraint(equalToConstant: 200),
+
+            insertButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            insertButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            insertButton.leadingAnchor.constraint(equalTo: cellDivider.trailingAnchor, constant: 8),
+            insertButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            insertButton.heightAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5),
         ])
     }
 }

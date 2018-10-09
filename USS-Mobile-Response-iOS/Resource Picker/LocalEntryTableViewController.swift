@@ -18,31 +18,20 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     let locationManager = CLLocationManager()
     let imagePickerController = UIImagePickerController()
     
-    var testImage: UIImage?
+    var previewImage: UIImage?
+    var submissionStatus: SubmissionStatus = SubmissionStatus.LocalOnly
+    
+    var actionSheetController = ActionSheetController(mode: ActionSheetController.ActionSheetMode.PHOTOS)
     
     @objc private func showActionSheet(sender: UIButton) {
-        checkPhotoPermission()
-        // Create and modify an UIAlertController.actionSheet to allow option between Camera or Photo Library.
-        let actionSheet = UIAlertController(title: "Photo Source", message: "Please choose a source for image upload.", preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                self.imagePickerController.sourceType = .camera
-                self.present(self.imagePickerController, animated: true, completion: nil)
-            }
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
-            self.imagePickerController.sourceType = .photoLibrary
-            self.present(self.imagePickerController, animated: true, completion: nil)
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
-        self.present(actionSheet, animated: true, completion: nil)
+        print("action sheet show")
     }
+    
     
     @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             print("did get image")
-            testImage = pickedImage
+            previewImage = pickedImage
             let set = IndexSet(arrayLiteral: 0)
             tableView.reloadSections(set, with: .automatic)
         }
@@ -50,7 +39,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     private func textViewDidChange(_ textView: UITextView) {
-        
+        print("textViewDidChange")
         let size = textView.bounds.size
         let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
 
@@ -69,34 +58,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         present(alert, animated: true, completion: nil)
     }
     
-    func checkPhotoPermission() {
-        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
-        switch photoAuthorizationStatus {
-        case .authorized:
-            print("Access is granted by user")
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization({
-                (newStatus) in
-                print("status is \(newStatus)")
-                if newStatus ==  PHAuthorizationStatus.authorized {
-                    /* do stuff here */
-                    print("success")
-                }
-            })
-            print("It is not determined until now")
-        case .restricted:
-            // same same
-            print("User do not have access to photo album.")
-        case .denied:
-            // same same
-            print("User has denied the permission.")
-        }
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -119,7 +82,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 4
+            return 5
         }
         else {
             return 3
@@ -144,32 +107,38 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             if indexPath.row == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
-                
-                cell.contentView.isUserInteractionEnabled = true
-                cell.insertButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
-                cell.tag = indexPath.row
-                cell.selectionStyle = .none
-                cell.cellLabel.text = "Resource"
-                if (testImage != nil) {
-                    cell.insertButton.setImage(testImage, for: .normal)
-                }
-                
+                let cell = tableView.dequeueReusableCell(withIdentifier: resourceTypeCellId, for: indexPath) as! LocalResourceTypeTableViewCell
+                cell.cellLabel.text = "Resource Type"
                 return cell
             }
             if indexPath.row == 1 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
-                cell.textView.delegate = self
-                cell.cellLabel.text = "Hazard"
+                let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
+                cell.contentView.isUserInteractionEnabled = true
+                cell.insertButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
+                cell.selectionStyle = .none
+                cell.cellLabel.text = "Resource"
+                if (previewImage != nil) {
+                    cell.resourceSet = true
+                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
+                    cell.insertButton.setImage(previewImage, for: .normal)
+                    cell.layoutIfNeeded()
+                }
+                
                 return cell
             }
             if indexPath.row == 2 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
                 cell.textView.delegate = self
-                cell.cellLabel.text = "Subcategory"
+                cell.cellLabel.text = "Hazard"
                 return cell
             }
             if indexPath.row == 3 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
+                cell.textView.delegate = self
+                cell.cellLabel.text = "Subcategory"
+                return cell
+            }
+            else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
                 cell.textView.delegate = self
                 cell.cellLabel.text = "Collection"
@@ -188,14 +157,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 cell.cellLabel.text = "Description"
                 return cell
             }
-            if indexPath.row == 2 {
+            else {
                 cell.cellLabel.text = "Notes"
                 return cell
             }
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
-        cell.textView.delegate = self
-        return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -203,7 +169,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 50
     }
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50
