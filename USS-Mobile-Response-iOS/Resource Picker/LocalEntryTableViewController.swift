@@ -38,14 +38,16 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         picker.dismiss(animated: true, completion: nil)
     }
     
-    private func textViewDidChange(_ textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         print("textViewDidChange")
         let size = textView.bounds.size
         let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
 
         if size.height != newSize.height {
+            UIView.setAnimationsEnabled(false)
             tableView?.beginUpdates()
             tableView?.endUpdates()
+            UIView.setAnimationsEnabled(true)
         }
     }
     
@@ -113,7 +115,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             }
             if indexPath.row == 1 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
-                cell.contentView.isUserInteractionEnabled = true
+//                cell.contentView.isUserInteractionEnabled = true
                 cell.insertButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Resource"
