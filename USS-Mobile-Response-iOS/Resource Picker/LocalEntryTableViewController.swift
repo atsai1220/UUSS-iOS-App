@@ -31,9 +31,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     var resourceType: ActionSheetMode = ActionSheetMode.PHOTOS
     
     @objc private func showActionSheet(sender: UIButton) {
-    // Create and modify an UIAlertController.actionSheet to allow option between Camera or Photo Library.
         switch resourceType {
-            
         case .PHOTOS:
             let imagePickerController = UIImagePickerController()
             imagePickerController.delegate = self
@@ -98,7 +96,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             self.present(actionSheet, animated: true, completion: nil)
             
         case .AUDIOS:
-            print("add select audio")
+            let audioViewController = AudioViewController()
+            self.navigationController?.pushViewController(audioViewController, animated: true)
         case .PDFS:
             print("add select from pdf")
         }
@@ -108,15 +107,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     func videoFormatIsAvailable(for sourceType: UIImagePickerControllerSourceType ) -> Bool
     {
         let types = UIImagePickerController.availableMediaTypes(for: .camera)
-        
-        for type in types!
-        {
-            if(type == kUTTypeMovie as String)
-            {
+        for type in types! {
+            if(type == kUTTypeMovie as String) {
                 return true
             }
         }
-        
         return false
     }
     
@@ -152,6 +147,18 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         present(alert, animated: true, completion: nil)
     }
     
+    @objc func saveAndUpload() {
+        print("saveing and uploading...")
+        //TODO: check for empty fields
+        //TODO: Create local device entry
+        //TODO: HTTP uploadig with custom plugin
+        //TODO: Create resource on resource space
+        //TODO: Add resource to selected collection
+        //TODO: Confirmation and update local history
+
+//        self.navigationController?.popToRootViewController(animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -165,6 +172,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.tableView.register(LocalEntryTableViewCell.self, forCellReuseIdentifier: infoCellId)
         self.tableView.register(LocalResourceTableViewCell.self, forCellReuseIdentifier: resourceCellId)
         self.tableView.tableFooterView = UIView(frame: .zero)
+        
+        navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
     }
 
     // MARK: - Table view data source
