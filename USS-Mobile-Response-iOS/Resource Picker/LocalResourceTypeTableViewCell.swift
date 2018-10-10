@@ -39,13 +39,13 @@ class LocalResourceTypeTableViewCell: UITableViewCell {
     @objc func changeMode(sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 1:
-            print("Videos")
+            print("VideosInside")
         case 2:
-            print("Audio")
+            print("AudioInside")
         case 3:
-            print("PDF")
+            print("PDFInside")
         default:
-            print("Photos")
+            print("PhotosInside")
         }
     }
     

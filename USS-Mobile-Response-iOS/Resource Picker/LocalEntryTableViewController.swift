@@ -9,8 +9,16 @@
 import UIKit
 import Photos
 import CoreLocation
+import MobileCoreServices
 
 class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate {
+    
+    enum ActionSheetMode: String {
+        case PHOTOS = "PHOTOS"
+        case VIDEOS = "VIDEOS"
+        case AUDIOS = "AUDIOS"
+        case PDFS = "PDFS"
+    }
     
     let infoCellId = "infoCellId"
     let resourceCellId = "resourceCellId"
@@ -20,11 +28,96 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     var previewImage: UIImage?
     var submissionStatus: SubmissionStatus = SubmissionStatus.LocalOnly
-    
-    var actionSheetController = ActionSheetController(mode: ActionSheetController.ActionSheetMode.PHOTOS)
+    var resourceType: ActionSheetMode = ActionSheetMode.PHOTOS
     
     @objc private func showActionSheet(sender: UIButton) {
-        print("action sheet show")
+    // Create and modify an UIAlertController.actionSheet to allow option between Camera or Photo Library.
+        switch resourceType {
+            
+        case .PHOTOS:
+            let imagePickerController = UIImagePickerController()
+            imagePickerController.delegate = self
+            
+            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    imagePickerController.sourceType = .camera
+                    self.present(imagePickerController, animated: true, completion: nil)
+                }
+            }))
+            actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
+                imagePickerController.sourceType = .photoLibrary
+                self.present(imagePickerController, animated: true, completion: nil)
+            }))
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(alert: UIAlertAction)-> Void in
+                actionSheet.dismiss(animated: true, completion: nil)
+            })
+            cancelAction.setValue(UIColor.red, forKey: "titleTextColor")
+            actionSheet.addAction(cancelAction)
+            
+            self.present(actionSheet, animated: true, completion: nil)
+            
+        case .VIDEOS:
+            let imagePickerController = UIImagePickerController()
+            let actionSheet: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            actionSheet.addAction(UIAlertAction(title: "Take Video", style: .default, handler: {(alert: UIAlertAction) -> Void in
+                if(UIImagePickerController.isSourceTypeAvailable(.camera)) {
+                    imagePickerController.sourceType = .camera
+                    if(self.videoFormatIsAvailable(for: imagePickerController.sourceType)) {
+                        imagePickerController.mediaTypes = [kUTTypeMovie as String]
+                        self.present(self.imagePickerController, animated: true, completion: nil)
+                    }
+                    else {
+                        let alert: UIAlertController = UIAlertController(title: "Video Unavailable", message: "Video is not available on your device", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                }
+            }))
+            actionSheet.addAction(UIAlertAction(title: "Choose Video", style: .default, handler: {(alert: UIAlertAction) -> Void in
+                if(UIImagePickerController.isSourceTypeAvailable(.camera)) {
+                    self.imagePickerController.sourceType = .savedPhotosAlbum
+                    self.imagePickerController.mediaTypes = [kUTTypeMovie as String]
+                    self.present(self.imagePickerController, animated: true, completion: nil)
+                }
+                else
+                {
+                    let alert: UIAlertController = UIAlertController(title: "No Photo Library", message: "There was a problem accessing your camera roll", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }))
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(alert: UIAlertAction)-> Void in
+                actionSheet.dismiss(animated: true, completion: nil)
+            })
+            cancelAction.setValue(UIColor.red, forKey: "titleTextColor")
+            actionSheet.addAction(cancelAction)
+            
+            self.present(actionSheet, animated: true, completion: nil)
+            
+        case .AUDIOS:
+            print("add select audio")
+        case .PDFS:
+            print("add select from pdf")
+        }
+ 
+    }
+    
+    func videoFormatIsAvailable(for sourceType: UIImagePickerControllerSourceType ) -> Bool
+    {
+        let types = UIImagePickerController.availableMediaTypes(for: .camera)
+        
+        for type in types!
+        {
+            if(type == kUTTypeMovie as String)
+            {
+                return true
+            }
+        }
+        
+        return false
     }
     
     
@@ -39,7 +132,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        print("textViewDidChange")
         let size = textView.bounds.size
         let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
 
@@ -72,7 +164,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         navigationController?.navigationBar.prefersLargeTitles = false
         self.tableView.register(LocalEntryTableViewCell.self, forCellReuseIdentifier: infoCellId)
         self.tableView.register(LocalResourceTableViewCell.self, forCellReuseIdentifier: resourceCellId)
-        self.tableView.register(LocalResourceTypeTableViewCell.self, forCellReuseIdentifier: resourceTypeCellId)
         self.tableView.tableFooterView = UIView(frame: .zero)
     }
 
@@ -84,7 +175,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 5
+            return 4
         }
         else {
             return 3
@@ -109,13 +200,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             if indexPath.row == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: resourceTypeCellId, for: indexPath) as! LocalResourceTypeTableViewCell
-                cell.cellLabel.text = "Resource Type"
-                return cell
-            }
-            if indexPath.row == 1 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
-//                cell.contentView.isUserInteractionEnabled = true
+                //                cell.contentView.isUserInteractionEnabled = true
                 cell.insertButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Resource"
@@ -128,13 +214,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 
                 return cell
             }
-            if indexPath.row == 2 {
+            if indexPath.row == 1 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
                 cell.textView.delegate = self
                 cell.cellLabel.text = "Hazard"
                 return cell
             }
-            if indexPath.row == 3 {
+            if indexPath.row == 2 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
                 cell.textView.delegate = self
                 cell.cellLabel.text = "Subcategory"
