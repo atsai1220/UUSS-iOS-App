@@ -34,21 +34,45 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     var resourceType: ActionSheetMode = ActionSheetMode.PHOTOS
     
     // Hazards related
+    var hazardSelected = false
+    var subcategorySelected = false
+    var collectionSelected = false
     var allHazards: [Hazard] = []
-    let picker = UIPickerView()
+    var hazardsDictionary: [String: [Hazard]] = [:]
+    var filteredHazardsTitles: [String] = []
+    let hazardPicker = UIPickerView()
+    let subcategoryPicker = UIPickerView()
+    let collectionPicker = UIPickerView()
+    var subcategoryTitles: [String] = []
+    var collectionTitles: [String] = []
     
-    func showPickerView() {
-        if !picker.isDescendant(of: self.view) {
-            view.addSubview(picker)
-            picker.delegate = self
-            picker.dataSource = self
-            picker.translatesAutoresizingMaskIntoConstraints = false
+    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
+    var showPicker = false
+    
+    // MARK: - Picker View
+    
+    func showHazardPickerView() {
+        if !hazardPicker.isDescendant(of: self.view) {
             
-            picker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-            picker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-            picker.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            view.addSubview(hazardPicker)
+            UIView.animate(withDuration: 0.3) {
+                self.hazardPicker.alpha = 1.0
+            }
+            hazardPicker.delegate = self
+            hazardPicker.dataSource = self
+            hazardPicker.translatesAutoresizingMaskIntoConstraints = false
+            
+            hazardPicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+            hazardPicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+            hazardPicker.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         } else {
-            picker.removeFromSuperview()
+            UIView.animate(withDuration: 0.3, animations: {
+                self.hazardPicker.alpha = 0.0
+            }) { (done) in
+                if done {
+                    self.hazardPicker.removeFromSuperview()
+                }
+            }
         }
     }
     
@@ -57,12 +81,29 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 10
+        if pickerView.isEqual(hazardPicker) {
+            return self.filteredHazardsTitles.count
+        }
+        else if pickerView.isEqual(subcategoryPicker) {
+            return self.subcategoryTitles.count
+        }
+        else {
+            return self.collectionTitles.count
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return "Test"
+        if self.filteredHazardsTitles.count > 0 {
+            return self.filteredHazardsTitles[row]
+        }
+        return ""
     }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        print(self.filteredHazardsTitles[row])
+    }
+    
+    // MARK: - Action sheet
     
     @objc private func showActionSheet(sender: UIButton) {
         switch resourceType {
@@ -159,12 +200,33 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         picker.dismiss(animated: true, completion: nil)
     }
     
+    // MARK: - API Functions
+    
     @objc func collectAndShowHazards() {
-        collectHazards()
-        self.showPickerView()
+        if !hazardPicker.isDescendant(of: self.view) {
+            self.showPicker = true
+            collectHazards()
+        } else {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.hazardPicker.alpha = 0.0
+            }) { (done) in
+                if done {
+                    self.hazardPicker.removeFromSuperview()
+                }
+            }
+        }
     }
     
     @objc func collectHazards() {
+        // Show activity indicator
+        activityIndicator.center = view.center
+        let activityBackground = UIView(frame: view.frame)
+        activityBackground.tag = 99
+        activityBackground.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        view.addSubview(activityBackground)
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        
         // check Internet connection
         let internetTestObject = Reachability()
         if internetTestObject.hasInternet() {
@@ -186,10 +248,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 alert.addAction(okayAction)
                 self.present(alert, animated: true, completion: nil)
             }
-            
+            filterAllHazardsAndReloadTable()
             if self.refreshControl?.isRefreshing == true {
                 self.refreshControl?.endRefreshing()
             }
+
         }
     }
     
@@ -217,10 +280,22 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     })
                     // save to disk in case of connectivity lost
                     saveCompleteHazardsToDisk(hazards: self.allHazards)
+                    self.filterAllHazardsAndReloadTable()
                     
                     if self.refreshControl?.isRefreshing == true {
                         self.refreshControl?.endRefreshing()
                     }
+                    self.activityIndicator.stopAnimating()
+                    self.activityIndicator.isHidden = true
+                    if let viewWithTag = self.view.viewWithTag(99) {
+                        viewWithTag.removeFromSuperview()
+                    }
+                    
+                    if self.showPicker {
+                        self.showHazardPickerView()
+                        self.showPicker = false
+                    }
+                    
                 }
             } catch let jsonError {
                 print(jsonError)
@@ -228,18 +303,43 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }.resume()
     }
     
-    
-    func textViewDidChange(_ textView: UITextView) {
-        let size = textView.bounds.size
-        let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
-
-        if size.height != newSize.height {
-            UIView.setAnimationsEnabled(false)
-            tableView?.beginUpdates()
-            tableView?.endUpdates()
-            UIView.setAnimationsEnabled(true)
+    func filterAllHazardsAndReloadTable() {
+        self.hazardsDictionary = self.allHazards.reduce([String: [Hazard]]()) {
+            (dict, hazard) in
+            var tempDict = dict
+            if var array = tempDict[hazard.theme2] {
+                if array.contains(where: { (insideHazard: Hazard) -> Bool in
+                    insideHazard.name == hazard.name
+                }) {
+                    
+                }
+                else {
+                    array.append(hazard)
+                    tempDict.updateValue(array, forKey: hazard.theme2)
+                }
+            }
+            else {
+                let newArray: [Hazard] = [hazard]
+                tempDict[hazard.theme2] = newArray
+            }
+            return tempDict
         }
+        
+        for (key, _) in self.hazardsDictionary {
+            if self.filteredHazardsTitles.contains(where: { (insideName: String) -> Bool in
+                insideName == key
+            }) {
+                
+            }
+            else {
+                self.filteredHazardsTitles.append(key)
+            }
+        }
+        
+        self.filteredHazardsTitles = self.filteredHazardsTitles.sorted(by: { $0 < $1 })
     }
+    
+
     
     private func displayErrorMessage(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -262,8 +362,17 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
 //        self.navigationController?.popToRootViewController(animated: true)
     }
     
+    // MARK: - Table view
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.hazardPicker.alpha = 0.0
+        self.hazardPicker.backgroundColor = UIColor.white
         
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -284,8 +393,18 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         
         navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
     }
-
-    // MARK: - Table view data source
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let size = textView.bounds.size
+        let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
+        
+        if size.height != newSize.height {
+            UIView.setAnimationsEnabled(false)
+            tableView?.beginUpdates()
+            tableView?.endUpdates()
+            UIView.setAnimationsEnabled(true)
+        }
+    }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -293,7 +412,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 4
+            if !hazardSelected && !subcategorySelected && !collectionSelected {
+                return 2
+            }
+            else {
+                //TODO: return 3 or 4 depending on hazard selection
+                return 4
+            }
         }
         else {
             return 3
@@ -323,10 +448,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Resource"
                 if (previewImage != nil) {
+                    
                     cell.resourceSet = true
                     cell.insertButton.imageView?.contentMode = .scaleAspectFill
                     cell.insertButton.setImage(previewImage, for: .normal)
-                    cell.layoutIfNeeded()
+                    cell.layoutSubviews()
+//                    cell.layoutIfNeeded()
                 }
                 
                 return cell
@@ -387,50 +514,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         return 50
     }
 
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
