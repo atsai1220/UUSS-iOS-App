@@ -93,10 +93,22 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if self.filteredHazardsTitles.count > 0 {
-            return self.filteredHazardsTitles[row]
+        if pickerView.isEqual(hazardPicker) {
+            if self.filteredHazardsTitles.count > 0 {
+                return self.filteredHazardsTitles[row]
+            }
         }
-        return ""
+        else if pickerView.isEqual(subcategoryPicker) {
+            if self.subcategoryTitles.count > 0 {
+                return self.subcategoryTitles[row]
+            }
+        }
+        else {
+            if self.collectionTitles.count > 0 {
+                return self.collectionTitles[row]
+            }
+        }
+        return "Should never happen"
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
