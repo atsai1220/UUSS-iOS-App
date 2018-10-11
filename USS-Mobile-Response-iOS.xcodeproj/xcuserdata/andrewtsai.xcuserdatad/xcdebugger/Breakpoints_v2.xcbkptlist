@@ -189,10 +189,29 @@
             timestampString = "560918310.893466"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+            startingLineNumber = "112"
+            endingLineNumber = "112"
+            landmarkName = "collectHazards()"
+            landmarkType = "7">
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> master
             startingLineNumber = "109"
             endingLineNumber = "109"
             landmarkName = "unknown"
             landmarkType = "0">
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> master
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -218,13 +237,52 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "USS-Mobile-Response-iOS/Resource Picker/LocalEntryTableViewController.swift"
+<<<<<<< HEAD
             timestampString = "560918310.896093"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+=======
+            timestampString = "560808112.077136"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+=======
             startingLineNumber = "336"
             endingLineNumber = "336"
             landmarkName = "unknown"
             landmarkType = "0">
+>>>>>>> Stashed changes
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "USS-Mobile-Response-iOS/Resource Picker/LocalEntryTableViewController.swift"
+            timestampString = "560808112.078406"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+=======
+>>>>>>> master
+            startingLineNumber = "336"
+            endingLineNumber = "336"
+            landmarkName = "unknown"
+            landmarkType = "0">
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> master
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
