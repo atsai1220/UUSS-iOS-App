@@ -64,8 +64,8 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         NotificationCenter.default.addObserver(self, selector: #selector(newFilesAdded), name: Notification.Name("New data"), object: nil)
         
         let holdGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(cellPressedAndHeld))
-        holdGesture.minimumPressDuration = TimeInterval(exactly: 1.0)!
-        view.addGestureRecognizer(holdGesture)
+        holdGesture.minimumPressDuration = 1.0
+        myCollectionView.addGestureRecognizer(holdGesture)
         
         // Register cell classes
         myCollectionView.dataSource = self
@@ -73,8 +73,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         myCollectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView = myCollectionView
         myCollectionView.backgroundColor = UIColor(red: 211/225, green: 211/225, blue: 211/225, alpha: 1)
-        // Do any additional setup after loading the view.
-//        self.view.addSubview(self.collectionView!)
         
         view.addSubview(doneEditingButton)
         
@@ -86,7 +84,7 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
             ])
         
         pdfModalViewController = PdfFileModalViewController()
-        pdfModalViewController!.modalDoneDelegate = self
+        pdfModalViewController?.modalDoneDelegate = self
     }
     
     @objc func newFilesAdded()
@@ -166,9 +164,7 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         let item = self.localEntries[indexPath.row]
         let setting = MainCellSetting(name: item.name!, imageName: item.localFileName!, fileType: item.fileType!, videoURL: item.videoURL ?? "", submissionStatus: item.submissionStatus!)
         cell.setting = setting
-        
-        // Drop shadow setting
-  
+
         return cell
     }
     
@@ -203,9 +199,9 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
                 break
             case FileType.VIDEO.rawValue:
                 
-                let videoPLaybackController: VideoPlaybackViewController = VideoPlaybackViewController()
-                videoPLaybackController.videoUrl = URL(fileURLWithPath: localMedia.videoURL!)
-                navigationController?.pushViewController(videoPLaybackController, animated: true)
+                let videoPlaybackController: VideoPlaybackViewController = VideoPlaybackViewController()
+                videoPlaybackController.videoUrl = URL(fileURLWithPath: localMedia.videoURL!)
+                navigationController?.pushViewController(videoPlaybackController, animated: true)
             
             case FileType.AUDIO.rawValue:
                 break
@@ -232,12 +228,13 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     }
     */
 
-    /*
+    
     // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
     override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
-
+    
+    /*
     override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
         return false
     }
@@ -249,15 +246,17 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 
     @objc func cellPressedAndHeld(gesture: UILongPressGestureRecognizer)
     {
-        if(gesture.state == .ended)
+        if(gesture.state != .began)
         {
             return
         }
-        
+        print("cell pressed and held")
         let locationPointInView: CGPoint = gesture.location(in: self.myCollectionView)
-        let indexPath: IndexPath = myCollectionView.indexPathForItem(at: locationPointInView)!
-        let cell: UICollectionViewCell = myCollectionView.cellForItem(at: indexPath)!
-        
+        if let indexPath = (self.myCollectionView.indexPathForItem(at: locationPointInView)){
+            let cell = myCollectionView.cellForItem(at: indexPath) as! MainCollectionViewCell
+            cell.setting?.isEditing = true
+            
+        }
         
     }
 }

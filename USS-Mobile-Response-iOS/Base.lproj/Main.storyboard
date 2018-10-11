@@ -296,9 +296,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="jBA-kC-qT0" kind="show" identifier="resourceTypeSegue" id="4t7-9s-ZQS"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -310,29 +307,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6PN-68-lOF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-372" y="-1948"/>
-        </scene>
-        <!--Form View Controller-->
-        <scene sceneID="CXd-tr-QBx">
-            <objects>
-                <pageViewController storyboardIdentifier="FormViewController" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="jEJ-Na-dkM" customClass="FormViewController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="MBx-X0-BRB" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="870" y="-2667"/>
-        </scene>
-        <!--Resource Type Form Controller-->
-        <scene sceneID="4Rg-5K-XS0">
-            <objects>
-                <viewController storyboardIdentifier="ResourceTypeFormController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="jBA-kC-qT0" customClass="ResourceTypeFormController" customModule="USS_Mobile_Response_iOS" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="0a4-00-uXN">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="pvX-eo-hPH"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="MF4-my-CNb" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="870" y="-1948"/>
         </scene>
         <!--Local-->
         <scene sceneID="twa-P5-kEO">
@@ -371,40 +345,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PIF-FJ-3zm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="871" y="-1183"/>
-        </scene>
-        <!--Collection View Controller-->
-        <scene sceneID="w3b-Cf-SQ4">
-            <objects>
-                <collectionViewController id="AYH-qZ-LK9" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="vid-XM-zPO">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="vUH-BK-Et0">
-                            <size key="itemSize" width="50" height="50"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="cAi-Hs-CVy">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </view>
-                            </collectionViewCell>
-                        </cells>
-                        <connections>
-                            <outlet property="dataSource" destination="AYH-qZ-LK9" id="zJu-wz-trI"/>
-                            <outlet property="delegate" destination="AYH-qZ-LK9" id="vYf-Ka-P65"/>
-                        </connections>
-                    </collectionView>
-                </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zDw-ja-QjG" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1900" y="-983"/>
         </scene>
         <!--Trash-->
         <scene sceneID="mLA-Z5-5F8">
@@ -460,12 +400,11 @@
                         <segue destination="wqY-gt-h7Y" kind="showDetail" identifier="LoginSegue" id="4mu-Z4-zH4"/>
                         <segue destination="qpd-gj-uuI" kind="relationship" relationship="viewControllers" id="Z5C-ZO-pkd"/>
                         <segue destination="Q46-83-LT1" kind="relationship" relationship="viewControllers" id="Dnb-0j-5PB"/>
-                        <segue destination="FV7-AA-yFm" kind="show" identifier="hazardSegue" id="hr8-Dv-guK"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RYh-Ir-fz2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-372" y="-786"/>
+            <point key="canvasLocation" x="-372" y="-788"/>
         </scene>
         <!--Main Navigation Controller-->
         <scene sceneID="BBR-CW-JAu">
