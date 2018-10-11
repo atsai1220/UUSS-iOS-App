@@ -11,7 +11,7 @@ import Photos
 import CoreLocation
 import MobileCoreServices
 
-class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate {
+class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
     enum ActionSheetMode: String {
         case PHOTOS = "PHOTOS"
@@ -22,13 +22,47 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     let infoCellId = "infoCellId"
     let resourceCellId = "resourceCellId"
-    let resourceTypeCellId = "resourceTypeCellId"
+    let hazardCellId = "hazardCellId"
+    let subcategoryCellId = "subcategoryCellId"
+    let collectionCellId = "collectionCellId"
     let locationManager = CLLocationManager()
     let imagePickerController = UIImagePickerController()
     
+    // Resource Info section related
     var previewImage: UIImage?
     var submissionStatus: SubmissionStatus = SubmissionStatus.LocalOnly
     var resourceType: ActionSheetMode = ActionSheetMode.PHOTOS
+    
+    // Hazards related
+    var allHazards: [Hazard] = []
+    let picker = UIPickerView()
+    
+    func showPickerView() {
+        if !picker.isDescendant(of: self.view) {
+            view.addSubview(picker)
+            picker.delegate = self
+            picker.dataSource = self
+            picker.translatesAutoresizingMaskIntoConstraints = false
+            
+            picker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+            picker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+            picker.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        } else {
+            picker.removeFromSuperview()
+        }
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 10
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return "Test"
+    }
     
     @objc private func showActionSheet(sender: UIButton) {
         switch resourceType {
@@ -120,11 +154,80 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             print("did get image")
             previewImage = pickedImage
-            let set = IndexSet(arrayLiteral: 0)
-            tableView.reloadSections(set, with: .automatic)
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         }
         picker.dismiss(animated: true, completion: nil)
     }
+    
+    @objc func collectAndShowHazards() {
+        collectHazards()
+        self.showPickerView()
+    }
+    
+    @objc func collectHazards() {
+        // check Internet connection
+        let internetTestObject = Reachability()
+        if internetTestObject.hasInternet() {
+            loadHazardsFromApi()
+        }
+        else {
+            if localHazardsFromDiskExists() {
+                self.allHazards = getCompleteHazardsFromDisk()
+                // show warning
+                let alert = UIAlertController(title: "No Connection", message: "Using cached hazards.", preferredStyle: .alert)
+                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                alert.addAction(okayAction)
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                // show warning
+                let alert = UIAlertController(title: "No Connection", message: "No Internet connection and cached hazards are not available.", preferredStyle: .alert)
+                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                alert.addAction(okayAction)
+                self.present(alert, animated: true, completion: nil)
+            }
+            
+            if self.refreshControl?.isRefreshing == true {
+                self.refreshControl?.endRefreshing()
+            }
+        }
+    }
+    
+    func loadHazardsFromApi() {
+        let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
+        let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=search_public_collections&param1=&param2=theme&param3=DESC&param4=0&param5=0"
+        let signature = "&sign=" + (privateKey + queryString).sha256()!
+        let completeURL = urlString + queryString + signature
+        guard let url = URL(string: completeURL) else { return }
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }
+            guard let data = data else { return }
+            // JSON decodign and parsing
+            do {
+                // decode retrieved data with JSONDecoder
+                let resourceSpaceData = try JSONDecoder().decode([Hazard].self, from: data)
+                // return to main queue
+                DispatchQueue.main.async {
+                    // parse and filter JSON results
+                    self.allHazards = resourceSpaceData.filter({
+                        $0.theme == "Geologic Hazards" && $0.theme2 != ""
+                    })
+                    // save to disk in case of connectivity lost
+                    saveCompleteHazardsToDisk(hazards: self.allHazards)
+                    
+                    if self.refreshControl?.isRefreshing == true {
+                        self.refreshControl?.endRefreshing()
+                    }
+                }
+            } catch let jsonError {
+                print(jsonError)
+            }
+        }.resume()
+    }
+    
     
     func textViewDidChange(_ textView: UITextView) {
         let size = textView.bounds.size
@@ -167,10 +270,16 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         
         imagePickerController.delegate = self
         
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl?.addTarget(self, action: #selector(collectHazards), for: .valueChanged)
+        
         navigationItem.title = "New Local Entry"
         navigationController?.navigationBar.prefersLargeTitles = false
         self.tableView.register(LocalEntryTableViewCell.self, forCellReuseIdentifier: infoCellId)
         self.tableView.register(LocalResourceTableViewCell.self, forCellReuseIdentifier: resourceCellId)
+        self.tableView.register(HazardTableViewCell.self, forCellReuseIdentifier: hazardCellId)
+        self.tableView.register(SubcategoryTableViewCell.self, forCellReuseIdentifier: subcategoryCellId)
+        self.tableView.register(CollectionTableViewCell.self, forCellReuseIdentifier: collectionCellId)
         self.tableView.tableFooterView = UIView(frame: .zero)
         
         navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
@@ -210,7 +319,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         if indexPath.section == 0 {
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
-                //                cell.contentView.isUserInteractionEnabled = true
                 cell.insertButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Resource"
@@ -224,38 +332,45 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 return cell
             }
             if indexPath.row == 1 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
-                cell.textView.delegate = self
+                let cell = tableView.dequeueReusableCell(withIdentifier: hazardCellId, for: indexPath) as! HazardTableViewCell
+                cell.hazardButton.addTarget(self, action: #selector(collectAndShowHazards), for: .touchUpInside)
+                cell.selectionStyle = .none
                 cell.cellLabel.text = "Hazard"
                 return cell
             }
             if indexPath.row == 2 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
-                cell.textView.delegate = self
+                let cell = tableView.dequeueReusableCell(withIdentifier: subcategoryCellId, for: indexPath) as! SubcategoryTableViewCell
+                cell.selectionStyle = .none
                 cell.cellLabel.text = "Subcategory"
                 return cell
             }
             else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
-                cell.textView.delegate = self
+                let cell = tableView.dequeueReusableCell(withIdentifier: collectionCellId, for: indexPath) as! CollectionTableViewCell
+                cell.selectionStyle = .none
                 cell.cellLabel.text = "Collection"
                 return cell
             }
         }
         else {
             let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
-            cell.textView.delegate = self
+            
             
             if indexPath.row == 0 {
                 cell.cellLabel.text = "Title"
+                cell.selectionStyle = .none
+                cell.textView.delegate = self
                 return cell
             }
             if indexPath.row == 1 {
                 cell.cellLabel.text = "Description"
+                cell.selectionStyle = .none
+                cell.textView.delegate = self
                 return cell
             }
             else {
                 cell.cellLabel.text = "Notes"
+                cell.selectionStyle = .none
+                cell.textView.delegate = self
                 return cell
             }
         }

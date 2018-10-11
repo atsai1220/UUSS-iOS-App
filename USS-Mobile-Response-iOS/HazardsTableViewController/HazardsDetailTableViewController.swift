@@ -119,8 +119,13 @@ class HazardsDetailTableViewController: UITableViewController, UIImagePickerCont
             navigationController?.pushViewController(hazardsDetailTableVC, animated: true)
         }
         else {
-            // collection
-            showActionSheet(indexPath: indexPath)
+            //TODO: Send back selected hazards
+            
+            NotificationCenter.default.post(name: Notification.Name("didReceiveHazard"), object: nil)
+            
+            if let vc = self.navigationController?.viewControllers.filter({$0.isKind(of: LocalEntryTableViewController.self)}).last {
+                self.navigationController?.popToViewController(vc, animated: true)
+            }
         }
     }
     

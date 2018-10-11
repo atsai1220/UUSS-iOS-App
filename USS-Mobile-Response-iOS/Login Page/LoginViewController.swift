@@ -225,6 +225,7 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
                             UserDefaults.standard.set(userName!, forKey: "userName")
                             UserDefaults.standard.set(userPassword!, forKey: "userPassword")
                             UserDefaults.standard.set(true, forKey: "isLoggedIn")
+                            UserDefaults.standard.set(self.selectedServerURL, forKey: "selectedURL")
                             UserDefaults.standard.synchronize()
                             print(String(data: data, encoding:. utf8)!)
                             self.navigateToMainInterface()
