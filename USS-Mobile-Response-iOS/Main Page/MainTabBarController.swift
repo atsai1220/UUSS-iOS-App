@@ -120,6 +120,7 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
         selectedIndex = 0
         navigationItem.title = "Main"
         navigationController?.navigationBar.prefersLargeTitles = false

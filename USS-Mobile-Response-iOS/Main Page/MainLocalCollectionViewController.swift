@@ -10,9 +10,15 @@ import UIKit
 
 private let reuseIdentifier = "Cell"
 
-class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, PDFModalDoneDelegate
+{
+    func headerDoneButtonPressed(_: Bool)
+    {
+        pdfModalViewController?.dismiss(animated: true, completion: nil)
+    }
     
     var localEntries: [LocalEntry] = []
+    var pdfModalViewController: PdfFileModalViewController?
     
     var myCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -42,17 +48,20 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         
     }()
     
-    override init(collectionViewLayout layout: UICollectionViewLayout) {
+    override init(collectionViewLayout layout: UICollectionViewLayout)
+    {
         super.init(collectionViewLayout: layout)
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(newFilesAdded), name: Notification.Name("New data"), object: nil)
         
         let holdGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(cellPressedAndHeld))
         holdGesture.minimumPressDuration = TimeInterval(exactly: 1.0)!
@@ -75,10 +84,27 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
             doneEditingButton.heightAnchor.constraint(equalToConstant: 25.0),
             doneEditingButton.widthAnchor.constraint(equalToConstant: 70.0)
             ])
-       
+        
+        pdfModalViewController = PdfFileModalViewController()
+        pdfModalViewController!.modalDoneDelegate = self
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    @objc func newFilesAdded()
+    {
+        if(pdfModalViewController!.isViewLoaded && (pdfModalViewController!.view!.window != nil))
+        {
+            return
+        }
+        else
+        {
+            pdfModalViewController!.modalPresentationStyle = .overCurrentContext
+            navigationController!.present(pdfModalViewController!, animated: true, completion: nil)
+        }
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
         super.viewWillAppear(animated)
         self.localEntries = getLocalEntriesFromDisk()
         self.collectionView?.reloadData()

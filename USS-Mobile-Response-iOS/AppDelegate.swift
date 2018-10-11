@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 import AVFoundation
+import Foundation
+import CloudKit
 
 @UIApplicationMain
 
@@ -18,8 +20,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     var window: UIWindow?
     var orientationLock = UIInterfaceOrientationMask.all
     var audioSession: AVAudioSession?
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+        let fileManager: FileManager = FileManager.default
+        let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+        let tempDocDir = docDir!.appendingPathComponent("tmp")
+        
+        if(!fileManager.fileExists(atPath: tempDocDir.relativePath))
+        {
+            do
+            {
+                try fileManager.createDirectory(at: tempDocDir, withIntermediateDirectories: false, attributes: nil)
+            }
+            catch
+            {
+                print(error)
+            }
+        }
         
         audioSession = AVAudioSession.sharedInstance()
         do
@@ -121,12 +139,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     
     // MARK: - Core Data Saving support
     
-    func saveContext () {
+    func saveContext ()
+    {
         let context = persistentContainer.viewContext
         if context.hasChanges {
-            do {
+            do
+            {
                 try context.save()
-            } catch {
+            }
+            catch
+            {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nserror = error as NSError
@@ -135,6 +157,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         }
     }
 
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool
+    {
+        let fileManager: FileManager = FileManager.default
+        let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+        let tempDir = docDir?.appendingPathComponent("tmp/\(url.lastPathComponent)")
+        
+        do
+        {
+            let pdfFile: Data = try Data(contentsOf: url)
+            
+            do
+            {
+                try pdfFile.write(to: tempDir!)
+                NotificationCenter.default.post(name: Notification.Name("New data"), object: nil)
+                
+            }
+            catch
+            {
+                print(error)
+                return false
+            }
+        }
+        catch
+        {
+            print(error)
+            return false
+        }
 
+        return true
+    }
 }
 

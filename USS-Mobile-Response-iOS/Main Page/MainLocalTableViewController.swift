@@ -8,7 +8,8 @@
 
 import UIKit
 
-class MainLocalTableViewController: UITableViewController {
+class MainLocalTableViewController: UITableViewController
+{
     
     let cellId = "cellId"
     var localEntries: [LocalEntry] = []
@@ -17,8 +18,6 @@ class MainLocalTableViewController: UITableViewController {
         super.viewDidLoad()
         self.tableView.register(MainTableViewCell.self, forCellReuseIdentifier: cellId)
         self.tableView.tableFooterView = UIView(frame: .zero)
-        
-      
     }
     
     override func viewWillLayoutSubviews() {

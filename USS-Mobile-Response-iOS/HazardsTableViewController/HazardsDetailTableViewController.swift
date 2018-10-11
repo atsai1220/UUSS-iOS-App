@@ -124,7 +124,8 @@ class HazardsDetailTableViewController: UITableViewController, UIImagePickerCont
         }
     }
     
-    func showActionSheet(indexPath: IndexPath) {
+    func showActionSheet(indexPath: IndexPath)
+    {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
@@ -134,7 +135,9 @@ class HazardsDetailTableViewController: UITableViewController, UIImagePickerCont
             self.navigationController?.pushViewController(photoPickerVC, animated: true)
         }))
         actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
-            
+            let pdf: PDFViewController = PDFViewController()
+            pdf.collectionRef = self.hazardCollections[indexPath.row].ref
+            self.navigationController?.pushViewController(pdf, animated: true)
         }))
         actionSheet.addAction(UIAlertAction(title: "Video (.MOV and .MP4)", style: .default, handler: { (action: UIAlertAction) in
             let videoViewcontroller: VideoViewController = VideoViewController()
