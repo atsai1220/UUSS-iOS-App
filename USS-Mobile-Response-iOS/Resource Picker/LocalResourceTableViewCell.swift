@@ -55,6 +55,7 @@ class LocalResourceTableViewCell: UITableViewCell {
         super.updateConstraints()
     }
     
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         addSubview(cellLabel)
@@ -78,6 +79,21 @@ class LocalResourceTableViewCell: UITableViewCell {
                 ])
         }
         else {
+            NSLayoutConstraint.deactivate([
+                cellLabel.topAnchor.constraint(equalTo: self.topAnchor),
+                cellLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+                cellLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+                cellLabel.widthAnchor.constraint(equalToConstant: 100),
+                cellDivider.topAnchor.constraint(equalTo: self.topAnchor),
+                cellDivider.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+                cellDivider.leadingAnchor.constraint(equalTo: cellLabel.trailingAnchor, constant: 8),
+                cellDivider.widthAnchor.constraint(equalToConstant: 1),
+                insertButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+                insertButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+                insertButton.leadingAnchor.constraint(equalTo: cellDivider.trailingAnchor, constant: 8),
+                insertButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+                ])
+            
             NSLayoutConstraint.activate([
             cellLabel.topAnchor.constraint(equalTo: self.topAnchor),
             cellLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),

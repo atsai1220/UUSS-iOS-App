@@ -138,7 +138,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "USS-Mobile-Response-iOS/CommonFunctions.swift"
-            timestampString = "560466861.043323"
+            timestampString = "560918310.893131"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "105"
@@ -170,7 +170,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "USS-Mobile-Response-iOS/CommonFunctions.swift"
-            timestampString = "560466861.044587"
+            timestampString = "560918310.893325"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "163"
@@ -186,13 +186,32 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "USS-Mobile-Response-iOS/HazardsTableViewController/HazardsTableViewController.swift"
-            timestampString = "559195907.811988"
+            timestampString = "560918310.893466"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             startingLineNumber = "112"
             endingLineNumber = "112"
             landmarkName = "collectHazards()"
             landmarkType = "7">
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> master
+            startingLineNumber = "109"
+            endingLineNumber = "109"
+            landmarkName = "unknown"
+            landmarkType = "0">
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> master
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -202,7 +221,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "USS-Mobile-Response-iOS/Video/VideoViewController.swift"
-            timestampString = "559966270.230695"
+            timestampString = "560906099.90903"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "463"
@@ -218,13 +237,26 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "USS-Mobile-Response-iOS/Resource Picker/LocalEntryTableViewController.swift"
+<<<<<<< HEAD
+            timestampString = "560918310.896093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+=======
             timestampString = "560808112.077136"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             startingLineNumber = "116"
             endingLineNumber = "116"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
+=======
+            startingLineNumber = "336"
+            endingLineNumber = "336"
+            landmarkName = "unknown"
+            landmarkType = "0">
+>>>>>>> Stashed changes
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -241,6 +273,16 @@
             endingLineNumber = "120"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
+=======
+>>>>>>> master
+            startingLineNumber = "336"
+            endingLineNumber = "336"
+            landmarkName = "unknown"
+            landmarkType = "0">
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> master
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -1,14 +1,14 @@
 //
-//  LocalResourceTypeTableViewCell.swift
+//  HazardTableViewCell.swift
 //  USS-Mobile-Response-iOS
 //
-//  Created by Andrew Tsai on 10/8/18.
+//  Created by Andrew Tsai on 10/9/18.
 //  Copyright © 2018 Andrew Tsai. All rights reserved.
 //
 
 import UIKit
 
-class LocalResourceTypeTableViewCell: UITableViewCell {
+class HazardTableViewCell: UITableViewCell {
     
     var cellLabel: UILabel = {
         let label = UILabel()
@@ -27,33 +27,23 @@ class LocalResourceTypeTableViewCell: UITableViewCell {
         return view
     }()
     
-    var segmentController: UISegmentedControl = {
-        let items = ["Photo", "Video", "Audio", "PDF"]
-        let segments = UISegmentedControl(items: items)
-        segments.selectedSegmentIndex = 0
-        segments.translatesAutoresizingMaskIntoConstraints = false
-        segments.addTarget(self, action: #selector(changeMode), for: .valueChanged)
-        return segments
+    var hazardButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.lightGray
+        button.layer.cornerRadius = 5
+        button.clipsToBounds = true
+        button.setTitle("Tap to select hazard...", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.invalidateIntrinsicContentSize()
+        return button
     }()
     
-    @objc func changeMode(sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 1:
-            print("Videos")
-        case 2:
-            print("Audio")
-        case 3:
-            print("PDF")
-        default:
-            print("Photos")
-        }
-    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         addSubview(cellLabel)
         addSubview(cellDivider)
-        addSubview(segmentController)
+        addSubview(hazardButton)
         
         NSLayoutConstraint.activate([
             cellLabel.topAnchor.constraint(equalTo: self.topAnchor),
@@ -64,13 +54,12 @@ class LocalResourceTypeTableViewCell: UITableViewCell {
             cellDivider.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             cellDivider.leadingAnchor.constraint(equalTo: cellLabel.trailingAnchor, constant: 8),
             cellDivider.widthAnchor.constraint(equalToConstant: 1),
-            segmentController.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            segmentController.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            segmentController.leadingAnchor.constraint(equalTo: cellDivider.trailingAnchor, constant: 8),
-            segmentController.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            hazardButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            hazardButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            hazardButton.leadingAnchor.constraint(equalTo: cellDivider.trailingAnchor, constant: 8),
+            hazardButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             ])
     }
-    
 
     override func awakeFromNib() {
         super.awakeFromNib()

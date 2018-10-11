@@ -73,8 +73,6 @@ class HazardsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        showActionSheet(indexPat: indexPath)
-        
         let itemTitle = self.filteredHazardsTitles[indexPath.row]
         self.selectedHazards = self.hazardsDictionary[itemTitle]!
         let hazardsDetailTableVC = HazardsDetailTableViewController()
@@ -84,8 +82,7 @@ class HazardsTableViewController: UITableViewController {
     }
     
     
-    @objc
-    func collectHazards() {
+    @objc func collectHazards() {
         // check Internet connection
         let internetTestObject = Reachability()
         if internetTestObject.hasInternet() {
@@ -115,11 +112,11 @@ class HazardsTableViewController: UITableViewController {
         }
     }
     
-    
+
     func loadHazardsFromApi() {
-        let urlString = "https://geodata.geology.utah.gov/api/?"
-        let privateKey = "7d510414a826c1af09d864e70c3656964839664786b8e774bafb7c10adc5fea1"
-        let queryString = "user=atsai-uuss&function=search_public_collections&param1=&param2=theme&param3=DESC&param4=0&param5=0"
+        let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
+        let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=search_public_collections&param1=&param2=theme&param3=DESC&param4=0&param5=0"
         let signature = "&sign=" + (privateKey + queryString).sha256()!
         let completeURL = urlString + queryString + signature
         guard let url = URL(string: completeURL) else { return }
@@ -142,9 +139,7 @@ class HazardsTableViewController: UITableViewController {
                     saveCompleteHazardsToDisk(hazards: self.allHazards)
                 
                     self.filterAllHazardsAndReloadTable()
-                    
 
-                    
                     if self.refreshControl?.isRefreshing == true {
                         self.refreshControl?.endRefreshing()
                     }
@@ -154,6 +149,7 @@ class HazardsTableViewController: UITableViewController {
             }
             }.resume()
     }
+    
     
     func filterAllHazardsAndReloadTable() {
         self.hazardsDictionary = self.allHazards.reduce([String: [Hazard]]()) {
@@ -198,46 +194,4 @@ class HazardsTableViewController: UITableViewController {
         self.tableView.reloadData()
         self.tableView.reloadRows(at: indexPathsToReload, with: .left)
     }
-
-
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    
-
- 
-
 }

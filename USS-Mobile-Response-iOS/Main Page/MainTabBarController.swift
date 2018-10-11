@@ -41,14 +41,50 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
         return launcher
     }()
     
+    func showResourceTypeActionSheet() {
+        let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Photo (.JPEG and .TIF)", style: .default, handler: { (action: UIAlertAction) in
+            let localEntryVC = LocalEntryTableViewController()
+            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.PHOTOS
+            self.navigationController?.pushViewController(localEntryVC, animated: true)
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Video (.MOV and .MP4)", style: .default, handler: { (action: UIAlertAction) in
+            let localEntryVC = LocalEntryTableViewController()
+            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.VIDEOS
+            self.navigationController?.pushViewController(localEntryVC, animated: true)
+//            let videoViewcontroller: VideoViewController = VideoViewController()
+//            videoViewcontroller.collectionReference = self.hazardCollections[indexPath.row].ref
+//            self.navigationController?.pushViewController(videoViewcontroller, animated: true)
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
+            let localEntryVC = LocalEntryTableViewController()
+            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.AUDIOS
+            self.navigationController?.pushViewController(localEntryVC, animated: true)
+            
+//            let audioViewController: AudioViewController = AudioViewController()
+//            audioViewController.collectionReference = self.hazardCollections[indexPath.row].ref
+//            self.navigationController?.pushViewController(audioViewController, animated: true)
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
+            let localEntryVC = LocalEntryTableViewController()
+            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.PDFS
+            self.navigationController?.pushViewController(localEntryVC, animated: true)
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
     @IBAction func menuTapped(_ sender: Any) {
         // Cover and disable main view when hamburger button is tapped.
         sideMenuLauncher.showSideMenu()
     }
     
     @IBAction func newTapped(_ sender: Any) {
-        let localEntryVC = LocalEntryTableViewController()
-        self.navigationController?.pushViewController(localEntryVC, animated: true)
+        showResourceTypeActionSheet()
 //        let ew = PhotoPickerViewController()
 //        self.navigationController?.pushViewController(ew, animated: true)
     }

@@ -40,6 +40,14 @@
 		1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */; };
 		F6028FED2143303700429805 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6028FEC2143303700429805 /* AnnotationView.swift */; };
 		F60773672135F38A009F6962 /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60773662135F38A009F6962 /* AudioViewController.swift */; };
+		F624BCC4216FED7B002D891D /* CollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCBC216FED7B002D891D /* CollectionTableViewCell.swift */; };
+		F624BCC5216FED7B002D891D /* LocalResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCBD216FED7B002D891D /* LocalResourceTableViewCell.swift */; };
+		F624BCC6216FED7B002D891D /* HazardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCBE216FED7B002D891D /* HazardTableViewCell.swift */; };
+		F624BCC7216FED7B002D891D /* ActionSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCBF216FED7B002D891D /* ActionSheetController.swift */; };
+		F624BCC8216FED7B002D891D /* LocalEntryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCC0216FED7B002D891D /* LocalEntryTableViewController.swift */; };
+		F624BCC9216FED7B002D891D /* SubcategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCC1216FED7B002D891D /* SubcategoryTableViewCell.swift */; };
+		F624BCCA216FED7B002D891D /* LocalEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCC2216FED7B002D891D /* LocalEntryTableViewCell.swift */; };
+		F624BCCB216FED7B002D891D /* LocalResourceTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCC3216FED7B002D891D /* LocalResourceTypeTableViewCell.swift */; };
 		F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */; };
 		F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */; };
 		F6305E182166C83B006B389F /* DocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6305E172166C83B006B389F /* DocumentPickerViewController.swift */; };
@@ -50,13 +58,6 @@
 		F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */; };
 		F6CDB5B72134BCCD0016C036 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B62134BCCC0016C036 /* MapViewController.swift */; };
 		F6D2785D214C6DE800490350 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D2785C214C6DE800490350 /* VideoViewController.swift */; };
-		F6E16E83216FE82600F97049 /* LocalResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E16E7E216FE82500F97049 /* LocalResourceTableViewCell.swift */; };
-		F6E16E84216FE82600F97049 /* LocalEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E16E7F216FE82500F97049 /* LocalEntryTableViewCell.swift */; };
-		F6E16E85216FE82600F97049 /* LocalEntryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E16E80216FE82600F97049 /* LocalEntryTableViewController.swift */; };
-		F6E16E86216FE82600F97049 /* LocalResourceTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E16E81216FE82600F97049 /* LocalResourceTypeTableViewCell.swift */; };
-		F6E16E87216FE82600F97049 /* ActionSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E16E82216FE82600F97049 /* ActionSheetController.swift */; };
-		F6E16E8A216FE8A000F97049 /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E16E88216FE8A000F97049 /* PhotoPickerViewController.swift */; };
-		F6E16E8B216FE8A000F97049 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E16E89216FE8A000F97049 /* PhotoCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +96,14 @@
 		1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		F6028FEC2143303700429805 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		F60773662135F38A009F6962 /* AudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewController.swift; sourceTree = "<group>"; };
+		F624BCBC216FED7B002D891D /* CollectionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CollectionTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/CollectionTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		F624BCBD216FED7B002D891D /* LocalResourceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalResourceTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/LocalResourceTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		F624BCBE216FED7B002D891D /* HazardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HazardTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/HazardTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		F624BCBF216FED7B002D891D /* ActionSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ActionSheetController.swift; path = "USS-Mobile-Response-iOS/Resource Picker/ActionSheetController.swift"; sourceTree = SOURCE_ROOT; };
+		F624BCC0216FED7B002D891D /* LocalEntryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalEntryTableViewController.swift; path = "USS-Mobile-Response-iOS/Resource Picker/LocalEntryTableViewController.swift"; sourceTree = SOURCE_ROOT; };
+		F624BCC1216FED7B002D891D /* SubcategoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SubcategoryTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/SubcategoryTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		F624BCC2216FED7B002D891D /* LocalEntryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalEntryTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/LocalEntryTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		F624BCC3216FED7B002D891D /* LocalResourceTypeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalResourceTypeTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/LocalResourceTypeTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackViewController.swift; sourceTree = "<group>"; };
 		F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackViewController.swift; sourceTree = "<group>"; };
 		F6305E172166C83B006B389F /* DocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPickerViewController.swift; sourceTree = "<group>"; };
@@ -105,13 +114,6 @@
 		F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAnnotation.swift; sourceTree = "<group>"; };
 		F6CDB5B62134BCCC0016C036 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		F6D2785C214C6DE800490350 /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
-		F6E16E7E216FE82500F97049 /* LocalResourceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalResourceTableViewCell.swift; path = ResourcePicker/LocalResourceTableViewCell.swift; sourceTree = "<group>"; };
-		F6E16E7F216FE82500F97049 /* LocalEntryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalEntryTableViewCell.swift; path = ResourcePicker/LocalEntryTableViewCell.swift; sourceTree = "<group>"; };
-		F6E16E80216FE82600F97049 /* LocalEntryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalEntryTableViewController.swift; path = ResourcePicker/LocalEntryTableViewController.swift; sourceTree = "<group>"; };
-		F6E16E81216FE82600F97049 /* LocalResourceTypeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalResourceTypeTableViewCell.swift; path = ResourcePicker/LocalResourceTypeTableViewCell.swift; sourceTree = "<group>"; };
-		F6E16E82216FE82600F97049 /* ActionSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ActionSheetController.swift; path = ResourcePicker/ActionSheetController.swift; sourceTree = "<group>"; };
-		F6E16E88216FE8A000F97049 /* PhotoPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotoPickerViewController.swift; path = ../../../../.Trash/PhotoPickerViewController.swift; sourceTree = "<group>"; };
-		F6E16E89216FE8A000F97049 /* PhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotoCell.swift; path = ../../../../.Trash/PhotoCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,12 +157,7 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
-				F6E16E7D216FE77C00F97049 /* ResourcePicker */,
-				F6E16E82216FE82600F97049 /* ActionSheetController.swift */,
-				F6E16E7F216FE82500F97049 /* LocalEntryTableViewCell.swift */,
-				F6E16E80216FE82600F97049 /* LocalEntryTableViewController.swift */,
-				F6E16E7E216FE82500F97049 /* LocalResourceTableViewCell.swift */,
-				F6E16E81216FE82600F97049 /* LocalResourceTypeTableViewCell.swift */,
+				F624BCAB216FED1B002D891D /* Resource Picker */,
 				F64F8F312166AE140045A8E5 /* PDF */,
 				F6D2785B214C6DBC00490350 /* Video */,
 				F60773652135F36A009F6962 /* Audio */,
@@ -276,6 +273,22 @@
 			path = Audio;
 			sourceTree = "<group>";
 		};
+		F624BCAB216FED1B002D891D /* Resource Picker */ = {
+			isa = PBXGroup;
+			children = (
+				F624BCBF216FED7B002D891D /* ActionSheetController.swift */,
+				F624BCBC216FED7B002D891D /* CollectionTableViewCell.swift */,
+				F624BCBE216FED7B002D891D /* HazardTableViewCell.swift */,
+				F624BCC2216FED7B002D891D /* LocalEntryTableViewCell.swift */,
+				F624BCC0216FED7B002D891D /* LocalEntryTableViewController.swift */,
+				F624BCBD216FED7B002D891D /* LocalResourceTableViewCell.swift */,
+				F624BCC3216FED7B002D891D /* LocalResourceTypeTableViewCell.swift */,
+				F624BCC1216FED7B002D891D /* SubcategoryTableViewCell.swift */,
+			);
+			name = "Resource Picker";
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		F64F8F312166AE140045A8E5 /* PDF */ = {
 			isa = PBXGroup;
 			children = (
@@ -292,15 +305,6 @@
 				F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */,
 			);
 			path = Video;
-			sourceTree = "<group>";
-		};
-		F6E16E7D216FE77C00F97049 /* ResourcePicker */ = {
-			isa = PBXGroup;
-			children = (
-				F6E16E89216FE8A000F97049 /* PhotoCell.swift */,
-				F6E16E88216FE8A000F97049 /* PhotoPickerViewController.swift */,
-			);
-			path = ResourcePicker;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -378,6 +382,8 @@
 			files = (
 				1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */,
 				F64F8F332166AE3E0045A8E5 /* PDFViewController.swift in Sources */,
+				F624BCC4216FED7B002D891D /* CollectionTableViewCell.swift in Sources */,
+				F624BCCA216FED7B002D891D /* LocalEntryTableViewCell.swift in Sources */,
 				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */,
@@ -387,36 +393,35 @@
 				F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */,
 				1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
-				F6E16E86216FE82600F97049 /* LocalResourceTypeTableViewCell.swift in Sources */,
-				F6E16E8B216FE8A000F97049 /* PhotoCell.swift in Sources */,
 				F6D2785D214C6DE800490350 /* VideoViewController.swift in Sources */,
-				F6E16E87216FE82600F97049 /* ActionSheetController.swift in Sources */,
 				1C1AE27D212FBEDD00F436FD /* Reachability.swift in Sources */,
 				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
-				F6E16E85216FE82600F97049 /* LocalEntryTableViewController.swift in Sources */,
+				F624BCC7216FED7B002D891D /* ActionSheetController.swift in Sources */,
 				F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				F6679BE1216D59EB008375EF /* PdfTableViewController.swift in Sources */,
 				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
+				F624BCC8216FED7B002D891D /* LocalEntryTableViewController.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
 				F6CDB5B72134BCCD0016C036 /* MapViewController.swift in Sources */,
 				F6028FED2143303700429805 /* AnnotationView.swift in Sources */,
+				F624BCCB216FED7B002D891D /* LocalResourceTypeTableViewCell.swift in Sources */,
 				1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
+				F624BCC6216FED7B002D891D /* HazardTableViewCell.swift in Sources */,
 				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
 				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
 				F6679BB9216A97E9008375EF /* PdfFileModalViewController.swift in Sources */,
-				F6E16E83216FE82600F97049 /* LocalResourceTableViewCell.swift in Sources */,
 				1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */,
 				1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */,
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
 				F6305E182166C83B006B389F /* DocumentPickerViewController.swift in Sources */,
+				F624BCC9216FED7B002D891D /* SubcategoryTableViewCell.swift in Sources */,
 				F60773672135F38A009F6962 /* AudioViewController.swift in Sources */,
-				F6E16E8A216FE8A000F97049 /* PhotoPickerViewController.swift in Sources */,
+				F624BCC5216FED7B002D891D /* LocalResourceTableViewCell.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
 				1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */,
 				1C76A8A52113B08000EE51A8 /* (null) in Sources */,
-				F6E16E84216FE82600F97049 /* LocalEntryTableViewCell.swift in Sources */,
 				F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */,
 				1C5F8E9C21604175002773AA /* MainLocalCollectionViewController.swift in Sources */,
 				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,
