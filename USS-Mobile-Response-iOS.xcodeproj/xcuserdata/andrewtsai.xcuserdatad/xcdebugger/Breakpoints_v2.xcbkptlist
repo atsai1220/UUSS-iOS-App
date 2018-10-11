@@ -189,10 +189,23 @@
             timestampString = "559195907.811988"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             startingLineNumber = "112"
             endingLineNumber = "112"
             landmarkName = "collectHazards()"
             landmarkType = "7">
+=======
+=======
+>>>>>>> Stashed changes
+            startingLineNumber = "109"
+            endingLineNumber = "109"
+            landmarkName = "unknown"
+            landmarkType = "0">
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -221,10 +234,18 @@
             timestampString = "560808112.077136"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             startingLineNumber = "116"
             endingLineNumber = "116"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
+=======
+            startingLineNumber = "336"
+            endingLineNumber = "336"
+            landmarkName = "unknown"
+            landmarkType = "0">
+>>>>>>> Stashed changes
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -241,6 +262,12 @@
             endingLineNumber = "120"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
+=======
+            startingLineNumber = "336"
+            endingLineNumber = "336"
+            landmarkName = "unknown"
+            landmarkType = "0">
+>>>>>>> Stashed changes
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
