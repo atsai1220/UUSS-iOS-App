@@ -12,8 +12,29 @@ protocol TableViewControllerDelegate: class
 {
     func tableViewDone(_: Bool)
 }
-class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearDataDelegate
+
+class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearDataDelegate, ImportAllDelegate
 {
+    func importAll()
+    {
+        for i in 0..<tableData.count
+        {
+            let file: Data = fileManager.contents(atPath: tableData[i].relativePath)!
+            let fileName: String = tableData[i].lastPathComponent
+            fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)
+        }
+        
+        NotificationCenter.default.post(name: Notification.Name("Import Data"), object: nil)
+        clearData()
+       
+        let alert: UIAlertController = UIAlertController(title: "Files Imported", message: "Your files were imported to your documents library", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {(alert: UIAlertAction) -> Void in
+            self.dismissPDFForm(true)
+        }))
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
     func clearData()
     {
         for i in 0..<tableData.count
@@ -87,6 +108,7 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as! PdfTableHeader
         header.doneDelegate = self
         header.clearDelegate = self
+        header.importAllDelegate = self
         
         return header
     }
@@ -104,8 +126,55 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
         
         return cell
     }
-}
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        
+        let file: Data = fileManager.contents(atPath: tableData[indexPath.row].relativePath)!
+        let fileName: String = tableData[indexPath.row].lastPathComponent
+        fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)
 
+        do
+        {
+            try fileManager.removeItem(at: tableData[indexPath.row])
+        }
+        catch
+        {
+            print(error)
+        }
+        
+        tableData.remove(at: indexPath.row)
+        tableView.reloadData()
+        
+        
+        NotificationCenter.default.post(name: Notification.Name("Import Data"), object: nil)
+        
+        let alert: UIAlertController = UIAlertController(title: "File Imported", message: "Your file was imported to your documents library", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {(alert: UIAlertAction) -> Void in
+            self.dismissPDFForm(true)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
+    {
+        if editingStyle == .delete
+        {
+            do
+            {
+                try fileManager.removeItem(at: tableData[indexPath.row])
+            }
+            catch
+            {
+                print(error)
+            }
+            
+            tableData.remove(at: indexPath.row)
+            tableView.reloadData()
+        }
+    }
+
+}
 
 class PdfTableCell: UITableViewCell
 {
@@ -146,7 +215,6 @@ class PdfTableCell: UITableViewCell
             pdfLogo.heightAnchor.constraint(equalToConstant: 40.0),
             pdfLogo.widthAnchor.constraint(equalToConstant: 40.0),
             pdfTitle.leadingAnchor.constraint(equalTo: pdfLogo.trailingAnchor, constant: 15.0),
-//            pdfTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 2.0),
             pdfTitle.centerYAnchor.constraint(equalTo: pdfLogo.centerYAnchor),
             ])
     }
@@ -160,11 +228,17 @@ protocol ClearDataDelegate: class
 {
     func clearData()
 }
+protocol ImportAllDelegate: class
+{
+    func importAll()
+}
 
 class PdfTableHeader: UITableViewHeaderFooterView
 {
     weak var doneDelegate: DoneWithPDFDelegate?
     weak var clearDelegate: ClearDataDelegate?
+    weak var importAllDelegate: ImportAllDelegate?
+    let fileManager: FileManager = FileManager.default
     
     override init(reuseIdentifier: String?)
     {
@@ -242,6 +316,19 @@ class PdfTableHeader: UITableViewHeaderFooterView
     
     @objc func importAllPdfDocs()
     {
-        print("Import all")
+        //Write all the files to a documents/import/pdf
+        do
+        {
+            if(!fileManager.fileExists(atPath: getDocumentsURL().appendingPathComponent("import").relativePath))
+            {
+                try fileManager.createDirectory(at: getDocumentsURL().appendingPathComponent("import"), withIntermediateDirectories: false, attributes: nil)
+            }
+            importAllDelegate?.importAll()
+        }
+        catch
+        {
+            print(error)
+        }
+        
     }
 }

@@ -10,19 +10,19 @@ import UIKit
 import CoreData
 import AVFoundation
 import Foundation
-import CloudKit
 
 @UIApplicationMain
 
 class AppDelegate: UIResponder, UIApplicationDelegate
 {
-
     var window: UIWindow?
     var orientationLock = UIInterfaceOrientationMask.all
     var audioSession: AVAudioSession?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        printImportDir()
+        printTmpDir()
         let fileManager: FileManager = FileManager.default
         let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
         let tempDocDir = docDir!.appendingPathComponent("tmp")
