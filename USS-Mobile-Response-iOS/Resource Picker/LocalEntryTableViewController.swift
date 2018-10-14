@@ -32,11 +32,14 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     var previewImage: UIImage?
     var submissionStatus: SubmissionStatus = SubmissionStatus.LocalOnly
     var resourceType: ActionSheetMode = ActionSheetMode.PHOTOS
+    var resourceSelected = false
+    var imageURL: URL?
     
     // Hazards related
     var hazardSelected = false
     var subcategorySelected = false
     var collectionSelected = false
+    var entryReference: String?
     var selectedHazard: String?
     var selectedSubcategory: String?
     var selectedCollection: String?
@@ -116,7 +119,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     @objc func toggleCategoryPickerView() {
         if !subcategoryPicker.isDescendant(of: self.view) {
-            print("show category ppicker")
             view.addSubview(subcategoryPicker)
             UIView.animate(withDuration: 0.3) {
                 self.subcategoryPicker.alpha = 1.0
@@ -130,7 +132,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             subcategoryPicker.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
             
         } else {
-            print("hide category picker")
             UIView.animate(withDuration: 0.3, animations: {
                 self.subcategoryPicker.alpha = 0.0
             }) { (done) in
@@ -289,6 +290,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             if self.collectionTitles.count - 1 > 0 {
                 toggleCollectionPickerView()
                 self.collectionSelected = true
+                self.entryReference = self.allCollections.first(where: { (collection) -> Bool in
+                    if collection.name == self.collectionTitles[row] {
+                        return true
+                    } else {
+                        return false
+                    }
+                })?.ref
                 self.selectedCollection = self.collectionTitles[row]
                 let rows = tableView.numberOfRows(inSection: 0)
                 tableView.reloadRows(at: [IndexPath(row: rows - 1, section: 0)], with: .fade)
@@ -387,9 +395,31 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            print("did get image")
             previewImage = pickedImage
             tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            self.resourceSelected = true
+            
+            if let newURL = info[UIImagePickerControllerImageURL] as? URL {
+                self.imageURL = newURL
+            } else {
+                PHPhotoLibrary.shared().performChanges({
+                    let assetChangeRequest = PHAssetChangeRequest.creationRequestForAsset(from: pickedImage)
+                    var currentLocation: CLLocation!
+                    if( CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
+                        CLLocationManager.authorizationStatus() ==  .authorizedAlways){
+                        currentLocation = self.locationManager.location
+                    }
+                    assetChangeRequest.location = currentLocation
+                }) { (success, error) in
+                    if success {
+                        
+                    } else {
+                        let ac = UIAlertController(title: "Save error", message: error?.localizedDescription, preferredStyle: .alert)
+                        ac.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(ac, animated: true)
+                    }
+                }
+            }
         }
         picker.dismiss(animated: true, completion: nil)
     }
@@ -516,14 +546,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     @objc func collectAndShowCategories() {
         removeAllPickerView()
         self.showPicker = true
-        // TODO: gather categories....?
         toggleCategoryPickerView()
     }
     
     @objc func collectAndShowCollections() {
         removeAllPickerView()
         self.showPicker = true
-        // TODO: gather categories....?
         toggleCollectionPickerView()
     }
     
@@ -664,15 +692,72 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     @objc func saveAndUpload() {
-        print("saveing and uploading...")
         //TODO: check for empty fields
-        //TODO: Create local device entry
-        //TODO: HTTP uploadig with custom plugin
-        //TODO: Create resource on resource space
-        //TODO: Add resource to selected collection
-        //TODO: Confirmation and update local history
-
-//        self.navigationController?.popToRootViewController(animated: true)
+        let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
+        let descriptionCell = tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
+        let notesCell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
+        if titleCell.textView.text.isEmpty || descriptionCell.textView.text.isEmpty || notesCell.textView.text.isEmpty {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        } else if !resourceSelected {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        } else if !collectionSelected {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        } else {
+            
+            let savedName = createLocalEntry()
+            httpUpload()
+            createResourceSpaceEntry(fileName: savedName)
+            addResourceToCollection()
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+        
+    }
+    
+    func createLocalEntry() -> String {
+        let titleCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
+        let descriptionCell = self.tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
+        let notesCell = self.tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
+        var newEntry = LocalEntry()
+        newEntry.name = titleCell.textView.text
+        newEntry.description = descriptionCell.textView.text
+        newEntry.notes = notesCell.textView.text
+        newEntry.collectionRef = self.entryReference
+        
+        switch resourceType {
+        case .PHOTOS:
+            var savedImageName = ""
+            if let possibleImageURL = self.imageURL {
+                savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
+            } else {
+                savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
+            }
+            newEntry.localFileName = savedImageName
+            newEntry.fileType = FileType.PHOTO.rawValue
+            newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+            var oldEntries = getLocalEntriesFromDisk()
+            oldEntries.append(newEntry)
+            saveLocalEntriesToDisk(entries: oldEntries)
+            return savedImageName
+        case .VIDEOS:
+            print("handle videos")
+        case .AUDIOS:
+            print("handle audio")
+        case .PDFS:
+            print("handle pdf")
+        }
+        return "no"
+    }
+    
+    func httpUpload() {
+        
+    }
+    
+    func createResourceSpaceEntry(fileName: String) {
+    
+    }
+    
+    func addResourceToCollection() {
+    
     }
     
     // MARK: - Table view
@@ -684,12 +769,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.backgroundColor = UIColor(white: 0.97, alpha: 1)
         self.hazardPicker.alpha = 0.0
-        self.hazardPicker.backgroundColor = UIColor.lightGray
+        self.hazardPicker.backgroundColor = UIColor(white: 0.97, alpha: 1)
         self.subcategoryPicker.alpha = 0.0
-        self.subcategoryPicker.backgroundColor = UIColor.lightGray
+        self.subcategoryPicker.backgroundColor = UIColor(white: 0.97, alpha: 1)
         self.collectionPicker.alpha = 0.0
-        self.collectionPicker.backgroundColor = UIColor.lightGray
+        self.collectionPicker.backgroundColor = UIColor(white: 0.97, alpha: 1)
         
         tableView.keyboardDismissMode = .onDrag
         
