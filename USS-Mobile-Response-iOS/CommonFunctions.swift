@@ -272,9 +272,12 @@ func printImportDir()
     
     print("Import Directory\n")
     
-    while let file = dirEnum!.nextObject()
+    if(dirEnum != nil)
     {
-        print(file)
+        while let file = dirEnum!.nextObject()
+        {
+            print(file)
+        }
     }
 }
 
@@ -285,8 +288,11 @@ func printTmpDir()
     
     print("Tmp Directory\n")
     
-    while let file = dirEnum!.nextObject()
+    if(dirEnum != nil)
     {
-        print(file)
+        while let file = dirEnum!.nextObject()
+        {
+            print(file)
+        }
     }
 }
