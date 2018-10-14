@@ -376,7 +376,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             let audioViewController = AudioViewController()
             self.navigationController?.pushViewController(audioViewController, animated: true)
         case .PDFS:
-            print("add select from pdf")
+            let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+            layout.scrollDirection = .vertical
+            layout.sectionInset = UIEdgeInsets(top: 25.0, left: 10.0, bottom: 2.0, right: 10.0)
+            let pdfCollectionViewController: PdfCollectionViewController = PdfCollectionViewController(collectionViewLayout: layout)
+            navigationController?.pushViewController(pdfCollectionViewController, animated: true)
         }
  
     }

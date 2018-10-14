@@ -264,3 +264,35 @@ enum SubmissionStatus: String {
     case SuccessfulUpload = "SUCCESSFULUPLOAD"
     case ErrorUpload = "ERRORUPLOAD"
 }
+
+func printImportDir()
+{
+    let importDir: URL = getDocumentsURL().appendingPathComponent("import")
+    let dirEnum = FileManager.default.enumerator(atPath: importDir.relativePath)
+    
+    print("Import Directory\n")
+    
+    if(dirEnum != nil)
+    {
+        while let file = dirEnum!.nextObject()
+        {
+            print(file)
+        }
+    }
+}
+
+func printTmpDir()
+{
+    let importDir: URL = getDocumentsURL().appendingPathComponent("tmp")
+    let dirEnum = FileManager.default.enumerator(atPath: importDir.relativePath)
+    
+    print("Tmp Directory\n")
+    
+    if(dirEnum != nil)
+    {
+        while let file = dirEnum!.nextObject()
+        {
+            print(file)
+        }
+    }
+}

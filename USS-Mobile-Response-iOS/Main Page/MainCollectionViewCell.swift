@@ -12,7 +12,7 @@ class MainCellSetting: NSObject
 {
     let name: String
     let imageName: String
-let fileType: String
+    let fileType: String
     let submissionStatus: String
     let videoURL: String?
     var isEditing: Bool
@@ -143,7 +143,7 @@ class MainCollectionViewCell: UICollectionViewCell {
             statusView.widthAnchor.constraint(equalToConstant: 10),
             deleteViewIcon.topAnchor.constraint(equalTo: topAnchor, constant: -10.0),
             deleteViewIcon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10.0),
-        deleteViewIcon.heightAnchor.constraint(equalToConstant: 20.0),
+            deleteViewIcon.heightAnchor.constraint(equalToConstant: 20.0),
             deleteViewIcon.widthAnchor.constraint(equalToConstant: 20.0)
             ])
     }

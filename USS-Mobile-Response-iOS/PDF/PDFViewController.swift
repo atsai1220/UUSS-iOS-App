@@ -9,20 +9,14 @@
 import UIKit
 import PDFKit
 
-class PDFViewController: UIViewController, UIDocumentInteractionControllerDelegate
+class PDFViewController: UIViewController
 {
     var collectionRef: String = ""
-    var docInteractionController: UIDocumentInteractionController = UIDocumentInteractionController()
+    var pdfView: PDFView?
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        docInteractionController.delegate = self
-    }
-    
-    func documentInteractionControllerViewForPreview(_ controller: UIDocumentInteractionController) -> UIView?
-    {
-        var view = controller.url
-        return UIView()
+        pdfView = PDFView()
     }
 }
