@@ -691,6 +691,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.collectionPicker.alpha = 0.0
         self.collectionPicker.backgroundColor = UIColor.lightGray
         
+        tableView.keyboardDismissMode = .onDrag
+        
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         
