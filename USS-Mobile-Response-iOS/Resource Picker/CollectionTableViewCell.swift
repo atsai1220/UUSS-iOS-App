@@ -27,7 +27,7 @@ class CollectionTableViewCell: UITableViewCell {
         return view
     }()
     
-    var hazardButton: UIButton = {
+    var button: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.lightGray
         button.layer.cornerRadius = 5
@@ -43,7 +43,7 @@ class CollectionTableViewCell: UITableViewCell {
         super.layoutSubviews()
         addSubview(cellLabel)
         addSubview(cellDivider)
-        addSubview(hazardButton)
+        addSubview(button)
         
         NSLayoutConstraint.activate([
             cellLabel.topAnchor.constraint(equalTo: self.topAnchor),
@@ -54,10 +54,10 @@ class CollectionTableViewCell: UITableViewCell {
             cellDivider.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             cellDivider.leadingAnchor.constraint(equalTo: cellLabel.trailingAnchor, constant: 8),
             cellDivider.widthAnchor.constraint(equalToConstant: 1),
-            hazardButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            hazardButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            hazardButton.leadingAnchor.constraint(equalTo: cellDivider.trailingAnchor, constant: 8),
-            hazardButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            button.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            button.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            button.leadingAnchor.constraint(equalTo: cellDivider.trailingAnchor, constant: 8),
+            button.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             ])
     }
     

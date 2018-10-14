@@ -85,7 +85,7 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
     
     @IBAction func newTapped(_ sender: Any) {
         showResourceTypeActionSheet()
-//        let ew = PhotoPickerViewController()
+//        let ew = HazardsTableViewController()
 //        self.navigationController?.pushViewController(ew, animated: true)
     }
     

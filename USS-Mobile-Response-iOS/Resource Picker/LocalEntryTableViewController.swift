@@ -32,28 +32,68 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     var previewImage: UIImage?
     var submissionStatus: SubmissionStatus = SubmissionStatus.LocalOnly
     var resourceType: ActionSheetMode = ActionSheetMode.PHOTOS
+    var resourceSelected = false
+    var imageURL: URL?
     
     // Hazards related
     var hazardSelected = false
     var subcategorySelected = false
     var collectionSelected = false
+    var entryReference: String?
+    var selectedHazard: String?
+    var selectedSubcategory: String?
+    var selectedCollection: String?
     var allHazards: [Hazard] = []
+    var allCategories: [Hazard] = []
+    var allCollections: [Hazard] = []
+    var hazardTitles: [String] = []
+    var subcategoryTitles: [String] = []
+    var collectionTitles: [String] = []
     var hazardsDictionary: [String: [Hazard]] = [:]
-    var filteredHazardsTitles: [String] = []
+    var categoryDictionary: [String: [Hazard]] = [:]
+    var collectionDictionary: [String: [Hazard]] = [:]
     let hazardPicker = UIPickerView()
     let subcategoryPicker = UIPickerView()
     let collectionPicker = UIPickerView()
-    var subcategoryTitles: [String] = []
-    var collectionTitles: [String] = []
+    var collectionOnly = false
     
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
     var showPicker = false
     
     // MARK: - Picker View
     
-    func showHazardPickerView() {
+    func removeAllPickerView() {
+        if hazardPicker.isDescendant(of: self.view) {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.hazardPicker.alpha = 0.0
+            }) { (done) in
+                if done {
+                    self.hazardPicker.removeFromSuperview()
+                }
+            }
+        }
+        if subcategoryPicker.isDescendant(of: self.view) {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.subcategoryPicker.alpha = 0.0
+            }) { (done) in
+                if done {
+                    self.subcategoryPicker.removeFromSuperview()
+                }
+            }
+        }
+        if collectionPicker.isDescendant(of: self.view) {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.collectionPicker.alpha = 0.0
+            }) { (done) in
+                if done {
+                    self.collectionPicker.removeFromSuperview()
+                }
+            }
+        }
+    }
+    
+    func toggleHazardPickerView() {
         if !hazardPicker.isDescendant(of: self.view) {
-            
             view.addSubview(hazardPicker)
             UIView.animate(withDuration: 0.3) {
                 self.hazardPicker.alpha = 1.0
@@ -65,6 +105,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             hazardPicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
             hazardPicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
             hazardPicker.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            
         } else {
             UIView.animate(withDuration: 0.3, animations: {
                 self.hazardPicker.alpha = 0.0
@@ -76,13 +117,63 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
     }
     
+    @objc func toggleCategoryPickerView() {
+        if !subcategoryPicker.isDescendant(of: self.view) {
+            view.addSubview(subcategoryPicker)
+            UIView.animate(withDuration: 0.3) {
+                self.subcategoryPicker.alpha = 1.0
+            }
+            subcategoryPicker.delegate = self
+            subcategoryPicker.dataSource = self
+            subcategoryPicker.translatesAutoresizingMaskIntoConstraints = false
+            
+            subcategoryPicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+            subcategoryPicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+            subcategoryPicker.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            
+        } else {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.subcategoryPicker.alpha = 0.0
+            }) { (done) in
+                if done {
+                    self.subcategoryPicker.removeFromSuperview()
+                }
+            }
+        }
+    }
+    
+    @objc func toggleCollectionPickerView() {
+        if !collectionPicker.isDescendant(of: self.view) {
+            view.addSubview(collectionPicker)
+            UIView.animate(withDuration: 0.3) {
+                self.collectionPicker.alpha = 1.0
+            }
+            collectionPicker.delegate = self
+            collectionPicker.dataSource = self
+            collectionPicker.translatesAutoresizingMaskIntoConstraints = false
+            
+            collectionPicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+            collectionPicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+            collectionPicker.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            
+        } else {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.collectionPicker.alpha = 0.0
+            }) { (done) in
+                if done {
+                    self.collectionPicker.removeFromSuperview()
+                }
+            }
+        }
+    }
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView.isEqual(hazardPicker) {
-            return self.filteredHazardsTitles.count
+            return self.hazardTitles.count
         }
         else if pickerView.isEqual(subcategoryPicker) {
             return self.subcategoryTitles.count
@@ -93,14 +184,125 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if self.filteredHazardsTitles.count > 0 {
-            return self.filteredHazardsTitles[row]
+        if pickerView.isEqual(hazardPicker) {
+            if self.hazardTitles.count > 0 {
+                return self.hazardTitles[row]
+            }
         }
-        return ""
+        else if pickerView.isEqual(subcategoryPicker) {
+            if self.subcategoryTitles.count > 0 {
+                return self.subcategoryTitles[row]
+            }
+        }
+        else {
+            if self.collectionTitles.count > 0 {
+                return self.collectionTitles[row]
+            }
+        }
+        return "Should never happen"
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        print(self.filteredHazardsTitles[row])
+        if row == 0 {
+            return
+        }
+        else if pickerView.isEqual(hazardPicker) {
+            if self.hazardTitles.count > 0 {
+                self.hazardSelected = true
+                self.selectedHazard = self.hazardTitles[row]
+                toggleHazardPickerView()
+                loadCollectionAndCategoryArrays()
+                
+                if subcategoryTitles.count - 1 == 0 && collectionTitles.count - 1 > 0 {
+                    collectionOnly = true
+                } else {
+                    collectionOnly = false
+                }
+ 
+                if subcategoryTitles.count - 1 > 0 && collectionTitles.count - 1 > 0 {
+                    tableView.beginUpdates()
+                    if tableView.numberOfRows(inSection: 0) == 2 {
+                        tableView.insertRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                        tableView.insertRows(at: [IndexPath(row: 3, section: 0)], with: .fade)
+                    } else if tableView.numberOfRows(inSection: 0) == 3 {
+                        tableView.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                        tableView.insertRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                        tableView.insertRows(at: [IndexPath(row: 3, section: 0)], with: .fade)
+                    } else {
+                        tableView.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                        tableView.deleteRows(at: [IndexPath(row: 3, section: 0)], with: .fade)
+                        tableView.insertRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                        tableView.insertRows(at: [IndexPath(row: 3, section: 0)], with: .fade)
+                    }
+                    
+                    tableView.endUpdates()
+                }
+                else if subcategoryTitles.count - 1 == 0 && collectionTitles.count - 1 > 0 {
+                    tableView.beginUpdates()
+                    if tableView.numberOfRows(inSection: 0) == 2 {
+                        self.tableView.insertRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                    } else if tableView.numberOfRows(inSection: 0) == 3 {
+                        self.tableView.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                        self.tableView.insertRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                    } else if collectionOnly {
+                        tableView.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                        tableView.deleteRows(at: [IndexPath(row: 3, section: 0)], with: .fade)
+                        self.tableView.insertRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                    } else {
+                        print("didSelectRow: does this ever hapen?")
+                        tableView.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                        tableView.deleteRows(at: [IndexPath(row: 3, section: 0)], with: .fade)
+                        self.tableView.insertRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                    }
+                    tableView.endUpdates()
+                   
+                }
+                self.subcategorySelected = false
+                self.collectionSelected = false
+                self.selectedSubcategory = nil
+                self.selectedCollection = nil
+                tableView.reloadData()
+            }
+        }
+        else if pickerView.isEqual(subcategoryPicker) {
+            if self.subcategoryTitles.count > 0 {
+                self.subcategorySelected = true
+                self.selectedSubcategory = self.subcategoryTitles[row]
+                
+                toggleCategoryPickerView()
+                // load collection titles
+                loadOnlyCollectionArray()
+                
+                if tableView.numberOfRows(inSection: 0) == 3 {
+                    tableView.beginUpdates()
+                    tableView.insertRows(at: [IndexPath(row: 3, section: 0)], with: .fade)
+                    tableView.endUpdates()
+                }
+                self.collectionSelected = false
+                self.selectedCollection = nil
+                tableView.beginUpdates()
+                tableView.reloadRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+                tableView.reloadRows(at: [IndexPath(row: 3, section: 0)], with: .fade)
+                tableView.endUpdates()
+            }
+        }
+        else {
+            if self.collectionTitles.count - 1 > 0 {
+                toggleCollectionPickerView()
+                self.collectionSelected = true
+                self.entryReference = self.allCollections.first(where: { (collection) -> Bool in
+                    if collection.name == self.collectionTitles[row] {
+                        return true
+                    } else {
+                        return false
+                    }
+                })?.ref
+                self.selectedCollection = self.collectionTitles[row]
+                let rows = tableView.numberOfRows(inSection: 0)
+                tableView.reloadRows(at: [IndexPath(row: rows - 1, section: 0)], with: .fade)
+            }
+        }
+        
     }
     
     // MARK: - Action sheet
@@ -197,28 +399,164 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            print("did get image")
             previewImage = pickedImage
             tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            self.resourceSelected = true
+            
+            if let newURL = info[UIImagePickerControllerImageURL] as? URL {
+                self.imageURL = newURL
+            } else {
+                PHPhotoLibrary.shared().performChanges({
+                    let assetChangeRequest = PHAssetChangeRequest.creationRequestForAsset(from: pickedImage)
+                    var currentLocation: CLLocation!
+                    if( CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
+                        CLLocationManager.authorizationStatus() ==  .authorizedAlways){
+                        currentLocation = self.locationManager.location
+                    }
+                    assetChangeRequest.location = currentLocation
+                }) { (success, error) in
+                    if success {
+                        
+                    } else {
+                        let ac = UIAlertController(title: "Save error", message: error?.localizedDescription, preferredStyle: .alert)
+                        ac.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(ac, animated: true)
+                    }
+                }
+            }
         }
         picker.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - API Functions
     
-    @objc func collectAndShowHazards() {
-        if !hazardPicker.isDescendant(of: self.view) {
-            self.showPicker = true
-            collectHazards()
-        } else {
-            UIView.animate(withDuration: 0.3, animations: {
-                self.hazardPicker.alpha = 0.0
-            }) { (done) in
-                if done {
-                    self.hazardPicker.removeFromSuperview()
+    func filterForCategories() {
+        
+    }
+    
+    func loadCollectionAndCategoryArrays() {
+        self.subcategoryTitles.removeAll()
+        self.collectionTitles.removeAll()
+        
+//        self.allHazards.removeAll()
+        self.allCategories.removeAll()
+        self.allCollections.removeAll()
+        // retrieve all top-level categories and collections
+        let hazardsArray = self.hazardsDictionary[self.selectedHazard!]!
+        
+        // take care of collection items
+        for hazard in hazardsArray {
+            // is collection
+            if hazard.theme3 == "" {
+                if self.allCollections.contains(where: { (target: Hazard) -> Bool in
+                    target.name == hazard.name
+                }) {
+                }
+                else {
+                    self.allCollections.append(hazard)
                 }
             }
         }
+        
+        for collection in self.allCollections  {
+            if self.collectionTitles.contains(where: { (insideName) -> Bool in
+                insideName == collection.name
+            }) {
+                
+            } else {
+                self.collectionTitles.append(collection.name)
+            }
+        }
+        
+        // take care of category dictionary (key: category name, value: Hazard item)
+        self.categoryDictionary = hazardsArray.reduce([String: [Hazard]]()) {
+            (dict, category) in
+            var tempDict = dict
+            if var array = tempDict[category.theme3] {
+                if array.contains(where: { (insideCategory: Hazard) -> Bool in
+                    insideCategory.name == category.name
+                }) {
+                    
+                }
+                else {
+                    if category.theme3 != "" {
+                        array.append(category)
+                        tempDict.updateValue(array, forKey: category.theme3)
+                    }
+                }
+            }
+            else {
+                if category.theme3 != "" {
+                    let newArray: [Hazard] = [category]
+                    tempDict[category.theme3] = newArray
+                }
+            }
+            return tempDict
+        }
+        
+        for (key, _) in self.categoryDictionary {
+            if self.subcategoryTitles.contains(where: { (insideName) -> Bool in
+                insideName == key
+            }) {
+                
+            }
+            else {
+                self.subcategoryTitles.append(key)
+            }
+        }
+        self.subcategoryTitles = self.subcategoryTitles.sorted(by: { $0 < $1 })
+        self.collectionTitles = self.collectionTitles.sorted(by: { $0 < $1 })
+        self.subcategoryTitles.insert("Please select an item", at: 0)
+        self.collectionTitles.insert("Please select an item", at: 0)
+    }
+    
+    func loadOnlyCollectionArray() {
+        self.collectionTitles.removeAll()
+        self.allCollections.removeAll()
+        
+        let categoryArray = self.categoryDictionary[self.selectedSubcategory!]!
+        
+        // take care of collection items
+        for hazard in categoryArray {
+            // is collection
+                if self.allCollections.contains(where: { (target: Hazard) -> Bool in
+                    target.name == hazard.name
+                }) {
+                }
+                else {
+                    self.allCollections.append(hazard)
+                }
+        }
+        
+        for collection in self.allCollections  {
+            if self.collectionTitles.contains(where: { (insideName) -> Bool in
+                insideName == collection.name
+            }) {
+                
+            } else {
+                self.collectionTitles.append(collection.name)
+            }
+        }
+        self.collectionTitles = self.collectionTitles.sorted(by: { $0 < $1 })
+        self.collectionTitles.insert("Please select an item", at: 0)
+    }
+    
+    @objc func collectAndShowHazards() {
+        removeAllPickerView()
+        self.showPicker = true
+        collectHazards()
+    }
+    
+    @objc func collectAndShowCategories() {
+        removeAllPickerView()
+        self.showPicker = true
+        toggleCategoryPickerView()
+    }
+    
+    @objc func collectAndShowCollections() {
+        removeAllPickerView()
+        self.showPicker = true
+        toggleCollectionPickerView()
     }
     
     @objc func collectHazards() {
@@ -296,7 +634,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     }
                     
                     if self.showPicker {
-                        self.showHazardPickerView()
+                        self.toggleHazardPickerView()
                         self.showPicker = false
                     }
                     
@@ -329,18 +667,21 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             return tempDict
         }
         
+        self.hazardTitles.removeAll()
+        
         for (key, _) in self.hazardsDictionary {
-            if self.filteredHazardsTitles.contains(where: { (insideName: String) -> Bool in
+            if self.hazardTitles.contains(where: { (insideName: String) -> Bool in
                 insideName == key
             }) {
                 
             }
             else {
-                self.filteredHazardsTitles.append(key)
+                self.hazardTitles.append(key)
             }
         }
         
-        self.filteredHazardsTitles = self.filteredHazardsTitles.sorted(by: { $0 < $1 })
+        self.hazardTitles = self.hazardTitles.sorted(by: { $0 < $1 })
+        self.hazardTitles.insert("Please select an item", at: 0)
     }
     
 
@@ -355,15 +696,72 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     @objc func saveAndUpload() {
-        print("saveing and uploading...")
         //TODO: check for empty fields
-        //TODO: Create local device entry
-        //TODO: HTTP uploadig with custom plugin
-        //TODO: Create resource on resource space
-        //TODO: Add resource to selected collection
-        //TODO: Confirmation and update local history
-
-//        self.navigationController?.popToRootViewController(animated: true)
+        let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
+        let descriptionCell = tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
+        let notesCell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
+        if titleCell.textView.text.isEmpty || descriptionCell.textView.text.isEmpty || notesCell.textView.text.isEmpty {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        } else if !resourceSelected {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        } else if !collectionSelected {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        } else {
+            
+            let savedName = createLocalEntry()
+            httpUpload()
+            createResourceSpaceEntry(fileName: savedName)
+            addResourceToCollection()
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+        
+    }
+    
+    func createLocalEntry() -> String {
+        let titleCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
+        let descriptionCell = self.tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
+        let notesCell = self.tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
+        var newEntry = LocalEntry()
+        newEntry.name = titleCell.textView.text
+        newEntry.description = descriptionCell.textView.text
+        newEntry.notes = notesCell.textView.text
+        newEntry.collectionRef = self.entryReference
+        
+        switch resourceType {
+        case .PHOTOS:
+            var savedImageName = ""
+            if let possibleImageURL = self.imageURL {
+                savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
+            } else {
+                savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
+            }
+            newEntry.localFileName = savedImageName
+            newEntry.fileType = FileType.PHOTO.rawValue
+            newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+            var oldEntries = getLocalEntriesFromDisk()
+            oldEntries.append(newEntry)
+            saveLocalEntriesToDisk(entries: oldEntries)
+            return savedImageName
+        case .VIDEOS:
+            print("handle videos")
+        case .AUDIOS:
+            print("handle audio")
+        case .PDFS:
+            print("handle pdf")
+        }
+        return "no"
+    }
+    
+    func httpUpload() {
+        
+    }
+    
+    func createResourceSpaceEntry(fileName: String) {
+    
+    }
+    
+    func addResourceToCollection() {
+    
     }
     
     // MARK: - Table view
@@ -375,8 +773,15 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.backgroundColor = UIColor(white: 0.97, alpha: 1)
         self.hazardPicker.alpha = 0.0
-        self.hazardPicker.backgroundColor = UIColor.white
+        self.hazardPicker.backgroundColor = UIColor(white: 0.97, alpha: 1)
+        self.subcategoryPicker.alpha = 0.0
+        self.subcategoryPicker.backgroundColor = UIColor(white: 0.97, alpha: 1)
+        self.collectionPicker.alpha = 0.0
+        self.collectionPicker.backgroundColor = UIColor(white: 0.97, alpha: 1)
+        
+        tableView.keyboardDismissMode = .onDrag
         
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -419,8 +824,15 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             if !hazardSelected && !subcategorySelected && !collectionSelected {
                 return 2
             }
+            else if subcategoryTitles.count - 1 > 0 && collectionTitles.count - 1 > 0 {
+                return 4
+            }
+            else if subcategoryTitles.count - 1 == 0 && collectionTitles.count - 1 > 0 {
+                return 3
+            }
             else {
                 //TODO: return 3 or 4 depending on hazard selection
+                print("tableView: numberOfRowsInSection: should not happen")
                 return 4
             }
         }
@@ -449,36 +861,76 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
                 cell.insertButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
+                cell.cellLabel.becomeFirstResponder()
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Resource"
                 if (previewImage != nil) {
-                    
                     cell.resourceSet = true
                     cell.insertButton.imageView?.contentMode = .scaleAspectFill
                     cell.insertButton.setImage(previewImage, for: .normal)
                     cell.layoutSubviews()
-//                    cell.layoutIfNeeded()
                 }
-                
                 return cell
             }
             if indexPath.row == 1 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: hazardCellId, for: indexPath) as! HazardTableViewCell
-                cell.hazardButton.addTarget(self, action: #selector(collectAndShowHazards), for: .touchUpInside)
+                cell.button.addTarget(self, action: #selector(collectAndShowHazards), for: .touchUpInside)
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Hazard"
+                
+                if self.hazardSelected {
+                    if let title = self.selectedHazard {
+                        cell.button.setTitle(title, for: .normal)
+                    }
+                } else {
+                    cell.button.setTitle("Tap to select hazard...", for: .normal)
+                }
                 return cell
             }
             if indexPath.row == 2 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: subcategoryCellId, for: indexPath) as! SubcategoryTableViewCell
-                cell.selectionStyle = .none
-                cell.cellLabel.text = "Subcategory"
-                return cell
+                if collectionOnly {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: collectionCellId, for: indexPath) as! CollectionTableViewCell
+                    cell.button.addTarget(self, action: #selector(collectAndShowCollections), for: .touchUpInside)
+                    cell.selectionStyle = .none
+                    cell.cellLabel.text = "Collection"
+                    
+                    if self.collectionSelected {
+                        if let title = self.selectedCollection {
+                            cell.button.setTitle(title, for: .normal)
+                        }
+                    } else {
+                        cell.button.setTitle("Tap to select collection...", for: .normal)
+                    }
+                    return cell
+                } else {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: subcategoryCellId, for: indexPath) as! SubcategoryTableViewCell
+                    cell.button.addTarget(self, action: #selector(collectAndShowCategories), for: .touchUpInside)
+                    cell.selectionStyle = .none
+                    cell.cellLabel.text = "Subcategory"
+                    
+                    if self.subcategorySelected {
+                        if let title = self.selectedSubcategory {
+                            cell.button.setTitle(title, for: .normal)
+                        }
+                    } else {
+                        cell.button.setTitle("Tap to select subcategory...", for: .normal)
+                    }
+                    return cell
+                }
             }
             else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: collectionCellId, for: indexPath) as! CollectionTableViewCell
+                cell.button.addTarget(self, action: #selector(collectAndShowCollections), for: .touchUpInside)
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Collection"
+                
+                if self.collectionSelected {
+                    if let title = self.selectedCollection {
+                        cell.button.setTitle(title, for: .normal)
+                    }
+                } else {
+                    cell.button.setTitle("Tap to select collection...", for: .normal)
+                }
                 return cell
             }
         }
