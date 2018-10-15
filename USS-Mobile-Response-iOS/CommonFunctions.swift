@@ -244,6 +244,7 @@ func getImageFromDocumentDirectory(imageName: String) -> UIImage? {
      */
     let imagePath = getDocumentsURL().appendingPathComponent(imageName).path
     if FileManager.default.fileExists(atPath: imagePath) {
+        var image = UIImage(contentsOfFile: imagePath)
         return UIImage(contentsOfFile: imagePath)
     }
     else {
@@ -279,6 +280,7 @@ func printImportDir()
             print(file)
         }
     }
+    print("\n")
 }
 
 func printTmpDir()
@@ -295,4 +297,22 @@ func printTmpDir()
             print(file)
         }
     }
+    print("\n")
+}
+
+func printDocDir()
+{
+    let docDir: URL = getDocumentsURL()
+    let dirEnum = FileManager.default.enumerator(atPath: docDir.relativePath)
+    
+    print("Documents Directory\n")
+    
+    if(dirEnum != nil)
+    {
+        while let file = dirEnum!.nextObject()
+        {
+            print(file)
+        }
+    }
+    print("\n")
 }

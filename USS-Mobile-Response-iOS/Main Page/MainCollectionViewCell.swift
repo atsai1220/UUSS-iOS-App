@@ -44,7 +44,6 @@ class MainCollectionViewCell: UICollectionViewCell {
                 self.iconImageView.contentMode = .scaleAspectFit
                 self.nameLabel.text = setting?.name
             case FileType.VIDEO.rawValue:
-//                                    self.iconImageView.image = UIImage(named: "video")
                 let localImage = getImageFromDocumentDirectory(imageName: (setting?.imageName)!)
                 self.iconImageView.image = localImage
                 self.nameLabel.text = setting?.name

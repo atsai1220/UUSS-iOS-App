@@ -9,10 +9,18 @@
 import UIKit
 import PDFKit
 
+
+protocol PDFDelegate: class
+{
+    func returnPDF(with pdfURL: URL)
+}
+
 class PdfCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout
 {
     var dataSource: [URL] = []
     let importDir: URL = getDocumentsURL().appendingPathComponent("import")
+    var pdfImage: PDFView = PDFView()
+    weak var pdfDelegate: PDFDelegate?
     
     override init(collectionViewLayout layout: UICollectionViewLayout)
     {
@@ -87,6 +95,14 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
         cell.pdfTitle.text = dataSource[indexPath.row].lastPathComponent
         
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+    {
+        let document: PDFDocument = PDFDocument(url: dataSource[indexPath.row])!
+        pdfImage.document = document
+        pdfDelegate?.returnPDF(with: dataSource[indexPath.row])
+        navigationController?.popViewController(animated: true)
     }
 }
 

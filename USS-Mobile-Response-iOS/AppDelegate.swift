@@ -21,8 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        printDocDir()
         printImportDir()
         printTmpDir()
+        
         let fileManager: FileManager = FileManager.default
         let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
         let tempDocDir = docDir!.appendingPathComponent("tmp")

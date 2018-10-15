@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RoundedImageView: UIImageView
+class RoundedImageView: UIButton
 {
     override func layoutSubviews()
     {
