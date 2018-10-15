@@ -10,8 +10,15 @@ import UIKit
 
 private let reuseIdentifier = "Cell"
 
-class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, PDFModalDoneDelegate
+class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, PDFModalDoneDelegate, MainCellDelegate
 {
+    
+    var editMode = false
+    
+    @objc func deleteThis(cell: MainCollectionViewCell) {
+        print("delegeat print")
+    }
+    
     func headerDoneButtonPressed(_: Bool)
     {
         pdfModalViewController?.dismiss(animated: true, completion: nil)
@@ -30,23 +37,23 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         return cv
     }()
     
-    let doneEditingButton: UIButton =
-    {
-        let button: UIButton = UIButton(type: .roundedRect)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 12
-        button.layer.borderWidth = 2
-        button.backgroundColor = UIColor.white
-        button.layer.shadowOpacity = 0.5
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 0.0, height:3.0)
-        button.layer.shadowRadius = 3.0
-        button.layer.borderColor = UIColor.black.cgColor
-        button.setTitle("Done", for: .normal)
-        
-        return button
-        
-    }()
+//    let doneEditingButton: UIButton =
+//    {
+//        let button: UIButton = UIButton(type: .roundedRect)
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.layer.cornerRadius = 12
+//        button.layer.borderWidth = 2
+//        button.backgroundColor = UIColor.white
+//        button.layer.shadowOpacity = 0.5
+//        button.layer.shadowColor = UIColor.black.cgColor
+//        button.layer.shadowOffset = CGSize(width: 0.0, height:3.0)
+//        button.layer.shadowRadius = 3.0
+//        button.layer.borderColor = UIColor.black.cgColor
+//        button.setTitle("Done", for: .normal)
+//
+//        return button
+//
+//    }()
     
     override init(collectionViewLayout layout: UICollectionViewLayout)
     {
@@ -74,14 +81,14 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         self.collectionView = myCollectionView
         myCollectionView.backgroundColor = UIColor(red: 211/225, green: 211/225, blue: 211/225, alpha: 1)
         
-        view.addSubview(doneEditingButton)
-        
-        NSLayoutConstraint.activate([
-            doneEditingButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0),
-            doneEditingButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0),
-            doneEditingButton.heightAnchor.constraint(equalToConstant: 25.0),
-            doneEditingButton.widthAnchor.constraint(equalToConstant: 70.0)
-            ])
+//        view.addSubview(doneEditingButton)
+//
+//        NSLayoutConstraint.activate([
+//            doneEditingButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0),
+//            doneEditingButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0),
+//            doneEditingButton.heightAnchor.constraint(equalToConstant: 25.0),
+//            doneEditingButton.widthAnchor.constraint(equalToConstant: 70.0)
+//            ])
         
         pdfModalViewController = PdfFileModalViewController()
         pdfModalViewController?.modalDoneDelegate = self
@@ -164,7 +171,19 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         let item = self.localEntries[indexPath.row]
         let setting = MainCellSetting(name: item.name!, imageName: item.localFileName!, fileType: item.fileType!, videoURL: item.videoURL ?? "", submissionStatus: item.submissionStatus!)
         cell.setting = setting
-
+        cell.delegate = self
+        cell.deleteViewButton.addTarget(self, action: #selector(deleteThis), for: .touchUpInside)
+        if self.editMode {
+            cell.showDeleteButton()
+        } else {
+            cell.hideDeleteButton()
+        }
+//        if cell.isEditing {
+//            cell.showDeleteButton()
+//        } else {
+//            cell.hideDeleteButton()
+//        }
+        
         return cell
     }
     
@@ -172,7 +191,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     {
         print("Cell pressed")
     }
-    
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
             super.viewWillTransition(to: size, with: coordinator)
@@ -243,6 +261,25 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     
     }
     */
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: true)
+//        var parentVC = self.parent as! MainTabBarController
+//        parentVC
+//        var indexPaths: [NSIndexPath] = []
+//        for section in 0...collectionView!.numberOfSections {
+//            for item in 0...collectionView!.numberOfItems(inSection: section) {
+//                indexPaths.append(NSIndexPath(item: item, section: section))
+//            }
+//        }
+//
+//        for indexPath in indexPaths {
+//            if let cell = collectionView?.cellForItem(at: indexPath as IndexPath) as? MainCollectionViewCell {
+//                cell.setting?.isEditing = true
+//            }
+//        }
+        
+    }
 
     @objc func cellPressedAndHeld(gesture: UILongPressGestureRecognizer)
     {
@@ -250,13 +287,32 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         {
             return
         }
-        print("cell pressed and held")
-        let locationPointInView: CGPoint = gesture.location(in: self.myCollectionView)
-        if let indexPath = (self.myCollectionView.indexPathForItem(at: locationPointInView)){
-            let cell = myCollectionView.cellForItem(at: indexPath) as! MainCollectionViewCell
-            cell.setting?.isEditing = true
-            
-        }
+//        var parentVC = self.parent as! MainTabBarController
+//        parentVC.setEditing(true, animated: true)
+//        setEditing(true, animated: true)
+        print("held down")
+        self.editMode = !self.editMode
+        collectionView?.reloadData()
+//        var indexPaths: [NSIndexPath] = []
+//        for item in 0...localEntries.count {
+//            indexPaths.append(NSIndexPath(item: item, section: 0))
+//        }
+//
+//        for indexPath in indexPaths {
+//            if let cell = collectionView?.cellForItem(at: indexPath as IndexPath) as? MainCollectionViewCell {
+//                cell.isEditing = !cell.isEditing
+////                        cell.toggleDeleteButtion()
+//            }
+//        }
+        
+        collectionView?.reloadData()
+        
+//        let locationPointInView: CGPoint = gesture.location(in: self.myCollectionView)
+//        if let indexPath = (self.myCollectionView.indexPathForItem(at: locationPointInView)){
+//            let cell = myCollectionView.cellForItem(at: indexPath) as! MainCollectionViewCell
+//            cell.setting?.isEditing = true
+//            cell.toggleDeleteButtion()
+//        }
         
     }
 }

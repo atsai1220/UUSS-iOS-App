@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class MainCellSetting: NSObject
 {
     let name: String
@@ -15,7 +16,7 @@ class MainCellSetting: NSObject
     let fileType: String
     let submissionStatus: String
     let videoURL: String?
-    var isEditing: Bool
+    
     
     init(name: String, imageName: String, fileType: String, videoURL: String, submissionStatus: String)
 {
@@ -24,11 +25,17 @@ class MainCellSetting: NSObject
         self.fileType = fileType
         self.videoURL = videoURL
         self.submissionStatus = submissionStatus
-        self.isEditing = false
     }
 }
 
+protocol MainCellDelegate {
+    func deleteThis(cell: MainCollectionViewCell)
+}
+
 class MainCollectionViewCell: UICollectionViewCell {
+    
+    var delegate: MainCellDelegate?
+    var isEditing = false
     var setting: MainCellSetting?
     {
         didSet
@@ -67,14 +74,27 @@ class MainCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    let deleteViewIcon: RoundedImageView =
-    {
-        let icon: RoundedImageView = RoundedImageView()
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.backgroundColor = UIColor.red
-        icon.image = UIImage(named: "minus")
-        return icon
+    var deleteViewButton: UIButton = {
+       let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 15
+        button.alpha = 0.0
+        button.backgroundColor = UIColor.red
+        button.setImage(UIImage(named: "minus"), for: .normal)
+        return button
     }()
+    
+//    let deleteViewIcon: RoundedImageView =
+//    {
+//        let icon: RoundedImageView = RoundedImageView()
+//        icon.translatesAutoresizingMaskIntoConstraints = false
+//        icon.layer.cornerRadius = self.frame.size.width / 2
+//        icon.backgroundColor = UIColor.red
+//        icon.alpha = 0.0
+//        icon.image = UIImage(named: "minus")
+//        return icon
+//    }()
     
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -126,7 +146,6 @@ class MainCollectionViewCell: UICollectionViewCell {
         addSubview(iconImageView)
         addSubview(statusView)
 //        addSubview(editView)
-        addSubview(deleteViewIcon)
         
         NSLayoutConstraint.activate([
             iconImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
@@ -140,11 +159,7 @@ class MainCollectionViewCell: UICollectionViewCell {
             statusView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             statusView.trailingAnchor.constraint(equalTo: nameLabel.leadingAnchor, constant: -10),
             statusView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            statusView.widthAnchor.constraint(equalToConstant: 10),
-            deleteViewIcon.topAnchor.constraint(equalTo: topAnchor, constant: -10.0),
-            deleteViewIcon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10.0),
-            deleteViewIcon.heightAnchor.constraint(equalToConstant: 20.0),
-            deleteViewIcon.widthAnchor.constraint(equalToConstant: 20.0)
+            statusView.widthAnchor.constraint(equalToConstant: 10)
             ])
     }
     
@@ -166,5 +181,66 @@ class MainCollectionViewCell: UICollectionViewCell {
     @objc func editTapped()
     {
         print("edit tapped")
+    }
+    
+    func showDeleteButton() {
+        if let superView = self.superview {
+            if !deleteViewButton.isDescendant(of: superView) {
+                
+                addSubview(deleteViewButton)
+                UIView.animate(withDuration: 0.3) {
+                    self.deleteViewButton.alpha = 1.0
+                }
+                deleteViewButton.topAnchor.constraint(equalTo: topAnchor, constant: -10.0).isActive = true
+                deleteViewButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10.0).isActive = true
+                deleteViewButton.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
+                deleteViewButton.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
+            }
+        }
+
+    }
+    
+    func hideDeleteButton() {
+        if let superView = self.superview {
+            if deleteViewButton.isDescendant(of: superView) {
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.deleteViewButton.alpha = 0.0
+                }) { (done) in
+                    if done {
+                        self.deleteViewButton.removeFromSuperview()
+                    }
+                }
+            }
+        }
+
+    }
+    
+    func toggleDeleteButtion() {
+        if !deleteViewButton.isDescendant(of: self.superview!) {
+//            let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteThis))
+//            deleteViewIcon.addGestureRecognizer(tapGesture)
+            
+            addSubview(deleteViewButton)
+            UIView.animate(withDuration: 0.3) {
+                self.deleteViewButton.alpha = 1.0
+            }
+            deleteViewButton.topAnchor.constraint(equalTo: topAnchor, constant: -10.0).isActive = true
+            deleteViewButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10.0).isActive = true
+            deleteViewButton.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
+            deleteViewButton.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
+        } else {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.deleteViewButton.alpha = 0.0
+            }) { (done) in
+                if done {
+                    self.deleteViewButton.removeFromSuperview()
+                }
+            }
+        }
+    }
+    
+    @objc func deleteThis() {
+        print("delete this")
+        delegate?.deleteThis(cell: self)
     }
 }

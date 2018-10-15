@@ -12,6 +12,9 @@ import CoreData
 
 class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
 {
+    @IBOutlet weak var rightBarButton: UIBarButtonItem!
+    var isEditMode: Bool = false
+    
     let doneEditingButton: UIButton =
     {
         let button: UIButton = UIButton(type: .system)
@@ -89,6 +92,20 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
 //        self.navigationController?.pushViewController(ew, animated: true)
     }
     
+    @objc func doneTapped(_ sender: Any) {
+        print("turn into done")
+    }
+    
+    func toggleRightBarButton() {
+        if isEditMode {
+            rightBarButton.action = #selector(newTapped)
+            rightBarButton.target = self
+        } else {
+            rightBarButton.action = #selector(doneTapped)
+            rightBarButton.target = self
+        }
+    }
+    
     
     func showControllerFor(setting: Setting) {
         let pageVC: UIViewController
@@ -159,6 +176,9 @@ class MainTabBarController: UITabBarController, NewMapDelegate, AddMapDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        rightBarButton.action = #selector(newTapped)
+        rightBarButton.target = self
         
         selectedIndex = 0
         navigationItem.title = "Main"
