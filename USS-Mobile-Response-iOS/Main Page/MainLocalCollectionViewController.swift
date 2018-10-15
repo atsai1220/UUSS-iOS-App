@@ -12,12 +12,44 @@ private let reuseIdentifier = "Cell"
 
 class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, PDFModalDoneDelegate, MainCellDelegate
 {
+    func deleteThis(cellIndexPath: IndexPath) {
+        print("test")
+        if self.localEntries.count > 0 {
+            var trashEntries = getTrashEntriesFromDisk()
+            trashEntries.append(self.localEntries[cellIndexPath.row])
+            saveTrashEntriesToDisk(entries: trashEntries)
+            self.localEntries.remove(at: cellIndexPath.row)
+            collectionView?.deleteItems(at: [cellIndexPath])
+            saveLocalEntriesToDisk(entries: self.localEntries)
+        }
+    }
+    
     
     var editMode = false
     
-    @objc func deleteThis(cell: MainCollectionViewCell) {
-        print("delegeat print")
+    @objc func handleDelete(sender: UIButton) {
+        
     }
+    
+//    func deleteThis(cellIndexPath: IndexPath) {
+//
+//    }
+    
+//    func deleteThis(cell: MainCollectionViewCell) {
+//        print("test")
+//        let indexPath = collectionView?.indexPath(for: cell)
+//        if let indexPath = collectionView?.indexPath(for: cell) {
+//            var trashEntries = getTrashEntriesFromDisk()
+//            trashEntries.append(self.localEntries[indexPath.row])
+//            saveTrashEntriesToDisk(entries: trashEntries)
+//            self.localEntries.remove(at: indexPath.row)
+//            collectionView?.deleteItems(at: [indexPath])
+//            saveLocalEntriesToDisk(entries: self.localEntries)
+//
+//        } else {
+//            print("could not find indexpath")
+//        }
+//    }
     
     func headerDoneButtonPressed(_: Bool)
     {
@@ -171,19 +203,14 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         let item = self.localEntries[indexPath.row]
         let setting = MainCellSetting(name: item.name!, imageName: item.localFileName!, fileType: item.fileType!, videoURL: item.videoURL ?? "", submissionStatus: item.submissionStatus!)
         cell.setting = setting
+        cell.cellIndexPath = indexPath
         cell.delegate = self
-        cell.deleteViewButton.addTarget(self, action: #selector(deleteThis), for: .touchUpInside)
+//        cell.deleteViewButton.addTarget(self, action: #selector(handleDelete), for: .touchUpInside)
         if self.editMode {
             cell.showDeleteButton()
         } else {
             cell.hideDeleteButton()
         }
-//        if cell.isEditing {
-//            cell.showDeleteButton()
-//        } else {
-//            cell.hideDeleteButton()
-//        }
-        
         return cell
     }
     
@@ -290,7 +317,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 //        var parentVC = self.parent as! MainTabBarController
 //        parentVC.setEditing(true, animated: true)
 //        setEditing(true, animated: true)
-        print("held down")
         self.editMode = !self.editMode
         collectionView?.reloadData()
 //        var indexPaths: [NSIndexPath] = []
@@ -305,7 +331,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 //            }
 //        }
         
-        collectionView?.reloadData()
         
 //        let locationPointInView: CGPoint = gesture.location(in: self.myCollectionView)
 //        if let indexPath = (self.myCollectionView.indexPathForItem(at: locationPointInView)){

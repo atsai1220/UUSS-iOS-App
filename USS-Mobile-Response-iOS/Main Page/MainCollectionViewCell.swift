@@ -29,12 +29,13 @@ class MainCellSetting: NSObject
 }
 
 protocol MainCellDelegate {
-    func deleteThis(cell: MainCollectionViewCell)
+    func deleteThis(cellIndexPath: IndexPath)
 }
 
 class MainCollectionViewCell: UICollectionViewCell {
     
     var delegate: MainCellDelegate?
+    var cellIndexPath: IndexPath?
     var isEditing = false
     var setting: MainCellSetting?
     {
@@ -135,6 +136,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         backgroundColor = UIColor.white
         setupViews()
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -195,6 +197,7 @@ class MainCollectionViewCell: UICollectionViewCell {
                 deleteViewButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10.0).isActive = true
                 deleteViewButton.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
                 deleteViewButton.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
+                deleteViewButton.addTarget(self, action: #selector(deleteThis), for: .touchUpInside)
             }
         }
 
@@ -228,6 +231,7 @@ class MainCollectionViewCell: UICollectionViewCell {
             deleteViewButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10.0).isActive = true
             deleteViewButton.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
             deleteViewButton.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
+            deleteViewButton.addTarget(self, action: #selector(deleteThis), for: .touchUpInside)
         } else {
             UIView.animate(withDuration: 0.3, animations: {
                 self.deleteViewButton.alpha = 0.0
@@ -241,6 +245,6 @@ class MainCollectionViewCell: UICollectionViewCell {
     
     @objc func deleteThis() {
         print("delete this")
-        delegate?.deleteThis(cell: self)
+        delegate?.deleteThis(cellIndexPath: self.cellIndexPath!)
     }
 }
