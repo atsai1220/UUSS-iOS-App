@@ -38,7 +38,7 @@ class LocalEntryTableViewCell: UITableViewCell, UITextViewDelegate {
     
     let cellDivider: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.gray
+        view.backgroundColor = UIColor(white: 0.90, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

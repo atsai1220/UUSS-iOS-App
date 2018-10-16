@@ -794,7 +794,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     @objc func saveAndUpload() {
-        //TODO: check for empty fields
         let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
         let descriptionCell = tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
         let notesCell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
@@ -805,12 +804,25 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         } else if !collectionSelected {
             displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
         } else {
-            
             let savedName = createLocalEntry()
-            httpUpload()
-            createResourceSpaceEntry(fileName: savedName)
-            addResourceToCollection()
-            self.navigationController?.popToRootViewController(animated: true)
+            let networkVC = NetworkViewController()
+            networkVC.modalPresentationStyle = .overCurrentContext
+            networkVC.modalTransitionStyle = .crossDissolve
+            let oldEntries = getLocalEntriesFromDisk()
+            
+            let currentEntry = oldEntries.first { (entry) -> Bool in
+                if entry.localFileName == savedName {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            networkVC.localEntry = currentEntry
+            self.navigationController?.present(networkVC, animated: true, completion: nil)
+//            httpUpload()
+//            createResourceSpaceEntry(fileName: savedName)
+//            addResourceToCollection()
+//            self.navigationController?.popToRootViewController(animated: true)
         }
         
     }

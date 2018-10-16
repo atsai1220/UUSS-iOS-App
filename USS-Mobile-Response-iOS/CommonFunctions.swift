@@ -252,6 +252,22 @@ func getImageFromDocumentDirectory(imageName: String) -> UIImage? {
     }
 }
 
+func getStringContentsOfFile(fileName: String) -> String? {
+    let filePath = getDocumentsURL().appendingPathComponent(fileName)
+    if FileManager.default.fileExists(atPath: filePath.path) {
+        do {
+            return try String(contentsOf: filePath, encoding: String.Encoding.utf8)
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+        
+    }
+    else {
+        return nil
+    }
+}
+
 enum FileType: String
 {
     case PHOTO = "PHOTO"
