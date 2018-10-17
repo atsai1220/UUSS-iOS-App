@@ -21,7 +21,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         switch item.fileType {
         case FileType.PHOTO.rawValue:
             let image = getImageFromDocumentDirectory(imageName: item.localFileName!)
-            let imageData = UIImageJPEGRepresentation(image!, 0.75)
+            let imageData = UIImageJPEGRepresentation(image!, 0.9)
             
             
             if (imageData == nil) { return }
@@ -41,22 +41,40 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             request.setValue("Keep-Alive", forHTTPHeaderField: "Connection")
             request.setValue("multipart/form-data; boundary=" + boundary, forHTTPHeaderField: "Content-Type")
             
-            request.setValue(String(fullFormData.length), forHTTPHeaderField: "Content-Length")
-            request.httpBody = fullFormData as Data
+            request.setValue(String(fullFormData.count), forHTTPHeaderField: "Content-Length")
+            request.httpBody = fullFormData
             request.httpShouldHandleCookies = false
             
             let configuration = URLSessionConfiguration.default
-
+            
             let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-
-            session.uploadTask(with: request, from: imageData!) { (responseData, response, responseError) in
-                guard let data = responseData else { return }
-                
-                let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: [])
-                if let jsonObject = jsonResponse as? [Any] {
-                    print(jsonObject)
+            
+            let task = session.dataTask(with: request) {
+                (data, response, error) in
+                guard let data = data, response != nil, error == nil else {
+                    print("error")
+                    return
                 }
-            }.resume()
+                let dataString = String(data: data, encoding: .utf8)
+                print(dataString ?? "Undecodable result")
+                
+                DispatchQueue.main.async {
+                    print("done")
+                }
+            }
+            task.resume()
+
+//            let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+//
+//            session.uploadTask(with: request, from: imageData!) {
+//                (responseData, response, responseError) in
+//                guard let data = responseData else { return }
+//
+//                let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: [])
+//                if let jsonObject = jsonResponse as? [Any] {
+//                    print(jsonObject)
+//                }
+//            }.resume()
         case FileType.VIDEO.rawValue:
             print("uploading video")
         case FileType.AUDIO.rawValue:
@@ -71,8 +89,8 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         return "Boundary-\(NSUUID().uuidString)"
     }
     
-    func photoDataToFormData(data: NSData, boundary: String, fileName: String) -> NSData {
-        let fullData = NSMutableData()
+    func photoDataToFormData(data: NSData, boundary: String, fileName: String) -> Data {
+        var fullData = Data()
         
         let lineOne = "--" + boundary + "\r\n"
         fullData.append(lineOne.data(
@@ -80,7 +98,6 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             allowLossyConversion: false)!)
         
         let lineTwo = "Content-Disposition: form-data; name=\"file\"; filename=\"" + fileName + "\"\r\n"
-        NSLog(lineTwo)
         fullData.append(lineTwo.data(
             using: String.Encoding.utf8,
             allowLossyConversion: false)!)
