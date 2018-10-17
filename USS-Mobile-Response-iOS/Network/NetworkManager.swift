@@ -22,59 +22,11 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         case FileType.PHOTO.rawValue:
             let image = getImageFromDocumentDirectory(imageName: item.localFileName!)
             let imageData = UIImageJPEGRepresentation(image!, 0.9)
-            
-            
             if (imageData == nil) { return }
-            
-            let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
-            let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
-            let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=http_upload"
-            let signature = "&sign=" + (privateKey + queryString).sha256()!
-            let completeURL = urlString + queryString + signature
-        
-            guard let url = URL(string: completeURL) else { return }
             let boundary = generateBoundaryString()
             let fullFormData = photoDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!)
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("Keep-Alive", forHTTPHeaderField: "Connection")
-            request.setValue("multipart/form-data; boundary=" + boundary, forHTTPHeaderField: "Content-Type")
-            
-            request.setValue(String(fullFormData.count), forHTTPHeaderField: "Content-Length")
-            request.httpBody = fullFormData
-            request.httpShouldHandleCookies = false
-            
-            let configuration = URLSessionConfiguration.default
-            
-            let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-            
-            let task = session.dataTask(with: request) {
-                (data, response, error) in
-                guard let data = data, response != nil, error == nil else {
-                    print("error")
-                    return
-                }
-                let dataString = String(data: data, encoding: .utf8)
-                print(dataString ?? "Undecodable result")
-                
-                DispatchQueue.main.async {
-                    print("done")
-                }
-            }
-            task.resume()
-
-//            let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-//
-//            session.uploadTask(with: request, from: imageData!) {
-//                (responseData, response, responseError) in
-//                guard let data = responseData else { return }
-//
-//                let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: [])
-//                if let jsonObject = jsonResponse as? [Any] {
-//                    print(jsonObject)
-//                }
-//            }.resume()
+            sendPostRequestWith(body: fullFormData, boundary: boundary)
+        
         case FileType.VIDEO.rawValue:
             print("uploading video")
         case FileType.AUDIO.rawValue:
@@ -85,6 +37,44 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             print("NetworkManager: should never happen")
         }
     }
+    
+    func sendPostRequestWith(body fullFormData: Data, boundary: String) {
+        let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
+        let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=http_upload"
+        let signature = "&sign=" + (privateKey + queryString).sha256()!
+        let completeURL = urlString + queryString + signature
+        guard let url = URL(string: completeURL) else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Keep-Alive", forHTTPHeaderField: "Connection")
+        request.setValue("multipart/form-data; boundary=" + boundary, forHTTPHeaderField: "Content-Type")
+        
+        request.setValue(String(fullFormData.count), forHTTPHeaderField: "Content-Length")
+        request.httpBody = fullFormData
+        request.httpShouldHandleCookies = false
+        
+        let configuration = URLSessionConfiguration.default
+        
+        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+        
+        let task = session.dataTask(with: request) {
+            (data, response, error) in
+            guard let data = data, response != nil, error == nil else {
+                self.displayErrorMessage(title: "Alert", message: "There was an error.")
+                return
+            }
+            let dataString = String(data: data, encoding: .utf8)
+            print(dataString ?? "Undecodable result")
+            
+            DispatchQueue.main.async {
+                print("done")
+            }
+        }
+        task.resume()
+    }
+    
     func generateBoundaryString() -> String {
         return "Boundary-\(NSUUID().uuidString)"
     }
@@ -142,7 +132,6 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         alert.addAction(dismissAction)
         let topController = UIApplication.shared.keyWindow?.rootViewController
         topController!.present(alert, animated: true, completion: nil)
-        
     }
     
     func updateDelegateWith(progress: Float) {
