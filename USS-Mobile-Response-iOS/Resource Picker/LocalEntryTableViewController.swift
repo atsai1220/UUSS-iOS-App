@@ -854,38 +854,48 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 saveLocalEntriesToDisk(entries: oldEntries)
                 return savedImageName
             case .VIDEOS:
-                
-                videoUrl = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".mov")
-                
-                if(FileManager.default.fileExists(atPath: videoUrl!.relativePath))
-                {
-                    let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
-                else
-                {
-                    newEntry.localFileName = localFileName!
-                    newEntry.fileType = FileType.VIDEO.rawValue
-                    newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-                    newEntry.videoURL = videoUrl?.relativePath
-                    var oldEntries = getLocalEntriesFromDisk()
-                    oldEntries.append(newEntry)
-                    saveLocalEntriesToDisk(entries: oldEntries)
-                    
-                    do
-                    {
-                        try videoData!.write(to: videoUrl!)
-                    }
-                    catch
-                    {
-                        let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                    }
-                }
-            
-                return videoUrl!.lastPathComponent
+                let savedVideoName = saveVideoAtDocumentDirectory(videoData: self.videoData!)
+                saveExistingImageAtDocumentDirectory(with: savedVideoName, image: videoThumbnail!)
+                newEntry.localFileName = savedVideoName
+                newEntry.fileType = FileType.VIDEO.rawValue
+                newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+                newEntry.videoURL = getDocumentsURL().appendingPathComponent(savedVideoName).relativePath
+                updateLocalEntries(with: newEntry)
+                return savedVideoName
+//
+//
+//                videoUrl = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".mov")
+//
+//
+//                if(FileManager.default.fileExists(atPath: videoUrl!.relativePath))
+//                {
+//                    let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
+//                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+//                    self.present(alert, animated: true, completion: nil)
+//                }
+//                else
+//                {
+//                    newEntry.localFileName = localFileName!
+//                    newEntry.fileType = FileType.VIDEO.rawValue
+//                    newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+//                    newEntry.videoURL = videoUrl?.relativePath
+//                    var oldEntries = getLocalEntriesFromDisk()
+//                    oldEntries.append(newEntry)
+//                    saveLocalEntriesToDisk(entries: oldEntries)
+//
+//                    do
+//                    {
+//                        try videoData!.write(to: videoUrl!)
+//                    }
+//                    catch
+//                    {
+//                        let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
+//                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+//                        self.present(alert, animated: true, completion: nil)
+//                    }
+//                }
+//
+//                return videoUrl!.lastPathComponent
             
             case .AUDIOS:
                 print("handle audio")

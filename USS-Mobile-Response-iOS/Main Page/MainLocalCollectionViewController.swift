@@ -13,7 +13,7 @@ private let reuseIdentifier = "Cell"
 class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, PDFModalDoneDelegate, MainCellDelegate
 {
     func deleteThis(cellIndexPath: IndexPath) {
-        print("test")
+        print(cellIndexPath.row)
         if self.localEntries.count > 0 {
             var trashEntries = getTrashEntriesFromDisk()
             trashEntries.append(self.localEntries[cellIndexPath.row])
@@ -21,6 +21,9 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
             self.localEntries.remove(at: cellIndexPath.row)
             collectionView?.deleteItems(at: [cellIndexPath])
             saveLocalEntriesToDisk(entries: self.localEntries)
+        }
+        if self.localEntries.count == 0 {
+            self.editMode = false
         }
     }
     
@@ -143,6 +146,7 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
+        editMode = false
         self.localEntries = getLocalEntriesFromDisk()
         self.collectionView?.reloadData()
     }
@@ -205,7 +209,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         cell.setting = setting
         cell.cellIndexPath = indexPath
         cell.delegate = self
-//        cell.deleteViewButton.addTarget(self, action: #selector(handleDelete), for: .touchUpInside)
         if self.editMode {
             cell.showDeleteButton()
         } else {
