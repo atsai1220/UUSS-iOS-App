@@ -88,6 +88,8 @@ class LoginViewController: UIViewController, PassSelectedServerBackwardsProtocol
         userNameField.layer.borderColor = UIColor.lightGray.cgColor
         userNameField.layer.borderWidth = 1.0
         userNameField.layer.cornerRadius = 5.0
+        userNameField.autocorrectionType = .no
+        userNameField.textContentType = UITextContentType.init("")
         
         apiField.layer.masksToBounds = true
         apiField.layer.borderColor = UIColor.lightGray.cgColor
