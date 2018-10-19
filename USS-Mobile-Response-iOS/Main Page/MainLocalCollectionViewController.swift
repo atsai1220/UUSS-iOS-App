@@ -225,9 +225,10 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
             super.viewWillTransition(to: size, with: coordinator)
-            guard let flowLayout = myCollectionView.collectionViewLayout as? UICollectionViewLayout else {
-                return
-            }
+            let flowLayout = myCollectionView.collectionViewLayout
+//            guard let flowLayout = myCollectionView.collectionViewLayout as? UICollectionViewLayout else {
+//                return
+//            }
             flowLayout.invalidateLayout()
     }
 

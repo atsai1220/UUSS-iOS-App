@@ -32,7 +32,6 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             var movieData: Data?
             do {
                 let path = URL(fileURLWithPath: item.videoURL!)
-                let relativePath = path.relativePath
                 movieData = try Data(contentsOf: path)
                 let boundary = generateBoundaryString()
                 let fullFormData = resourceDataToFormData(data: movieData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
@@ -87,6 +86,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         }
         task.resume()
     }
+    
     
     func generateBoundaryString() -> String {
         return "Boundary-\(NSUUID().uuidString)"

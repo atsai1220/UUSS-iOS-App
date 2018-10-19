@@ -33,7 +33,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     // Resource Info section related
     var previewImage: UIImage?
     var submissionStatus: SubmissionStatus = SubmissionStatus.LocalOnly
-    var resourceType: ActionSheetMode = ActionSheetMode.PHOTOS
+    var resourceType: FileType = FileType.PHOTO
     var resourceSelected = false
     var imageURL: URL?
     
@@ -320,11 +320,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     func showResourceTypeActionSheet() {
         let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Photo (.JPEG and .TIF)", style: .default, handler: { (action: UIAlertAction) in
+            self.resourceType = FileType.PHOTO
 //            let localEntryVC = LocalEntryTableViewController()
 //            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.PHOTOS
 //            self.navigationController?.pushViewController(localEntryVC, animated: true)
         }))
         actionSheet.addAction(UIAlertAction(title: "Video (.MOV and .MP4)", style: .default, handler: { (action: UIAlertAction) in
+            self.resourceType = FileType.VIDEO
 //            let localEntryVC = LocalEntryTableViewController()
 //            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.VIDEOS
 //            self.navigationController?.pushViewController(localEntryVC, animated: true)
@@ -333,7 +335,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             //            self.navigationController?.pushViewController(videoViewcontroller, animated: true)
             
         }))
-        actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "Audio (.MP4)", style: .default, handler: { (action: UIAlertAction) in
+            self.resourceType = FileType.AUDIO
 //            let localEntryVC = LocalEntryTableViewController()
 //            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.AUDIOS
 //            self.navigationController?.pushViewController(localEntryVC, animated: true)
@@ -344,6 +347,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             
         }))
         actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
+            self.resourceType = FileType.DOCUMENT
 //            let localEntryVC = LocalEntryTableViewController()
 //            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.PDFS
 //            self.navigationController?.pushViewController(localEntryVC, animated: true)
@@ -353,9 +357,32 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.present(actionSheet, animated: true, completion: nil)
     }
     
+    @objc private func showPhotoSourceActionSheet(sender: UIButton) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                imagePickerController.sourceType = .camera
+                self.present(imagePickerController, animated: true, completion: nil)
+            }
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
+            imagePickerController.sourceType = .photoLibrary
+            self.present(imagePickerController, animated: true, completion: nil)
+        }))
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(alert: UIAlertAction)-> Void in
+            actionSheet.dismiss(animated: true, completion: nil)
+        })
+        cancelAction.setValue(UIColor.red, forKey: "titleTextColor")
+        actionSheet.addAction(cancelAction)
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
     @objc private func showActionSheet(sender: UIButton) {
         switch resourceType {
-        case .PHOTOS:
+        case .PHOTO:
             let imagePickerController = UIImagePickerController()
             imagePickerController.delegate = self
             let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -377,7 +404,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             actionSheet.addAction(cancelAction)
             self.present(actionSheet, animated: true, completion: nil)
             
-        case .VIDEOS:
+        case .VIDEO:
             let imagePickerController = UIImagePickerController()
             imagePickerController.delegate = self
             let actionSheet: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -415,11 +442,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             actionSheet.addAction(cancelAction)
             self.present(actionSheet, animated: true, completion: nil)
             
-        case .AUDIOS:
+        case .AUDIO:
             let audioViewController = AudioViewController()
             self.navigationController?.pushViewController(audioViewController, animated: true)
             
-        case .PDFS:
+        case .DOCUMENT:
             let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
             layout.scrollDirection = .vertical
             layout.sectionInset = UIEdgeInsets(top: 25.0, left: 10.0, bottom: 2.0, right: 10.0)
@@ -475,7 +502,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         {
             switch resourceType
             {
-                case .PHOTOS:
+                case .PHOTO:
                     
                     if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
                         previewImage = pickedImage
@@ -509,7 +536,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     }
                     picker.dismiss(animated: true, completion: nil)
                 
-                case .VIDEOS:
+                case .VIDEO:
                     
                     let url = info[UIImagePickerControllerMediaURL] as? URL
                     
@@ -534,9 +561,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 
                 // TODO: Add geo-locating for videos, audio, and pdfs
                 
-                case .AUDIOS:
+                case .AUDIO:
                     print("audios")
-                case .PDFS:
+                case .DOCUMENT:
                     print("pdfs")
             }
     }
@@ -875,7 +902,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         
         switch resourceType
         {
-            case .PHOTOS:
+            case .PHOTO:
                 var savedImageName = ""
                 if let possibleImageURL = self.imageURL {
                     savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
@@ -888,7 +915,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 updateLocalEntries(with: newEntry)
                 return savedImageName
             
-            case .VIDEOS:
+            case .VIDEO:
                 let savedVideoName = saveVideoAtDocumentDirectory(videoData: self.videoData!)
                 saveExistingImageAtDocumentDirectory(with: savedVideoName, image: videoThumbnail!)
                 newEntry.localFileName = savedVideoName
@@ -898,9 +925,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 updateLocalEntries(with: newEntry)
                 return savedVideoName
             
-            case .AUDIOS:
+            case .AUDIO:
                 print("handle audio")
-            case .PDFS:
+            case .DOCUMENT:
                 print("handle pdf")
             }
             return "no"
@@ -1028,7 +1055,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         if indexPath.section == 0 {
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
-                cell.insertButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
+                cell.insertButton.addTarget(self, action: #selector(showPhotoSourceActionSheet), for: .touchUpInside)
                 cell.cellLabel.becomeFirstResponder()
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Resource"
@@ -1039,20 +1066,20 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     cell.insertButton.setImage(previewImage, for: .normal)
                     cell.layoutSubviews()
                 }
-                else if(videoThumbnail != nil)
-                {
-                    cell.resourceSet = true
-                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
-                    cell.insertButton.setImage(videoThumbnail, for: .normal)
-                    cell.layoutSubviews()
-                }
-                else if(imageForPDF != nil)
-                {
-                    cell.resourceSet = true
-                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
-                    cell.insertButton.setImage(imageForPDF, for: .normal)
-                    cell.layoutSubviews()
-                }
+//                else if(videoThumbnail != nil)
+//                {
+//                    cell.resourceSet = true
+//                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
+//                    cell.insertButton.setImage(videoThumbnail, for: .normal)
+//                    cell.layoutSubviews()
+//                }
+//                else if(imageForPDF != nil)
+//                {
+//                    cell.resourceSet = true
+//                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
+//                    cell.insertButton.setImage(imageForPDF, for: .normal)
+//                    cell.layoutSubviews()
+//                }
                 return cell
             }
             if indexPath.row == 1 {

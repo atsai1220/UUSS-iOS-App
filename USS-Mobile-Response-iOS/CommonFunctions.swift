@@ -275,7 +275,6 @@ func getImageFromDocumentDirectory(imageName: String) -> UIImage? {
      */
     let imagePath = getDocumentsURL().appendingPathComponent(imageName).path
     if FileManager.default.fileExists(atPath: imagePath) {
-        var image = UIImage(contentsOfFile: imagePath)
         return UIImage(contentsOfFile: imagePath)
     }
     else {
