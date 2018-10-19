@@ -11,6 +11,7 @@ import UIKit
 
 protocol NetWorkManagerDelegate {
     func uploadProgressWith(progress: Float)
+    func dismissProgressBar()
 }
 
 class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
@@ -37,6 +38,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                 let fullFormData = resourceDataToFormData(data: movieData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
                 sendPostRequestWith(body: fullFormData, boundary: boundary)
             } catch {
+                dismissProgressBar()
                 displayErrorMessage(title: "Error", message: "Video upload error.")
             }
  
@@ -161,6 +163,10 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
     func updateDelegateWith(progress: Float) {
         delegate?.uploadProgressWith(progress: progress)
+    }
+    
+    func dismissProgressBar() {
+        delegate?.dismissProgressBar()
     }
     
 }

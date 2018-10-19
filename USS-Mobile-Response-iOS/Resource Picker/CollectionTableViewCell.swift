@@ -13,7 +13,7 @@ class CollectionTableViewCell: UITableViewCell {
     var cellLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.textColor = UIColor.blue
+        label.textColor = UIView().tintColor
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.preferredFont(forTextStyle: .caption1)
         label.textAlignment = .right

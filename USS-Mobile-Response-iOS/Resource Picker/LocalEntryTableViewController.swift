@@ -26,6 +26,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     let hazardCellId = "hazardCellId"
     let subcategoryCellId = "subcategoryCellId"
     let collectionCellId = "collectionCellId"
+    let additionalButtonCellId = "additionalButtonCellId"
     let locationManager = CLLocationManager()
     let imagePickerController = UIImagePickerController()
     
@@ -315,12 +316,48 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     // MARK: - Action sheet
     
+    
+    func showResourceTypeActionSheet() {
+        let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Photo (.JPEG and .TIF)", style: .default, handler: { (action: UIAlertAction) in
+//            let localEntryVC = LocalEntryTableViewController()
+//            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.PHOTOS
+//            self.navigationController?.pushViewController(localEntryVC, animated: true)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Video (.MOV and .MP4)", style: .default, handler: { (action: UIAlertAction) in
+//            let localEntryVC = LocalEntryTableViewController()
+//            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.VIDEOS
+//            self.navigationController?.pushViewController(localEntryVC, animated: true)
+            //            let videoViewcontroller: VideoViewController = VideoViewController()
+            //            videoViewcontroller.collectionReference = self.hazardCollections[indexPath.row].ref
+            //            self.navigationController?.pushViewController(videoViewcontroller, animated: true)
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
+//            let localEntryVC = LocalEntryTableViewController()
+//            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.AUDIOS
+//            self.navigationController?.pushViewController(localEntryVC, animated: true)
+//
+            //            let audioViewController: AudioViewController = AudioViewController()
+            //            audioViewController.collectionReference = self.hazardCollections[indexPath.row].ref
+            //            self.navigationController?.pushViewController(audioViewController, animated: true)
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
+//            let localEntryVC = LocalEntryTableViewController()
+//            localEntryVC.resourceType = LocalEntryTableViewController.ActionSheetMode.PDFS
+//            self.navigationController?.pushViewController(localEntryVC, animated: true)
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
     @objc private func showActionSheet(sender: UIButton) {
         switch resourceType {
         case .PHOTOS:
             let imagePickerController = UIImagePickerController()
             imagePickerController.delegate = self
-            
             let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             
             actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
@@ -338,14 +375,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             })
             cancelAction.setValue(UIColor.red, forKey: "titleTextColor")
             actionSheet.addAction(cancelAction)
-            
             self.present(actionSheet, animated: true, completion: nil)
             
         case .VIDEOS:
             let imagePickerController = UIImagePickerController()
             imagePickerController.delegate = self
             let actionSheet: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            
             actionSheet.addAction(UIAlertAction(title: "Take Video", style: .default, handler: {(alert: UIAlertAction) -> Void in
                 if(UIImagePickerController.isSourceTypeAvailable(.camera)) {
                     self.imagePickerController.sourceType = .camera
@@ -378,12 +413,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             })
             cancelAction.setValue(UIColor.red, forKey: "titleTextColor")
             actionSheet.addAction(cancelAction)
-            
             self.present(actionSheet, animated: true, completion: nil)
             
         case .AUDIOS:
             let audioViewController = AudioViewController()
             self.navigationController?.pushViewController(audioViewController, animated: true)
+            
         case .PDFS:
             let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
             layout.scrollDirection = .vertical
@@ -391,6 +426,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             pdfCollectionViewController = PdfCollectionViewController(collectionViewLayout: layout)
             pdfCollectionViewController?.pdfDelegate = self
             navigationController?.pushViewController(pdfCollectionViewController!, animated: true)
+            
         }
  
     }
@@ -916,6 +952,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.tableView.register(HazardTableViewCell.self, forCellReuseIdentifier: hazardCellId)
         self.tableView.register(SubcategoryTableViewCell.self, forCellReuseIdentifier: subcategoryCellId)
         self.tableView.register(CollectionTableViewCell.self, forCellReuseIdentifier: collectionCellId)
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: additionalButtonCellId)
         self.tableView.tableFooterView = UIView(frame: .zero)
         
         navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
@@ -934,7 +971,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 4
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -954,22 +991,35 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 return 4
             }
         }
-        else {
+        else if section == 1 {
             return 3
+        }
+        else if section == 2 {
+            return 1
+        }
+        else {
+            //TODO return the number of 'additional files'
+            return 0
         }
     }
     
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
-    }
+//    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+//        return nil
+//    }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let title: String
         if section == 0 {
             title = "Resource Info"
         }
-        else {
+        else if section == 1 {
             title = "Entry Info"
+        }
+        else if section == 2 {
+            title = "Alternative Files"
+        }
+        else {
+            title = ""
         }
         return title
     }
@@ -1067,7 +1117,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 return cell
             }
         }
-        else {
+        else if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
             
             
@@ -1089,6 +1139,23 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 cell.textView.delegate = self
                 return cell
             }
+        }
+        else if indexPath.section == 2 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: additionalButtonCellId, for: indexPath)
+            cell.textLabel?.textColor = view.tintColor
+            cell.textLabel?.text = "Add alternative file..."
+            return cell
+        }
+        else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: additionalButtonCellId, for: indexPath)
+            cell.textLabel?.text = "alternative file!"
+            return cell
+        }
+    }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 2 {
+            tableView.deselectRow(at: indexPath, animated: true)
+            showResourceTypeActionSheet()
         }
     }
     
