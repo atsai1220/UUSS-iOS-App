@@ -21,6 +21,7 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
             self.localEntries.remove(at: cellIndexPath.row)
             collectionView?.deleteItems(at: [cellIndexPath])
             saveLocalEntriesToDisk(entries: self.localEntries)
+            self.collectionView?.reloadData()
         }
         if self.localEntries.count == 0 {
             self.editMode = false

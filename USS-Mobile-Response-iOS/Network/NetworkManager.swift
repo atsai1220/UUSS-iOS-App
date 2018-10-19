@@ -24,11 +24,22 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             let imageData = UIImageJPEGRepresentation(image!, 0.9)
             if (imageData == nil) { return }
             let boundary = generateBoundaryString()
-            let fullFormData = photoDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!)
+            let fullFormData = resourceDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
             sendPostRequestWith(body: fullFormData, boundary: boundary)
         
         case FileType.VIDEO.rawValue:
-            print("uploading video")
+            var movieData: Data?
+            do {
+                let path = URL(fileURLWithPath: item.videoURL!)
+                let relativePath = path.relativePath
+                movieData = try Data(contentsOf: path)
+                let boundary = generateBoundaryString()
+                let fullFormData = resourceDataToFormData(data: movieData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
+                sendPostRequestWith(body: fullFormData, boundary: boundary)
+            } catch {
+                displayErrorMessage(title: "Error", message: "Video upload error.")
+            }
+ 
         case FileType.AUDIO.rawValue:
             print("uploading audio")
         case FileType.DOCUMENT.rawValue:
@@ -79,8 +90,22 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         return "Boundary-\(NSUUID().uuidString)"
     }
     
-    func photoDataToFormData(data: NSData, boundary: String, fileName: String) -> Data {
+
+    func resourceDataToFormData(data: NSData, boundary: String, fileName: String, type: String) -> Data {
         var fullData = Data()
+        var mimeType = ""
+        switch type {
+        case FileType.PHOTO.rawValue:
+            mimeType = "image/jpg"
+        case FileType.VIDEO.rawValue:
+            mimeType = "video/mov"
+        case FileType.AUDIO.rawValue:
+            mimeType = "video/mp4"
+        case FileType.DOCUMENT.rawValue:
+            mimeType = "application/pdf"
+        default:
+            print("Should not happen")
+        }
         
         let lineOne = "--" + boundary + "\r\n"
         fullData.append(lineOne.data(
@@ -92,7 +117,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             using: String.Encoding.utf8,
             allowLossyConversion: false)!)
         
-        let lineThree = "Content-Type: image/jpg\r\n\r\n"
+        let lineThree = "Content-Type: " + mimeType + "\r\n\r\n"
         fullData.append(lineThree.data(
             using: String.Encoding.utf8,
             allowLossyConversion: false)!)
