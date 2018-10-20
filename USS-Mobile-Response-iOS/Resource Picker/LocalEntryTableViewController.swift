@@ -469,8 +469,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
         {
+            print(self.pickingForAltFiles)
             if !self.pickingForAltFiles {
                 if resourceType == .PHOTO {
+                    print("WHY")
+                    print(self.pickingForAltFiles)
                     if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
                         previewImage = pickedImage
                         tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
@@ -529,44 +532,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             } else {
                 if resourceType == .PHOTO {
                     if let imageURL = info[UIImagePickerControllerImageURL] as? URL {
-                        // save to disk with original naming scheme. changes by second
                         let image = UIImage(contentsOfFile: imageURL.path)
                         let imageName = saveExistingImageAtDocumentDirectory(image: image!)
-                        // save to alt file array
                         let altFile = AltFile.init(name: imageName, url: imageURL.path, type: FileType.PHOTO.rawValue)
                         self.altFiles.append(altFile)
-                        // update cell info
-                        // update tablerow
-                    }
-                    if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-                        previewImage = pickedImage
-                        tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-                        self.resourceSelected = true
-                        
-                        if let newURL = info[UIImagePickerControllerImageURL] as? URL {
-                            self.imageURL = newURL
-                        }
-                        else
-                        {
-                            PHPhotoLibrary.shared().performChanges({
-                                let assetChangeRequest = PHAssetChangeRequest.creationRequestForAsset(from: pickedImage)
-                                var currentLocation: CLLocation!
-                                if( CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
-                                    CLLocationManager.authorizationStatus() ==  .authorizedAlways)
-                                {
-                                    currentLocation = self.locationManager.location
-                                }
-                                assetChangeRequest.location = currentLocation
-                            }) { (success, error) in
-                                if success {
-                                    
-                                } else {
-                                    let ac = UIAlertController(title: "Save error", message: error?.localizedDescription, preferredStyle: .alert)
-                                    ac.addAction(UIAlertAction(title: "OK", style: .default))
-                                    self.present(ac, animated: true)
-                                }
-                            }
-                        }
+                        self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
                     }
                     picker.dismiss(animated: true, completion: nil)
                 } else {
@@ -1011,8 +981,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             return 1
         }
         else {
-            //TODO return the number of 'additional files'
-            return 3
+            return self.altFiles.count
         }
     }
     
@@ -1161,11 +1130,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
         else {
             let cell = tableView.dequeueReusableCell(withIdentifier: alternativeFileCellId, for: indexPath)
-            cell.imageView!.image = UIImage(named: "audio")
+            let altFile = self.altFiles[indexPath.row]
             cell.separatorInset = .zero
-            cell.textLabel?.text = "File Name"
-            cell.detailTextLabel?.text = "File type"
             cell.accessoryType = .detailButton
+            cell.imageView!.image = getImageFromDocumentDirectory(imageName: altFile.name)
+            cell.textLabel?.text = altFile.name
+            cell.detailTextLabel?.text = altFile.type
+            
             return cell
         }
     }
