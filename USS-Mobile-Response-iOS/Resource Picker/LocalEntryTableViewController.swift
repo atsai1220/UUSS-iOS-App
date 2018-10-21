@@ -469,11 +469,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
         {
-            print(self.pickingForAltFiles)
             if !self.pickingForAltFiles {
                 if resourceType == .PHOTO {
-                    print("WHY")
-                    print(self.pickingForAltFiles)
                     if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
                         previewImage = pickedImage
                         tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
@@ -536,11 +533,30 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                         let imageName = saveExistingImageAtDocumentDirectory(image: image!)
                         let altFile = AltFile.init(name: imageName, url: imageURL.path, type: FileType.PHOTO.rawValue)
                         self.altFiles.append(altFile)
-                        self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
+                    } else {
+                        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+                            let imageName = saveExistingImageAtDocumentDirectory(image: image)
+                            let imageURL = getDocumentsURL().appendingPathComponent(imageName)
+                            let altFile = AltFile.init(name: imageName, url: imageURL.path, type: FileType.PHOTO.rawValue)
+                            self.altFiles.append(altFile)
+                        }
                     }
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
+                    self.tableView.endUpdates()
                     picker.dismiss(animated: true, completion: nil)
                 } else {
-                    print("selecting for alternative video")
+                    if let videoURL = info[UIImagePickerControllerMediaURL] as? URL {
+                        let image = createVideoThumbnail(from: videoURL.absoluteString)
+                        let videoName = saveExistingImageAtDocumentDirectory(image: image)
+                        let altFile = AltFile.init(name: videoName, url: videoURL.path, type: FileType.VIDEO.rawValue)
+                        self.altFiles.append(altFile)
+                        self.tableView.beginUpdates()
+                        self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
+                        self.tableView.endUpdates()
+                        
+                    }
+                    picker.dismiss(animated: true, completion: nil)
                 }
             }
 
@@ -1129,14 +1145,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             return cell
         }
         else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: alternativeFileCellId, for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: alternativeFileCellId, for: indexPath) as! AlternativeTableViewCell
             let altFile = self.altFiles[indexPath.row]
             cell.separatorInset = .zero
-            cell.accessoryType = .detailButton
-            cell.imageView!.image = getImageFromDocumentDirectory(imageName: altFile.name)
-            cell.textLabel?.text = altFile.name
-            cell.detailTextLabel?.text = altFile.type
-            
+            cell.altImageView.image = getImageFromDocumentDirectory(imageName: altFile.name)
+            cell.cellLabel.text = altFile.name
+            cell.fileLabel.text = altFile.type
+
             return cell
         }
     }
@@ -1148,6 +1163,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 3 {
+            return 75
+        }
         return UITableViewAutomaticDimension
     }
     
