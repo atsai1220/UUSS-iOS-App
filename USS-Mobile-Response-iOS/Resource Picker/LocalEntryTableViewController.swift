@@ -531,13 +531,16 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     if let imageURL = info[UIImagePickerControllerImageURL] as? URL {
                         let image = UIImage(contentsOfFile: imageURL.path)
                         let imageName = saveExistingImageAtDocumentDirectory(image: image!)
-                        let altFile = AltFile.init(name: imageName, url: imageURL.path, type: FileType.PHOTO.rawValue)
+                        let imagePath = getDocumentsURL().appendingPathComponent(imageName).path
+                        let fileNameWithoutExtension = NSURL(fileURLWithPath: imageName).deletingPathExtension?.lastPathComponent ?? ""
+                        let altFile = AltFile.init(name: fileNameWithoutExtension, url: imagePath, type: FileType.PHOTO.rawValue)
                         self.altFiles.append(altFile)
                     } else {
                         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                             let imageName = saveExistingImageAtDocumentDirectory(image: image)
                             let imageURL = getDocumentsURL().appendingPathComponent(imageName)
-                            let altFile = AltFile.init(name: imageName, url: imageURL.path, type: FileType.PHOTO.rawValue)
+                            let fileNameWithoutExtension = NSURL(fileURLWithPath: imageName).deletingPathExtension?.lastPathComponent ?? ""
+                            let altFile = AltFile.init(name: fileNameWithoutExtension, url: imageURL.path, type: FileType.PHOTO.rawValue)
                             self.altFiles.append(altFile)
                         }
                     }
@@ -549,7 +552,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     if let videoURL = info[UIImagePickerControllerMediaURL] as? URL {
                         let image = createVideoThumbnail(from: videoURL.absoluteString)
                         let videoName = saveExistingImageAtDocumentDirectory(image: image)
-                        let altFile = AltFile.init(name: videoName, url: videoURL.path, type: FileType.VIDEO.rawValue)
+                        let fileNameWithoutExtension = NSURL(fileURLWithPath: videoName).deletingPathExtension?.lastPathComponent ?? ""
+                        let altFile = AltFile.init(name: fileNameWithoutExtension, url: videoURL.path, type: FileType.VIDEO.rawValue)
                         self.altFiles.append(altFile)
                         self.tableView.beginUpdates()
                         self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
@@ -1148,7 +1152,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             let cell = tableView.dequeueReusableCell(withIdentifier: alternativeFileCellId, for: indexPath) as! AlternativeTableViewCell
             let altFile = self.altFiles[indexPath.row]
             cell.separatorInset = .zero
-            cell.altImageView.image = getImageFromDocumentDirectory(imageName: altFile.name)
+            cell.altImageView.image = getImageFromDocumentDirectory(imageName: altFile.name + ".jpeg")
             cell.cellLabel.text = altFile.name
             cell.fileLabel.text = altFile.type
 
@@ -1159,6 +1163,17 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         if indexPath.section == 2 {
             tableView.deselectRow(at: indexPath, animated: true)
             showResourceTypeActionSheet()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 3 {
+            if editingStyle == .delete {
+                let altFile = self.altFiles[indexPath.row]
+                deleteAltFile(with: altFile)
+                self.altFiles.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .left)
+            }
         }
     }
     

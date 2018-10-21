@@ -294,6 +294,39 @@ func getVideoFromDocumentDirectory(videoName: String) -> Data? {
     return videoData
 }
 
+func deleteAltFile(with altFile: AltFile) {
+    let fileManager = FileManager.default
+    let name = altFile.name
+    let url = altFile.url
+    let type = altFile.type
+    if type == FileType.PHOTO.rawValue || type == FileType.VIDEO.rawValue {
+        let filePath = getDocumentsURL().appendingPathComponent(name + "jpeg")
+        do {
+            if fileManager.fileExists(atPath: filePath.path) {
+                print("deleted photo/video thumbnail only")
+                try fileManager.removeItem(at: filePath)
+            } else {
+                print("Thumbnail does not exist.")
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    // TODO: delete saved audio and imported pdf files along with thumbnails, if any.
+//    else if type == FileType.AUDIO.rawValue {
+//        let filePath = getDocumentsURL().appendingPathComponent(name + "jpeg")
+//        do {
+//
+//        } catch {
+//
+//        }
+//        print("deleting audio file from disk")
+//    }
+//    else if type == FileType.DOCUMENT.rawValue {
+//        print("deleting document file from disk")
+//    }
+}
+
 func getStringContentsOfFile(fileName: String) -> String? {
     let filePath = getDocumentsURL().appendingPathComponent(fileName)
     if FileManager.default.fileExists(atPath: filePath.path) {

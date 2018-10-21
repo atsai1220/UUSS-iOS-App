@@ -16,6 +16,7 @@ class AlternativeTableViewCell: UITableViewCell {
         label.textColor = UIColor.black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.lineBreakMode = .byTruncatingTail
+        label.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
         label.textAlignment = .left
         return label
     }()
@@ -33,18 +34,20 @@ class AlternativeTableViewCell: UITableViewCell {
        let label = UILabel()
         label.textColor = UIColor.gray
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote)
         label.textAlignment = .left
         return label
     }()
     
     var infoButton: UIButton = {
-       let button = UIButton(type: UIButtonType.infoLight)
+       let button = UIButton(type: UIButtonType.detailDisclosure)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        self.accessoryType = .disclosureIndicator
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -67,7 +70,8 @@ class AlternativeTableViewCell: UITableViewCell {
         addSubview(cellLabel)
         addSubview(altImageView)
         addSubview(fileLabel)
-        addSubview(infoButton)
+//        self.accessoryType = .disclosureIndicator
+//        addSubview(infoButton)
         
         NSLayoutConstraint.activate([
             altImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
@@ -77,10 +81,12 @@ class AlternativeTableViewCell: UITableViewCell {
             altImageView.trailingAnchor.constraint(equalTo: cellLabel.leadingAnchor, constant: -10),
             altImageView.trailingAnchor.constraint(equalTo: fileLabel.leadingAnchor, constant: -10),
             cellLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
-            cellLabel.trailingAnchor.constraint(equalTo: infoButton.leadingAnchor, constant: -10),
+//            cellLabel.trailingAnchor.constraint(equalTo: infoButton.leadingAnchor, constant: -10),
+//            cellLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.55),
             fileLabel.topAnchor.constraint(equalTo: cellLabel.bottomAnchor, constant: 5),
-            infoButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
-            infoButton.centerYAnchor.constraint(equalTo: self.centerYAnchor)])
+//            infoButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
+//            infoButton.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            ])
 
 
     }
