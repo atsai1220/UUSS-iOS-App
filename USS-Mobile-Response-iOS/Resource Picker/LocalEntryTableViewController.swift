@@ -12,7 +12,7 @@ import CoreLocation
 import MobileCoreServices
 import PDFKit
 
-class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PDFDelegate
+class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PDFDelegate, SaveAudioDelegate
 {
     enum ActionSheetMode: String {
         case PHOTOS = "PHOTOS"
@@ -64,6 +64,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     var localFileName: String?
     var pdfCollectionViewController: PdfCollectionViewController?
     var imageForPDF: UIImage?
+    var pdfURL: URL?
+    var audioImage: UIImage?
+    var audioURL: URL?
     
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
     var showPicker = false
@@ -383,6 +386,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             
         case .AUDIOS:
             let audioViewController = AudioViewController()
+            audioViewController.saveAudioDelegate = self
             self.navigationController?.pushViewController(audioViewController, animated: true)
         case .PDFS:
             let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -397,11 +401,20 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     func returnPDF(with pdfURL: URL)
     {
+        self.pdfURL = pdfURL
         imageForPDF = drawPDFfromURL(url: pdfURL)
+        localFileName = saveExistingImageAtDocumentDirectory(image: imageForPDF!)
         resourceSelected = true
         tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
     }
     
+    func saveAudio(with url: URL)
+    {
+        audioImage = UIImage(named: "audio")
+        resourceSelected = true
+        
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+    }
     
     func drawPDFfromURL(url: URL) -> UIImage?
     {
@@ -507,7 +520,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     func createVideoThumbnail(from url: String) -> UIImage
     {
-        print(URL(string: url)!)
         let asset = AVAsset(url: URL(string: url)!)
         let assetImgGenerate = AVAssetImageGenerator(asset: asset)
         assetImgGenerate.appliesPreferredTrackTransform = true
@@ -815,7 +827,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         
     }
     
-    func createLocalEntry() -> String {
+    func createLocalEntry() -> String
+    {
         let titleCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
         let descriptionCell = self.tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
         let notesCell = self.tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
@@ -876,9 +889,92 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 return videoUrl!.lastPathComponent
             
             case .AUDIOS:
-                print("handle audio")
+            
+                let URL: URL = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".caf")
+                
+                if(FileManager.default.fileExists(atPath: URL.relativePath))
+                {
+                    let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+                else
+                {
+                    newEntry.fileType = FileType.AUDIO.rawValue
+                    newEntry.localFileName = "audio"
+                    newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+                    newEntry.audioURL = URL.relativePath
+                    var oldEntries = getLocalEntriesFromDisk()
+                    oldEntries.append(newEntry)
+                    saveLocalEntriesToDisk(entries: oldEntries)
+                    
+                    do
+                    {
+                        let audioData: Data = try Data(contentsOf: getDocumentsURL().appendingPathComponent("tempAudioFile.caf"))
+
+                        do
+                        {
+                            try audioData.write(to: URL)
+                        }
+                        catch
+                        {
+                            let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write pdf to file", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                    catch
+                    {
+                        print(error)
+                    }
+
+                    return URL.lastPathComponent
+            }
+
+            
             case .PDFS:
-                print("handle pdf")
+            
+                let URL: URL = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".pdf")
+                
+                if(FileManager.default.fileExists(atPath: URL.relativePath))
+                {
+                    let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+                else
+                {
+                    newEntry.localFileName = localFileName!
+                    newEntry.fileType = FileType.DOCUMENT.rawValue
+                    newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+                    newEntry.pdfDocURL = URL.relativePath
+                    var oldEntries = getLocalEntriesFromDisk()
+                    oldEntries.append(newEntry)
+                    saveLocalEntriesToDisk(entries: oldEntries)
+
+                    do
+                    {
+                        let pdfData: Data = try Data(contentsOf: self.pdfURL!)
+                        
+                        do
+                        {
+                            try pdfData.write(to: URL)
+                        }
+                        catch
+                        {
+                            let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write pdf to file", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                    catch
+                    {
+                        print(error)
+                    }
+                    
+                    return URL.lastPathComponent
+                }
+
             }
             return "no"
     }
@@ -1045,6 +1141,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     cell.resourceSet = true
                     cell.insertButton.imageView?.contentMode = .scaleAspectFill
                     cell.insertButton.setImage(imageForPDF, for: .normal)
+                    cell.layoutSubviews()
+                }
+                else if(audioImage != nil)
+                {
+                    cell.resourceSet = true
+                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
+                    cell.insertButton.setImage(audioImage, for: .normal)
                     cell.layoutSubviews()
                 }
                 return cell

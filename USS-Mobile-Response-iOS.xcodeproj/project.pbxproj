@@ -10,7 +10,7 @@
 		1C043CA020CAA90E006A9D69 /* ServerList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C043C9F20CAA90E006A9D69 /* ServerList.plist */; };
 		1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */; };
 		1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA320CAD0BB006A9D69 /* PlistController.swift */; };
-		1C0DD398212768F900D656F7 /* NewMapFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DD397212768F900D656F7 /* NewMapFormViewController.swift */; };
+		1C0DD398212768F900D656F7 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DD397212768F900D656F7 /* MapViewController.swift */; };
 		1C1AE27D212FBEDD00F436FD /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1AE27C212FBEDD00F436FD /* Reachability.swift */; };
 		1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */; };
 		1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C403E3920D010A6000DB616 /* AddServerViewController.swift */; };
@@ -49,7 +49,13 @@
 		1CB851A0216FF05A00863B87 /* SubcategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB85197216FF05900863B87 /* SubcategoryTableViewCell.swift */; };
 		F6028FED2143303700429805 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6028FEC2143303700429805 /* AnnotationView.swift */; };
 		F60773672135F38A009F6962 /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60773662135F38A009F6962 /* AudioViewController.swift */; };
-
+		F60C9F092175221000281DB9 /* PdfFileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */; };
+		F60C9F0A2175221000281DB9 /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F062175220F00281DB9 /* PDFViewController.swift */; };
+		F60C9F0B2175221000281DB9 /* PdfCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F072175220F00281DB9 /* PdfCollectionViewController.swift */; };
+		F60C9F0C2175221000281DB9 /* PdfTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F082175220F00281DB9 /* PdfTableViewController.swift */; };
+		F60C9F0E21754A6500281DB9 /* LocalPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F0D21754A6500281DB9 /* LocalPlaybackViewController.swift */; };
+		F60C9F1021754D0A00281DB9 /* LocalAudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F0F21754D0A00281DB9 /* LocalAudioViewController.swift */; };
+		F621E6BB217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F621E6BA217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift */; };
 		F624BCD5216FEF33002D891D /* CollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCCC216FEF32002D891D /* CollectionTableViewCell.swift */; };
 		F624BCD6216FEF33002D891D /* LocalResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCCD216FEF33002D891D /* LocalResourceTableViewCell.swift */; };
 		F624BCD7216FEF33002D891D /* HazardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCCE216FEF33002D891D /* HazardTableViewCell.swift */; };
@@ -59,23 +65,15 @@
 		F624BCDB216FEF33002D891D /* SubcategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCD2216FEF33002D891D /* SubcategoryTableViewCell.swift */; };
 		F624BCDC216FEF33002D891D /* LocalEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCD3216FEF33002D891D /* LocalEntryTableViewCell.swift */; };
 		F624BCDD216FEF33002D891D /* LocalResourceTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCD4216FEF33002D891D /* LocalResourceTypeTableViewCell.swift */; };
-		F624BCDF216FF594002D891D /* PdfCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCDE216FF594002D891D /* PdfCollectionViewController.swift */; };
-
-		1CB851A62173E04000863B87 /* PdfFileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A12173E04000863B87 /* PdfFileModalViewController.swift */; };
-		1CB851A72173E04000863B87 /* PdfCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A22173E04000863B87 /* PdfCollectionViewController.swift */; };
-		1CB851A82173E04000863B87 /* PdfTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A32173E04000863B87 /* PdfTableViewController.swift */; };
-		1CB851A92173E04000863B87 /* DocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */; };
-		F6028FED2143303700429805 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6028FEC2143303700429805 /* AnnotationView.swift */; };
-		F60773672135F38A009F6962 /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60773662135F38A009F6962 /* AudioViewController.swift */; };
 		F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */; };
 		F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */; };
-		F6305E182166C83B006B389F /* DocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6305E172166C83B006B389F /* DocumentPickerViewController.swift */; };
 		F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6340E7721658C8900A3168E /* RoundedImageView.swift */; };
-		F64F8F332166AE3E0045A8E5 /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8F322166AE3E0045A8E5 /* PDFViewController.swift */; };
-		F6679BB9216A97E9008375EF /* PdfFileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6679BB8216A97E9008375EF /* PdfFileModalViewController.swift */; };
-		F6679BE1216D59EB008375EF /* PdfTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6679BE0216D59EB008375EF /* PdfTableViewController.swift */; };
+		F6A9278A217A732900797EC2 /* PresentationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A92789217A732900797EC2 /* PresentationViewController.swift */; };
+		F6A9278C217A7D4100797EC2 /* MapSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */; };
+		F6A9278F217A867F00797EC2 /* PresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A9278E217A867F00797EC2 /* PresentationManager.swift */; };
+		F6A92791217A880200797EC2 /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A92790217A880200797EC2 /* PresentationAnimator.swift */; };
 		F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */; };
-		F6CDB5B72134BCCD0016C036 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B62134BCCC0016C036 /* MapViewController.swift */; };
+		F6CDB5B72134BCCD0016C036 /* MpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B62134BCCC0016C036 /* MpViewController.swift */; };
 		F6D2785D214C6DE800490350 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D2785C214C6DE800490350 /* VideoViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -83,7 +81,7 @@
 		1C043C9F20CAA90E006A9D69 /* ServerList.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ServerList.plist; sourceTree = "<group>"; };
 		1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceSpaceModel.swift; sourceTree = "<group>"; };
 		1C043CA320CAD0BB006A9D69 /* PlistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistController.swift; sourceTree = "<group>"; };
-		1C0DD397212768F900D656F7 /* NewMapFormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMapFormViewController.swift; sourceTree = "<group>"; };
+		1C0DD397212768F900D656F7 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		1C1AE27C212FBEDD00F436FD /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTableNavigationController.swift; sourceTree = "<group>"; };
 		1C403E3920D010A6000DB616 /* AddServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServerViewController.swift; sourceTree = "<group>"; };
@@ -124,7 +122,13 @@
 		1CB85197216FF05900863B87 /* SubcategoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SubcategoryTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/SubcategoryTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F6028FEC2143303700429805 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		F60773662135F38A009F6962 /* AudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewController.swift; sourceTree = "<group>"; };
-
+		F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfFileModalViewController.swift; sourceTree = "<group>"; };
+		F60C9F062175220F00281DB9 /* PDFViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFViewController.swift; sourceTree = "<group>"; };
+		F60C9F072175220F00281DB9 /* PdfCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfCollectionViewController.swift; sourceTree = "<group>"; };
+		F60C9F082175220F00281DB9 /* PdfTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfTableViewController.swift; sourceTree = "<group>"; };
+		F60C9F0D21754A6500281DB9 /* LocalPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPlaybackViewController.swift; sourceTree = "<group>"; };
+		F60C9F0F21754D0A00281DB9 /* LocalAudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAudioViewController.swift; sourceTree = "<group>"; };
+		F621E6BA217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveAnnotationViewController.swift; sourceTree = "<group>"; };
 		F624BCCC216FEF32002D891D /* CollectionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CollectionTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/CollectionTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F624BCCD216FEF33002D891D /* LocalResourceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalResourceTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/LocalResourceTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F624BCCE216FEF33002D891D /* HazardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HazardTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/HazardTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
@@ -134,23 +138,15 @@
 		F624BCD2216FEF33002D891D /* SubcategoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SubcategoryTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/SubcategoryTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F624BCD3216FEF33002D891D /* LocalEntryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalEntryTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/LocalEntryTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F624BCD4216FEF33002D891D /* LocalResourceTypeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalResourceTypeTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/LocalResourceTypeTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
-		F624BCDE216FF594002D891D /* PdfCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCollectionViewController.swift; sourceTree = "<group>"; };
-
-		1CB851A12173E04000863B87 /* PdfFileModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfFileModalViewController.swift; sourceTree = "<group>"; };
-		1CB851A22173E04000863B87 /* PdfCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfCollectionViewController.swift; sourceTree = "<group>"; };
-		1CB851A32173E04000863B87 /* PdfTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfTableViewController.swift; sourceTree = "<group>"; };
-		1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickerViewController.swift; sourceTree = "<group>"; };
-		F6028FEC2143303700429805 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
-		F60773662135F38A009F6962 /* AudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewController.swift; sourceTree = "<group>"; };
 		F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackViewController.swift; sourceTree = "<group>"; };
 		F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackViewController.swift; sourceTree = "<group>"; };
-		F6305E172166C83B006B389F /* DocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPickerViewController.swift; sourceTree = "<group>"; };
 		F6340E7721658C8900A3168E /* RoundedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedImageView.swift; sourceTree = "<group>"; };
-		F64F8F322166AE3E0045A8E5 /* PDFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewController.swift; sourceTree = "<group>"; };
-		F6679BB8216A97E9008375EF /* PdfFileModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFileModalViewController.swift; sourceTree = "<group>"; };
-		F6679BE0216D59EB008375EF /* PdfTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfTableViewController.swift; sourceTree = "<group>"; };
+		F6A92789217A732900797EC2 /* PresentationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationViewController.swift; sourceTree = "<group>"; };
+		F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsViewController.swift; sourceTree = "<group>"; };
+		F6A9278E217A867F00797EC2 /* PresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationManager.swift; sourceTree = "<group>"; };
+		F6A92790217A880200797EC2 /* PresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationAnimator.swift; sourceTree = "<group>"; };
 		F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAnnotation.swift; sourceTree = "<group>"; };
-		F6CDB5B62134BCCC0016C036 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		F6CDB5B62134BCCC0016C036 /* MpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MpViewController.swift; sourceTree = "<group>"; };
 		F6D2785C214C6DE800490350 /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -200,6 +196,8 @@
 				F6D2785B214C6DBC00490350 /* Video */,
 				F60773652135F36A009F6962 /* Audio */,
 				1C601BB3210D1EAD00629D6F /* HazardsTableViewController */,
+				F6A9278D217A860100797EC2 /* Presentation */,
+				F60C9F11217938AB00281DB9 /* Map */,
 				9C5E159720EF69BD00BFD0F3 /* Main Page */,
 				9C5E15A820EF6ADF00BFD0F3 /* Side Menu */,
 				9C5E15AC20EF6B6E00BFD0F3 /* Side View Controllers */,
@@ -241,11 +239,6 @@
 		9C5E159720EF69BD00BFD0F3 /* Main Page */ = {
 			isa = PBXGroup;
 			children = (
-				F6CDB5B62134BCCC0016C036 /* MapViewController.swift */,
-				F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */,
-				F6028FEC2143303700429805 /* AnnotationView.swift */,
-				1C0DD397212768F900D656F7 /* NewMapFormViewController.swift */,
-				1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */,
 				1C4D76B020C1569700458079 /* MainNavigationController.swift */,
 				1C4D76B420C16ACC00458079 /* MainTabBarController.swift */,
 				1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */,
@@ -305,14 +298,29 @@
 			children = (
 				F60773662135F38A009F6962 /* AudioViewController.swift */,
 				F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */,
+				F60C9F0D21754A6500281DB9 /* LocalPlaybackViewController.swift */,
+				F60C9F0F21754D0A00281DB9 /* LocalAudioViewController.swift */,
 			);
 			path = Audio;
+			sourceTree = "<group>";
+		};
+		F60C9F11217938AB00281DB9 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				F6CDB5B62134BCCC0016C036 /* MpViewController.swift */,
+				F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */,
+				F6028FEC2143303700429805 /* AnnotationView.swift */,
+				1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */,
+				1C0DD397212768F900D656F7 /* MapViewController.swift */,
+				F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */,
+				F621E6BA217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		F624BCAB216FED1B002D891D /* Resource Picker */ = {
 			isa = PBXGroup;
 			children = (
-
 				F624BCCC216FEF32002D891D /* CollectionTableViewCell.swift */,
 				F624BCCE216FEF33002D891D /* HazardTableViewCell.swift */,
 				F624BCD3216FEF33002D891D /* LocalEntryTableViewCell.swift */,
@@ -322,7 +330,6 @@
 				F624BCCF216FEF33002D891D /* PhotoCell.swift */,
 				F624BCD0216FEF33002D891D /* PhotoPickerViewController.swift */,
 				F624BCD2216FEF33002D891D /* SubcategoryTableViewCell.swift */,
-
 				1CB85193216FF05900863B87 /* CollectionTableViewCell.swift */,
 				1CB85196216FF05900863B87 /* HazardTableViewCell.swift */,
 				1CB85192216FF05900863B87 /* LocalEntryTableViewCell.swift */,
@@ -332,7 +339,6 @@
 				1CB85194216FF05900863B87 /* PhotoCell.swift */,
 				1CB8518F216FF05800863B87 /* PhotoPickerViewController.swift */,
 				1CB85197216FF05900863B87 /* SubcategoryTableViewCell.swift */,
-
 			);
 			name = "Resource Picker";
 			path = "New Group";
@@ -341,19 +347,22 @@
 		F64F8F312166AE140045A8E5 /* PDF */ = {
 			isa = PBXGroup;
 			children = (
-				F64F8F322166AE3E0045A8E5 /* PDFViewController.swift */,
-				F6305E172166C83B006B389F /* DocumentPickerViewController.swift */,
-				F6679BB8216A97E9008375EF /* PdfFileModalViewController.swift */,
-				F6679BE0216D59EB008375EF /* PdfTableViewController.swift */,
-				F624BCDE216FF594002D891D /* PdfCollectionViewController.swift */,
-				1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */,
-				1CB851A22173E04000863B87 /* PdfCollectionViewController.swift */,
-				1CB851A12173E04000863B87 /* PdfFileModalViewController.swift */,
-				1CB851A32173E04000863B87 /* PdfTableViewController.swift */,
-				F64F8F322166AE3E0045A8E5 /* PDFViewController.swift */,
-				F6305E172166C83B006B389F /* DocumentPickerViewController.swift */,
+				F60C9F072175220F00281DB9 /* PdfCollectionViewController.swift */,
+				F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */,
+				F60C9F082175220F00281DB9 /* PdfTableViewController.swift */,
+				F60C9F062175220F00281DB9 /* PDFViewController.swift */,
 			);
 			path = PDF;
+			sourceTree = "<group>";
+		};
+		F6A9278D217A860100797EC2 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				F6A92790217A880200797EC2 /* PresentationAnimator.swift */,
+				F6A92789217A732900797EC2 /* PresentationViewController.swift */,
+				F6A9278E217A867F00797EC2 /* PresentationManager.swift */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 		F6D2785B214C6DBC00490350 /* Video */ = {
@@ -438,80 +447,71 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F60C9F0B2175221000281DB9 /* PdfCollectionViewController.swift in Sources */,
 				1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */,
 				1CB8519D216FF05A00863B87 /* PhotoCell.swift in Sources */,
-				F64F8F332166AE3E0045A8E5 /* PDFViewController.swift in Sources */,
-
 				F624BCDA216FEF33002D891D /* LocalEntryTableViewController.swift in Sources */,
-
 				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
 				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
 				1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */,
 				F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */,
 				1CB8519F216FF05A00863B87 /* HazardTableViewCell.swift in Sources */,
+				F60C9F1021754D0A00281DB9 /* LocalAudioViewController.swift in Sources */,
 				1C5F8E9A21604135002773AA /* MainCollectionViewCell.swift in Sources */,
 				1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */,
+				F6A92791217A880200797EC2 /* PresentationAnimator.swift in Sources */,
 				F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */,
 				1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */,
 				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
 				F6D2785D214C6DE800490350 /* VideoViewController.swift in Sources */,
+				F6A9278C217A7D4100797EC2 /* MapSettingsViewController.swift in Sources */,
 				1C1AE27D212FBEDD00F436FD /* Reachability.swift in Sources */,
+				F60C9F0E21754A6500281DB9 /* LocalPlaybackViewController.swift in Sources */,
 				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
-
+				F621E6BB217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift in Sources */,
+				F6A9278A217A732900797EC2 /* PresentationViewController.swift in Sources */,
 				F624BCD8216FEF33002D891D /* PhotoCell.swift in Sources */,
-				F624BCDF216FF594002D891D /* PdfCollectionViewController.swift in Sources */,
 				F624BCDC216FEF33002D891D /* LocalEntryTableViewCell.swift in Sources */,
-
 				F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */,
 				F624BCD5216FEF33002D891D /* CollectionTableViewCell.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				1CB8519A216FF05A00863B87 /* LocalResourceTableViewCell.swift in Sources */,
-				F6679BE1216D59EB008375EF /* PdfTableViewController.swift in Sources */,
 				F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				1CB8519A216FF05A00863B87 /* LocalResourceTableViewCell.swift in Sources */,
-				1CB851A62173E04000863B87 /* PdfFileModalViewController.swift in Sources */,
 				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
-				F6CDB5B72134BCCD0016C036 /* MapViewController.swift in Sources */,
+				F60C9F0A2175221000281DB9 /* PDFViewController.swift in Sources */,
+				F6CDB5B72134BCCD0016C036 /* MpViewController.swift in Sources */,
 				F6028FED2143303700429805 /* AnnotationView.swift in Sources */,
 				1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
 				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
 				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
 				1CB85198216FF05A00863B87 /* PhotoPickerViewController.swift in Sources */,
-				F6679BB9216A97E9008375EF /* PdfFileModalViewController.swift in Sources */,
-
 				F624BCD6216FEF33002D891D /* LocalResourceTableViewCell.swift in Sources */,
-
 				1CB85199216FF05A00863B87 /* LocalResourceTypeTableViewCell.swift in Sources */,
-
 				1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */,
 				1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */,
 				F624BCDB216FEF33002D891D /* SubcategoryTableViewCell.swift in Sources */,
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
-				F6305E182166C83B006B389F /* DocumentPickerViewController.swift in Sources */,
-
 				1CB8519E216FF05A00863B87 /* LocalEntryTableViewController.swift in Sources */,
+				F60C9F092175221000281DB9 /* PdfFileModalViewController.swift in Sources */,
 				1CB851A0216FF05A00863B87 /* SubcategoryTableViewCell.swift in Sources */,
-
 				F60773672135F38A009F6962 /* AudioViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
 				1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */,
 				F624BCDD216FEF33002D891D /* LocalResourceTypeTableViewCell.swift in Sources */,
-				1CB851A92173E04000863B87 /* DocumentPickerViewController.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
-				1CB851A82173E04000863B87 /* PdfTableViewController.swift in Sources */,
 				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
 				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
 				1CB85198216FF05A00863B87 /* PhotoPickerViewController.swift in Sources */,
 				1CB85199216FF05A00863B87 /* LocalResourceTypeTableViewCell.swift in Sources */,
+				F60C9F0C2175221000281DB9 /* PdfTableViewController.swift in Sources */,
 				1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */,
 				1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */,
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
-				F6305E182166C83B006B389F /* DocumentPickerViewController.swift in Sources */,
 				1CB8519E216FF05A00863B87 /* LocalEntryTableViewController.swift in Sources */,
-				1CB851A72173E04000863B87 /* PdfCollectionViewController.swift in Sources */,
 				1CB851A0216FF05A00863B87 /* SubcategoryTableViewCell.swift in Sources */,
 				F60773672135F38A009F6962 /* AudioViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
@@ -522,9 +522,10 @@
 				1CB8519C216FF05A00863B87 /* CollectionTableViewCell.swift in Sources */,
 				1C5F8E9C21604175002773AA /* MainLocalCollectionViewController.swift in Sources */,
 				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,
-				1C0DD398212768F900D656F7 /* NewMapFormViewController.swift in Sources */,
+				1C0DD398212768F900D656F7 /* MapViewController.swift in Sources */,
 				F624BCD9216FEF33002D891D /* PhotoPickerViewController.swift in Sources */,
 				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
+				F6A9278F217A867F00797EC2 /* PresentationManager.swift in Sources */,
 				F624BCD7216FEF33002D891D /* HazardTableViewCell.swift in Sources */,
 				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
 			);

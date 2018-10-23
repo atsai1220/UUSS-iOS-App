@@ -22,6 +22,7 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
             let file: Data = fileManager.contents(atPath: tableData[i].relativePath)!
             let fileName: String = tableData[i].lastPathComponent
             fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)
+            printImportDir()
         }
         
         NotificationCenter.default.post(name: Notification.Name("Import Data"), object: nil)
@@ -68,11 +69,28 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        makeImportDir()
         checkForPdfFilesAndLoad()
         tableView.layer.cornerRadius = 15.0
         tableView.register(PdfTableCell.self, forCellReuseIdentifier: "cell")
         tableView.register(PdfTableHeader.self, forHeaderFooterViewReuseIdentifier: "header")
     }
+    
+    
+    func makeImportDir()
+    {
+        let importDir: URL = getDocumentsURL().appendingPathComponent("import")
+        
+        do
+        {
+            try fileManager.createDirectory(at: importDir, withIntermediateDirectories: false, attributes: nil)
+        }
+        catch
+        {
+            print(error)
+        }
+    }
+    
     
     override func viewWillAppear(_ animated: Bool)
     {
@@ -129,10 +147,16 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
+        if(fileManager.fileExists(atPath: getDocumentsURL().appendingPathComponent("import").relativePath))
+        {
+            print("file exists")
+        }
         
         let file: Data = fileManager.contents(atPath: tableData[indexPath.row].relativePath)!
         let fileName: String = tableData[indexPath.row].lastPathComponent
         fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)
+        printImportDir()
+        NotificationCenter.default.post(name: Notification.Name("Import Data"), object: nil)
 
         do
         {
@@ -147,7 +171,6 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
         tableView.reloadData()
         
         
-        NotificationCenter.default.post(name: Notification.Name("Import Data"), object: nil)
         
         let alert: UIAlertController = UIAlertController(title: "File Imported", message: "Your file was imported to your documents library", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {(alert: UIAlertAction) -> Void in
