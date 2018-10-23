@@ -8,71 +8,67 @@
 
 /* Begin PBXBuildFile section */
 		1C043CA020CAA90E006A9D69 /* ServerList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C043C9F20CAA90E006A9D69 /* ServerList.plist */; };
-		1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */; };
-		1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA320CAD0BB006A9D69 /* PlistController.swift */; };
-		1C0DD398212768F900D656F7 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DD397212768F900D656F7 /* MapViewController.swift */; };
-		1C1AE27D212FBEDD00F436FD /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1AE27C212FBEDD00F436FD /* Reachability.swift */; };
-		1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */; };
-		1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C403E3920D010A6000DB616 /* AddServerViewController.swift */; };
-		1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C403E3F20D3A8EC000DB616 /* ServerTableViewController.swift */; };
-		1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B020C1569700458079 /* MainNavigationController.swift */; };
-		1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B220C159AE00458079 /* LoginViewController.swift */; };
-		1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B420C16ACC00458079 /* MainTabBarController.swift */; };
-		1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76BA20C1826200458079 /* ProfileViewController.swift */; };
-		1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C57E50020BF8387004E1270 /* AppDelegate.swift */; };
+		1C497F0E217FC67C006E273F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C98E8A121759616008565E9 /* NetworkManager.swift */; };
+		1C497F0F217FC680006E273F /* NetworkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C98E8A321759621008565E9 /* NetworkViewController.swift */; };
+		1C497F10217FC683006E273F /* HazardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB03733217A8B980085191C /* HazardManager.swift */; };
+		1C497F11217FC686006E273F /* AlternativeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C5217F86C200DE68D3 /* AlternativeTableViewCell.swift */; };
+		1C497F12217FC689006E273F /* CollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C6217F86C200DE68D3 /* CollectionTableViewCell.swift */; };
+		1C497F13217FC68C006E273F /* HazardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217CA217F86C200DE68D3 /* HazardTableViewCell.swift */; };
+		1C497F15217FC694006E273F /* LocalEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C7217F86C200DE68D3 /* LocalEntryTableViewCell.swift */; };
+		1C497F16217FC698006E273F /* LocalEntryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C8217F86C200DE68D3 /* LocalEntryTableViewController.swift */; };
+		1C497F17217FC69B006E273F /* LocalResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C4217F86C200DE68D3 /* LocalResourceTableViewCell.swift */; };
+		1C497F18217FC69E006E273F /* LocalResourceTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C9217F86C200DE68D3 /* LocalResourceTypeTableViewCell.swift */; };
+		1C497F19217FC6A0006E273F /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217CB217F86C200DE68D3 /* PhotoPickerViewController.swift */; };
+		1C497F1A217FC6A4006E273F /* SubcategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C3217F86C200DE68D3 /* SubcategoryTableViewCell.swift */; };
+		1C497F1B217FC6AD006E273F /* PdfFileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */; };
+		1C497F1C217FC6C1006E273F /* PdfTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F082175220F00281DB9 /* PdfTableViewController.swift */; };
+		1C497F1D217FC6C4006E273F /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F062175220F00281DB9 /* PDFViewController.swift */; };
+		1C497F1E217FC73F006E273F /* PdfCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F072175220F00281DB9 /* PdfCollectionViewController.swift */; };
+		1C497F1F217FC742006E273F /* DocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */; };
+		1C497F20217FC745006E273F /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D2785C214C6DE800490350 /* VideoViewController.swift */; };
+		1C497F21217FC748006E273F /* VideoPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */; };
+		1C497F22217FC74B006E273F /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60773662135F38A009F6962 /* AudioViewController.swift */; };
+		1C497F23217FC74E006E273F /* AudioPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */; };
+		1C497F24217FC751006E273F /* LocalPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F0D21754A6500281DB9 /* LocalPlaybackViewController.swift */; };
+		1C497F25217FC755006E273F /* LocalAudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F0F21754D0A00281DB9 /* LocalAudioViewController.swift */; };
+		1C497F26217FC759006E273F /* HazardsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */; };
+		1C497F27217FC75B006E273F /* HazardsDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AF2114052000EE51A8 /* HazardsDetailTableViewController.swift */; };
+		1C497F28217FC760006E273F /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A92790217A880200797EC2 /* PresentationAnimator.swift */; };
+		1C497F29217FC763006E273F /* PresentationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A92789217A732900797EC2 /* PresentationViewController.swift */; };
+		1C497F2A217FC766006E273F /* PresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A9278E217A867F00797EC2 /* PresentationManager.swift */; };
+		1C497F2B217FC782006E273F /* MpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B62134BCCC0016C036 /* MpViewController.swift */; };
+		1C497F2C217FC787006E273F /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */; };
+		1C497F2D217FC78A006E273F /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6028FEC2143303700429805 /* AnnotationView.swift */; };
+		1C497F2E217FC78D006E273F /* MapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */; };
+		1C497F2F217FC790006E273F /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DD397212768F900D656F7 /* MapViewController.swift */; };
+		1C497F30217FC793006E273F /* MapSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */; };
+		1C497F31217FC796006E273F /* SaveAnnotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F621E6BA217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift */; };
+		1C497F32217FC799006E273F /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B020C1569700458079 /* MainNavigationController.swift */; };
+		1C497F33217FC79C006E273F /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B420C16ACC00458079 /* MainTabBarController.swift */; };
+		1C497F34217FC79F006E273F /* MainTrashTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */; };
+		1C497F35217FC7A2006E273F /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */; };
+		1C497F36217FC7A5006E273F /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5F8E9921604135002773AA /* MainCollectionViewCell.swift */; };
+		1C497F37217FC7A9006E273F /* MainLocalCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5F8E9B21604175002773AA /* MainLocalCollectionViewController.swift */; };
+		1C497F38217FC7AC006E273F /* RoundedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6340E7721658C8900A3168E /* RoundedImageView.swift */; };
+		1C497F39217FC7AE006E273F /* SideMenuLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */; };
+		1C497F3A217FC7B2006E273F /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB6210F821700629D6F /* SettingCell.swift */; };
+		1C497F3B217FC7B5006E273F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76BA20C1826200458079 /* ProfileViewController.swift */; };
+		1C497F3C217FC7B7006E273F /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */; };
+		1C497F3D217FC7BA006E273F /* AddServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C403E3920D010A6000DB616 /* AddServerViewController.swift */; };
+		1C497F3E217FC7BD006E273F /* ServerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C403E3F20D3A8EC000DB616 /* ServerTableViewController.swift */; };
+		1C497F3F217FC7C1006E273F /* ServerTableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */; };
+		1C497F40217FC7C4006E273F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D76B220C159AE00458079 /* LoginViewController.swift */; };
+		1C497F41217FC7C7006E273F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C57E50020BF8387004E1270 /* AppDelegate.swift */; };
+		1C497F42217FC7CB006E273F /* ResourceSpaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA120CAAAAA006A9D69 /* ResourceSpaceModel.swift */; };
+		1C497F43217FC7CF006E273F /* ApiResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BA8210A6E7A00629D6F /* ApiResource.swift */; };
+		1C497F44217FC7D1006E273F /* LocalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B72124EA5300EE51A8 /* LocalEntry.swift */; };
+		1C497F45217FC7D4006E273F /* PlistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C043CA320CAD0BB006A9D69 /* PlistController.swift */; };
+		1C497F46217FC7D7006E273F /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1AE27C212FBEDD00F436FD /* Reachability.swift */; };
+		1C497F47217FC7DB006E273F /* CommonFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB1210BB86400629D6F /* CommonFunctions.swift */; };
 		1C57E50620BF8387004E1270 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50420BF8387004E1270 /* Main.storyboard */; };
 		1C57E50820BF8388004E1270 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50720BF8388004E1270 /* Assets.xcassets */; };
 		1C57E50B20BF8388004E1270 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C57E50920BF8388004E1270 /* LaunchScreen.storyboard */; };
-		1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5B55DF20C68425006FF1B4 /* SideMenuLauncher.swift */; };
-		1C5F8E9A21604135002773AA /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5F8E9921604135002773AA /* MainCollectionViewCell.swift */; };
-		1C5F8E9C21604175002773AA /* MainLocalCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5F8E9B21604175002773AA /* MainLocalCollectionViewController.swift */; };
-		1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BA8210A6E7A00629D6F /* ApiResource.swift */; };
-		1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB1210BB86400629D6F /* CommonFunctions.swift */; };
-		1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB4210D1EDB00629D6F /* HazardsTableViewController.swift */; };
-		1C601BB7210F821700629D6F /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C601BB6210F821700629D6F /* SettingCell.swift */; };
 		1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A89F21127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld */; };
-		1C76A8A52113B08000EE51A8 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8A62113B24A00EE51A8 /* MainTrashTableViewController.swift */; };
-		1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8AF2114052000EE51A8 /* HazardsDetailTableViewController.swift */; };
-		1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */; };
-		1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8B72124EA5300EE51A8 /* LocalEntry.swift */; };
-		1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */; };
-		1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C76A8BD21262F8F00EE51A8 /* AboutViewController.swift */; };
-		1C98E8A221759616008565E9 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C98E8A121759616008565E9 /* NetworkManager.swift */; };
-		1C98E8A421759621008565E9 /* NetworkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C98E8A321759621008565E9 /* NetworkViewController.swift */; };
-		1CB03734217A8B980085191C /* HazardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB03733217A8B980085191C /* HazardManager.swift */; };
-		1CB851A62173E04000863B87 /* PdfFileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A12173E04000863B87 /* PdfFileModalViewController.swift */; };
-		1CB851A72173E04000863B87 /* PdfCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A22173E04000863B87 /* PdfCollectionViewController.swift */; };
-		1CB851A92173E04000863B87 /* DocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */; };
-		F6028FED2143303700429805 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6028FEC2143303700429805 /* AnnotationView.swift */; };
-		F60773672135F38A009F6962 /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60773662135F38A009F6962 /* AudioViewController.swift */; };
-		F60C9F092175221000281DB9 /* PdfFileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */; };
-		F60C9F0A2175221000281DB9 /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F062175220F00281DB9 /* PDFViewController.swift */; };
-		F60C9F0B2175221000281DB9 /* PdfCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F072175220F00281DB9 /* PdfCollectionViewController.swift */; };
-		F60C9F0C2175221000281DB9 /* PdfTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F082175220F00281DB9 /* PdfTableViewController.swift */; };
-		F60C9F0E21754A6500281DB9 /* LocalPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F0D21754A6500281DB9 /* LocalPlaybackViewController.swift */; };
-		F60C9F1021754D0A00281DB9 /* LocalAudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F0F21754D0A00281DB9 /* LocalAudioViewController.swift */; };
-		F621E6BB217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F621E6BA217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift */; };
-		F62217CC217F86C200DE68D3 /* SubcategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C3217F86C200DE68D3 /* SubcategoryTableViewCell.swift */; };
-		F62217CD217F86C200DE68D3 /* LocalResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C4217F86C200DE68D3 /* LocalResourceTableViewCell.swift */; };
-		F62217CE217F86C200DE68D3 /* AlternativeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C5217F86C200DE68D3 /* AlternativeTableViewCell.swift */; };
-		F62217CF217F86C200DE68D3 /* CollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C6217F86C200DE68D3 /* CollectionTableViewCell.swift */; };
-		F62217D0217F86C200DE68D3 /* LocalEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C7217F86C200DE68D3 /* LocalEntryTableViewCell.swift */; };
-		F62217D1217F86C200DE68D3 /* LocalEntryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C8217F86C200DE68D3 /* LocalEntryTableViewController.swift */; };
-		F62217D2217F86C200DE68D3 /* LocalResourceTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C9217F86C200DE68D3 /* LocalResourceTypeTableViewCell.swift */; };
-		F62217D3217F86C200DE68D3 /* HazardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217CA217F86C200DE68D3 /* HazardTableViewCell.swift */; };
-		F62217D4217F86C200DE68D3 /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217CB217F86C200DE68D3 /* PhotoPickerViewController.swift */; };
-		F624BCDF216FF594002D891D /* PdfCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCDE216FF594002D891D /* PdfCollectionViewController.swift */; };
-		F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */; };
-		F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */; };
-		F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6340E7721658C8900A3168E /* RoundedImageView.swift */; };
-		F6A9278A217A732900797EC2 /* PresentationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A92789217A732900797EC2 /* PresentationViewController.swift */; };
-		F6A9278C217A7D4100797EC2 /* MapSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */; };
-		F6A9278F217A867F00797EC2 /* PresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A9278E217A867F00797EC2 /* PresentationManager.swift */; };
-		F6A92791217A880200797EC2 /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A92790217A880200797EC2 /* PresentationAnimator.swift */; };
-		F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */; };
-		F6CDB5B72134BCCD0016C036 /* MpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B62134BCCC0016C036 /* MpViewController.swift */; };
-		F6D2785D214C6DE800490350 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D2785C214C6DE800490350 /* VideoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -112,9 +108,6 @@
 		1C98E8A121759616008565E9 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		1C98E8A321759621008565E9 /* NetworkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkViewController.swift; sourceTree = "<group>"; };
 		1CB03733217A8B980085191C /* HazardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardManager.swift; sourceTree = "<group>"; };
-		1CB851A12173E04000863B87 /* PdfFileModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfFileModalViewController.swift; sourceTree = "<group>"; };
-		1CB851A22173E04000863B87 /* PdfCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfCollectionViewController.swift; sourceTree = "<group>"; };
-		1CB851A32173E04000863B87 /* PdfTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfTableViewController.swift; sourceTree = "<group>"; };
 		1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickerViewController.swift; sourceTree = "<group>"; };
 		F6028FEC2143303700429805 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		F60773662135F38A009F6962 /* AudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewController.swift; sourceTree = "<group>"; };
@@ -134,7 +127,6 @@
 		F62217C9217F86C200DE68D3 /* LocalResourceTypeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalResourceTypeTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/LocalResourceTypeTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F62217CA217F86C200DE68D3 /* HazardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HazardTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/HazardTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F62217CB217F86C200DE68D3 /* PhotoPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotoPickerViewController.swift; path = "USS-Mobile-Response-iOS/Resource Picker/PhotoPickerViewController.swift"; sourceTree = SOURCE_ROOT; };
-		F624BCDE216FF594002D891D /* PdfCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCollectionViewController.swift; sourceTree = "<group>"; };
 		F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackViewController.swift; sourceTree = "<group>"; };
 		F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackViewController.swift; sourceTree = "<group>"; };
 		F6340E7721658C8900A3168E /* RoundedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedImageView.swift; sourceTree = "<group>"; };
@@ -358,11 +350,7 @@
 				F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */,
 				F60C9F082175220F00281DB9 /* PdfTableViewController.swift */,
 				F60C9F062175220F00281DB9 /* PDFViewController.swift */,
-				F624BCDE216FF594002D891D /* PdfCollectionViewController.swift */,
 				1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */,
-				1CB851A22173E04000863B87 /* PdfCollectionViewController.swift */,
-				1CB851A12173E04000863B87 /* PdfFileModalViewController.swift */,
-				1CB851A32173E04000863B87 /* PdfTableViewController.swift */,
 			);
 			path = PDF;
 			sourceTree = "<group>";
@@ -459,93 +447,64 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F60C9F0B2175221000281DB9 /* PdfCollectionViewController.swift in Sources */,
-				1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */,
-				1C601BB2210BB86400629D6F /* CommonFunctions.swift in Sources */,
-				1CB03734217A8B980085191C /* HazardManager.swift in Sources */,
-				1C043CA220CAAAAA006A9D69 /* ResourceSpaceModel.swift in Sources */,
-				F62217D3217F86C200DE68D3 /* HazardTableViewCell.swift in Sources */,
-				1C76A8B02114052000EE51A8 /* HazardsDetailTableViewController.swift in Sources */,
-				F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */,
-				F60C9F1021754D0A00281DB9 /* LocalAudioViewController.swift in Sources */,
-				1C98E8A421759621008565E9 /* NetworkViewController.swift in Sources */,
-				1C5F8E9A21604135002773AA /* MainCollectionViewCell.swift in Sources */,
-				1C403E3A20D010A6000DB616 /* AddServerViewController.swift in Sources */,
-				F6A92791217A880200797EC2 /* PresentationAnimator.swift in Sources */,
-				F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */,
-				1C601BB5210D1EDB00629D6F /* HazardsTableViewController.swift in Sources */,
-				F62217D1217F86C200DE68D3 /* LocalEntryTableViewController.swift in Sources */,
-				1C4D76B320C159AE00458079 /* LoginViewController.swift in Sources */,
-				F6D2785D214C6DE800490350 /* VideoViewController.swift in Sources */,
-				F6A9278C217A7D4100797EC2 /* MapSettingsViewController.swift in Sources */,
-				1C1AE27D212FBEDD00F436FD /* Reachability.swift in Sources */,
-				F60C9F0E21754A6500281DB9 /* LocalPlaybackViewController.swift in Sources */,
-				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
-				F621E6BB217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift in Sources */,
-				F6A9278A217A732900797EC2 /* PresentationViewController.swift in Sources */,
-				F624BCDF216FF594002D891D /* PdfCollectionViewController.swift in Sources */,
-				F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */,
-				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
-				F62217CE217F86C200DE68D3 /* AlternativeTableViewCell.swift in Sources */,
-				F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */,
-				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
-				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
-				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
-				F60C9F0A2175221000281DB9 /* PDFViewController.swift in Sources */,
-				F6CDB5B72134BCCD0016C036 /* MpViewController.swift in Sources */,
-				F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */,
-				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
-				1CB851A62173E04000863B87 /* PdfFileModalViewController.swift in Sources */,
-				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
-				F62217CC217F86C200DE68D3 /* SubcategoryTableViewCell.swift in Sources */,
-				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
-				F6CDB5B72134BCCD0016C036 /* MpViewController.swift in Sources */,
-				F6028FED2143303700429805 /* AnnotationView.swift in Sources */,
-				1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */,
-				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
-				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
-				F62217CF217F86C200DE68D3 /* CollectionTableViewCell.swift in Sources */,
-				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
-				1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */,
-				1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */,
-				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
-				F60C9F092175221000281DB9 /* PdfFileModalViewController.swift in Sources */,
-				F60773672135F38A009F6962 /* AudioViewController.swift in Sources */,
-				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
-				1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */,
-				F60773672135F38A009F6962 /* AudioViewController.swift in Sources */,
-				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
-				1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */,
-				1CB851A92173E04000863B87 /* DocumentPickerViewController.swift in Sources */,
-				F62217D2217F86C200DE68D3 /* LocalResourceTypeTableViewCell.swift in Sources */,
-				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
-				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
-				1C043CA420CAD0BB006A9D69 /* PlistController.swift in Sources */,
-				F60C9F0C2175221000281DB9 /* PdfTableViewController.swift in Sources */,
-				1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */,
-				1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */,
-				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
-				1C76A8BC2126204A00EE51A8 /* MainTableViewCell.swift in Sources */,
-				1C76A8A72113B24A00EE51A8 /* MainTrashTableViewController.swift in Sources */,
-				F62217D4217F86C200DE68D3 /* PhotoPickerViewController.swift in Sources */,
-				F62217D0217F86C200DE68D3 /* LocalEntryTableViewCell.swift in Sources */,
-				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
-				1CB851A72173E04000863B87 /* PdfCollectionViewController.swift in Sources */,
-				1C98E8A221759616008565E9 /* NetworkManager.swift in Sources */,
-				F62217CD217F86C200DE68D3 /* LocalResourceTableViewCell.swift in Sources */,
-				F60773672135F38A009F6962 /* AudioViewController.swift in Sources */,
-				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
-				1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */,
-				1C76A8A52113B08000EE51A8 /* (null) in Sources */,
-				F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */,
-				1C5F8E9C21604175002773AA /* MainLocalCollectionViewController.swift in Sources */,
+				1C497F47217FC7DB006E273F /* CommonFunctions.swift in Sources */,
+				1C497F46217FC7D7006E273F /* Reachability.swift in Sources */,
+				1C497F45217FC7D4006E273F /* PlistController.swift in Sources */,
+				1C497F44217FC7D1006E273F /* LocalEntry.swift in Sources */,
+				1C497F43217FC7CF006E273F /* ApiResource.swift in Sources */,
+				1C497F42217FC7CB006E273F /* ResourceSpaceModel.swift in Sources */,
+				1C497F41217FC7C7006E273F /* AppDelegate.swift in Sources */,
+				1C497F40217FC7C4006E273F /* LoginViewController.swift in Sources */,
+				1C497F3F217FC7C1006E273F /* ServerTableNavigationController.swift in Sources */,
+				1C497F3E217FC7BD006E273F /* ServerTableViewController.swift in Sources */,
+				1C497F3D217FC7BA006E273F /* AddServerViewController.swift in Sources */,
+				1C497F3C217FC7B7006E273F /* AboutViewController.swift in Sources */,
+				1C497F3B217FC7B5006E273F /* ProfileViewController.swift in Sources */,
+				1C497F3A217FC7B2006E273F /* SettingCell.swift in Sources */,
+				1C497F39217FC7AE006E273F /* SideMenuLauncher.swift in Sources */,
+				1C497F38217FC7AC006E273F /* RoundedImageView.swift in Sources */,
+				1C497F37217FC7A9006E273F /* MainLocalCollectionViewController.swift in Sources */,
+				1C497F36217FC7A5006E273F /* MainCollectionViewCell.swift in Sources */,
+				1C497F35217FC7A2006E273F /* MainTableViewCell.swift in Sources */,
+				1C497F34217FC79F006E273F /* MainTrashTableViewController.swift in Sources */,
+				1C497F33217FC79C006E273F /* MainTabBarController.swift in Sources */,
+				1C497F32217FC799006E273F /* MainNavigationController.swift in Sources */,
+				1C497F31217FC796006E273F /* SaveAnnotationViewController.swift in Sources */,
+				1C497F30217FC793006E273F /* MapSettingsViewController.swift in Sources */,
+				1C497F2F217FC790006E273F /* MapViewController.swift in Sources */,
+				1C497F2E217FC78D006E273F /* MapTableViewController.swift in Sources */,
+				1C497F2D217FC78A006E273F /* AnnotationView.swift in Sources */,
+				1C497F2C217FC787006E273F /* MapAnnotation.swift in Sources */,
+				1C497F2B217FC782006E273F /* MpViewController.swift in Sources */,
+				1C497F2A217FC766006E273F /* PresentationManager.swift in Sources */,
+				1C497F29217FC763006E273F /* PresentationViewController.swift in Sources */,
+				1C497F28217FC760006E273F /* PresentationAnimator.swift in Sources */,
+				1C497F27217FC75B006E273F /* HazardsDetailTableViewController.swift in Sources */,
+				1C497F26217FC759006E273F /* HazardsTableViewController.swift in Sources */,
+				1C497F25217FC755006E273F /* LocalAudioViewController.swift in Sources */,
+				1C497F24217FC751006E273F /* LocalPlaybackViewController.swift in Sources */,
+				1C497F23217FC74E006E273F /* AudioPlaybackViewController.swift in Sources */,
+				1C497F22217FC74B006E273F /* AudioViewController.swift in Sources */,
+				1C497F21217FC748006E273F /* VideoPlaybackViewController.swift in Sources */,
+				1C497F20217FC745006E273F /* VideoViewController.swift in Sources */,
+				1C497F1F217FC742006E273F /* DocumentPickerViewController.swift in Sources */,
+				1C497F1E217FC73F006E273F /* PdfCollectionViewController.swift in Sources */,
+				1C497F1D217FC6C4006E273F /* PDFViewController.swift in Sources */,
+				1C497F1C217FC6C1006E273F /* PdfTableViewController.swift in Sources */,
+				1C497F1B217FC6AD006E273F /* PdfFileModalViewController.swift in Sources */,
+				1C497F1A217FC6A4006E273F /* SubcategoryTableViewCell.swift in Sources */,
+				1C497F19217FC6A0006E273F /* PhotoPickerViewController.swift in Sources */,
+				1C497F18217FC69E006E273F /* LocalResourceTypeTableViewCell.swift in Sources */,
+				1C497F17217FC69B006E273F /* LocalResourceTableViewCell.swift in Sources */,
+				1C497F16217FC698006E273F /* LocalEntryTableViewController.swift in Sources */,
+				1C497F15217FC694006E273F /* LocalEntryTableViewCell.swift in Sources */,
+				1C497F13217FC68C006E273F /* HazardTableViewCell.swift in Sources */,
+				1C497F12217FC689006E273F /* CollectionTableViewCell.swift in Sources */,
+				1C497F11217FC686006E273F /* AlternativeTableViewCell.swift in Sources */,
+				1C497F10217FC683006E273F /* HazardManager.swift in Sources */,
+				1C497F0F217FC680006E273F /* NetworkViewController.swift in Sources */,
+				1C497F0E217FC67C006E273F /* NetworkManager.swift in Sources */,
 				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,
-				1C0DD398212768F900D656F7 /* MapViewController.swift in Sources */,
-				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
-				F6A9278F217A867F00797EC2 /* PresentationManager.swift in Sources */,
-				1C0DD398212768F900D656F7 /* MapViewController.swift in Sources */,
-				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
-				1C5B55E020C68425006FF1B4 /* SideMenuLauncher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -692,13 +651,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = MT9376X85F;
+				DEVELOPMENT_TEAM = 5MA7674A5H;
 				INFOPLIST_FILE = "USS-Mobile-Response-iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = cbarb15;
+				PRODUCT_BUNDLE_IDENTIFIER = atsai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "USS-Mobile-Response-iOS/USS-Mobile-Response-iOS-Bridging-Header.h";
@@ -715,13 +674,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = MT9376X85F;
+				DEVELOPMENT_TEAM = 5MA7674A5H;
 				INFOPLIST_FILE = "USS-Mobile-Response-iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = cbarb15;
+				PRODUCT_BUNDLE_IDENTIFIER = atsai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "USS-Mobile-Response-iOS/USS-Mobile-Response-iOS-Bridging-Header.h";
