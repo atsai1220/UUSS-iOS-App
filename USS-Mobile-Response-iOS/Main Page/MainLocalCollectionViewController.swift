@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PDFKit
 
 private let reuseIdentifier = "Cell"
 
@@ -31,7 +32,8 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     
     var editMode = false
     
-    @objc func handleDelete(sender: UIButton) {
+    @objc func handleDelete(sender: UIButton)
+    {
         
     }
     
@@ -254,9 +256,17 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
                 navigationController?.pushViewController(videoPlaybackController, animated: true)
             
             case FileType.AUDIO.rawValue:
-                break
+            
+                let url: URL = URL(fileURLWithPath: localMedia.audioURL!)
+                let localAudioViewController: LocalAudioViewController = LocalAudioViewController()
+                localAudioViewController.audioUrl = URL(fileURLWithPath: localMedia.audioURL!)
+                localAudioViewController.audioTitle = url.lastPathComponent
+                navigationController?.pushViewController(localAudioViewController, animated: true)
+            
             case FileType.DOCUMENT.rawValue:
-                break
+                let pdfViewController: PDFViewController = PDFViewController()
+                pdfViewController.pdfDoc = PDFDocument(url: URL(fileURLWithPath: localMedia.pdfDocURL!))!
+                navigationController?.pushViewController(pdfViewController, animated: true)
             default:
                 break
         }

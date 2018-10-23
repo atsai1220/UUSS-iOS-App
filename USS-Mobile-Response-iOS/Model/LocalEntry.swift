@@ -49,6 +49,8 @@ struct LocalEntry: Codable {
     var metadata: metadataJSON?
     var videoURL: String?
     var submissionStatus: String?
+    var pdfDocURL: String?
+    var audioURL: String?
     var altFiles: [AltFile]?
 }
 

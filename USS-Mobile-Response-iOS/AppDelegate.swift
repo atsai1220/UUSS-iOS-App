@@ -164,6 +164,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         let fileManager: FileManager = FileManager.default
         let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
         let tempDir = docDir?.appendingPathComponent("tmp/\(url.lastPathComponent)")
+        //TODO: Delete from Documents/Inbox
         
         do
         {

@@ -162,23 +162,23 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         {
             let data = try Data(contentsOf: soundFileURL!)
             soundFileURL = docDir?.appendingPathComponent("tempFile.caf")
-            
+
             do
             {
-                try data.write(to: soundFileURL!)
-                printDocDir()
+               try data.write(to: soundFileURL!)
+               printDocDir()
             }
             catch
             {
                 print(error)
             }
-            
+
         }
         catch
         {
             print(error)
         }
-        
+
         saveAudioDelegate?.saveAudio(with: soundFileURL!)
         navigationController?.popViewController(animated: true)
     }

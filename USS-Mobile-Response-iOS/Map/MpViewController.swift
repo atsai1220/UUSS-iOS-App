@@ -9,7 +9,7 @@
 import MapKit
 import CoreData
 
-class MapViewController: UIViewController, MKMapViewDelegate
+class MpViewController: UIViewController, MKMapViewDelegate
 {
     var currentLocation: MKCoordinateRegion?
     var mapView: MKMapView?
