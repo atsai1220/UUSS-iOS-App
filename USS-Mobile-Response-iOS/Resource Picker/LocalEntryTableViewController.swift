@@ -14,25 +14,20 @@ import PDFKit
 
 class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PDFDelegate, SaveAudioDelegate
 {
-    enum ActionSheetMode: String {
-        case PHOTOS = "PHOTOS"
-        case VIDEOS = "VIDEOS"
-        case AUDIOS = "AUDIOS"
-        case PDFS = "PDFS"
-    }
-    
     let infoCellId = "infoCellId"
     let resourceCellId = "resourceCellId"
     let hazardCellId = "hazardCellId"
     let subcategoryCellId = "subcategoryCellId"
     let collectionCellId = "collectionCellId"
+    let additionalButtonCellId = "additionalButtonCellId"
+    let alternativeFileCellId = "alternativeFileCellId"
     let locationManager = CLLocationManager()
     let imagePickerController = UIImagePickerController()
     
     // Resource Info section related
     var previewImage: UIImage?
     var submissionStatus: SubmissionStatus = SubmissionStatus.LocalOnly
-    var resourceType: ActionSheetMode = ActionSheetMode.PHOTOS
+    var resourceType: FileType = FileType.PHOTO
     var resourceSelected = false
     var imageURL: URL?
     
@@ -70,6 +65,10 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
     var showPicker = false
+    
+    // Alt files related
+    var pickingForAltFiles = false
+    var altFiles: [AltFile] = []
     
     // MARK: - Picker View
     
@@ -112,6 +111,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             hazardPicker.delegate = self
             hazardPicker.dataSource = self
             hazardPicker.translatesAutoresizingMaskIntoConstraints = false
+            self.showPicker = true
             
             hazardPicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
             hazardPicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
@@ -125,6 +125,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     self.hazardPicker.removeFromSuperview()
                 }
             }
+            self.showPicker = false
         }
     }
     
@@ -318,12 +319,49 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     // MARK: - Action sheet
     
-    @objc private func showActionSheet(sender: UIButton) {
+    
+    func showResourceTypeActionSheet() {
+        self.pickingForAltFiles = true
+        let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Photo (.JPEG and .TIF)", style: .default, handler: { (action: UIAlertAction) in
+            self.resourceType = FileType.PHOTO
+            self.showFileSourceActionSheet()
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Video (.MOV and .MP4)", style: .default, handler: { (action: UIAlertAction) in
+            self.resourceType = FileType.VIDEO
+            self.showFileSourceActionSheet()
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Audio (.MP4)", style: .default, handler: { (action: UIAlertAction) in
+            self.resourceType = FileType.AUDIO
+            // TODO: implement showing and receiving audio files as alternative file
+            let audioViewController = AudioViewController()
+            self.navigationController?.pushViewController(audioViewController, animated: true)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
+            self.resourceType = FileType.DOCUMENT
+            // TODO: implement showing and receiving pdf files as alternative file
+            let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+            layout.scrollDirection = .vertical
+            layout.sectionInset = UIEdgeInsets(top: 25.0, left: 10.0, bottom: 2.0, right: 10.0)
+            self.pdfCollectionViewController = PdfCollectionViewController(collectionViewLayout: layout)
+            self.pdfCollectionViewController?.pdfDelegate = self
+            self.navigationController?.pushViewController(self.pdfCollectionViewController!, animated: true)
+            
+        }))
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(alert: UIAlertAction)-> Void in
+            self.pickingForAltFiles = false
+            actionSheet.dismiss(animated: true, completion: nil)
+        })
+        cancelAction.setValue(UIColor.red, forKey: "titleTextColor")
+        actionSheet.addAction(cancelAction)
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    @objc private func showFileSourceActionSheet() {
         switch resourceType {
-        case .PHOTOS:
+        case .PHOTO:
             let imagePickerController = UIImagePickerController()
             imagePickerController.delegate = self
-            
             let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             
             actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
@@ -337,18 +375,17 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 self.present(imagePickerController, animated: true, completion: nil)
             }))
             let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(alert: UIAlertAction)-> Void in
+                self.pickingForAltFiles = false
                 actionSheet.dismiss(animated: true, completion: nil)
             })
             cancelAction.setValue(UIColor.red, forKey: "titleTextColor")
             actionSheet.addAction(cancelAction)
-            
             self.present(actionSheet, animated: true, completion: nil)
             
-        case .VIDEOS:
+        case .VIDEO:
             let imagePickerController = UIImagePickerController()
             imagePickerController.delegate = self
             let actionSheet: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            
             actionSheet.addAction(UIAlertAction(title: "Take Video", style: .default, handler: {(alert: UIAlertAction) -> Void in
                 if(UIImagePickerController.isSourceTypeAvailable(.camera)) {
                     self.imagePickerController.sourceType = .camera
@@ -377,27 +414,19 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 }
             }))
             let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(alert: UIAlertAction)-> Void in
+                self.pickingForAltFiles = false
                 actionSheet.dismiss(animated: true, completion: nil)
             })
             cancelAction.setValue(UIColor.red, forKey: "titleTextColor")
             actionSheet.addAction(cancelAction)
-            
             self.present(actionSheet, animated: true, completion: nil)
-            
-        case .AUDIOS:
-            let audioViewController = AudioViewController()
-            audioViewController.saveAudioDelegate = self
-            self.navigationController?.pushViewController(audioViewController, animated: true)
-        case .PDFS:
-            let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-            layout.scrollDirection = .vertical
-            layout.sectionInset = UIEdgeInsets(top: 25.0, left: 10.0, bottom: 2.0, right: 10.0)
-            pdfCollectionViewController = PdfCollectionViewController(collectionViewLayout: layout)
-            pdfCollectionViewController?.pdfDelegate = self
-            navigationController?.pushViewController(pdfCollectionViewController!, animated: true)
+        default:
+            print("Should never happen")
         }
- 
     }
+    
+    
+    // MARK: - PDF functions
     
     func returnPDF(with pdfURL: URL)
     {
@@ -436,6 +465,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         return img
     }
     
+    // MARK: - Photo/Video functions
+    
     func videoFormatIsAvailable(for sourceType: UIImagePickerControllerSourceType ) -> Bool
     {
         let types = UIImagePickerController.availableMediaTypes(for: .camera)
@@ -450,10 +481,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
         {
-            switch resourceType
-            {
-                case .PHOTOS:
-                    
+            if !self.pickingForAltFiles {
+                if resourceType == .PHOTO {
                     if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
                         previewImage = pickedImage
                         tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
@@ -485,9 +514,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                         }
                     }
                     picker.dismiss(animated: true, completion: nil)
-                
-                case .VIDEOS:
-                    
+                } else {
                     let url = info[UIImagePickerControllerMediaURL] as? URL
                     
                     videoThumbnail = createVideoThumbnail(from: url!.absoluteString)
@@ -508,14 +535,47 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     }
                     
                     imagePickerController.dismiss(animated: true, completion: nil)
-                
-                // TODO: Add geo-locating for videos, audio, and pdfs
-                
-                case .AUDIOS:
-                    print("audios")
-                case .PDFS:
-                    print("pdfs")
+                    
+                    // TODO: Add geo-locating for videos, audio, and pdfs
+                }
+            } else {
+                if resourceType == .PHOTO {
+                    if let imageURL = info[UIImagePickerControllerImageURL] as? URL {
+                        let image = UIImage(contentsOfFile: imageURL.path)
+                        let imageName = saveExistingImageAtDocumentDirectory(image: image!)
+                        let imagePath = getDocumentsURL().appendingPathComponent(imageName).path
+                        let fileNameWithoutExtension = NSURL(fileURLWithPath: imageName).deletingPathExtension?.lastPathComponent ?? ""
+                        let altFile = AltFile.init(name: fileNameWithoutExtension, url: imagePath, type: FileType.PHOTO.rawValue)
+                        self.altFiles.append(altFile)
+                    } else {
+                        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+                            let imageName = saveExistingImageAtDocumentDirectory(image: image)
+                            let imageURL = getDocumentsURL().appendingPathComponent(imageName)
+                            let fileNameWithoutExtension = NSURL(fileURLWithPath: imageName).deletingPathExtension?.lastPathComponent ?? ""
+                            let altFile = AltFile.init(name: fileNameWithoutExtension, url: imageURL.path, type: FileType.PHOTO.rawValue)
+                            self.altFiles.append(altFile)
+                        }
+                    }
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
+                    self.tableView.endUpdates()
+                    picker.dismiss(animated: true, completion: nil)
+                } else {
+                    if let videoURL = info[UIImagePickerControllerMediaURL] as? URL {
+                        let image = createVideoThumbnail(from: videoURL.absoluteString)
+                        let videoName = saveExistingImageAtDocumentDirectory(image: image)
+                        let fileNameWithoutExtension = NSURL(fileURLWithPath: videoName).deletingPathExtension?.lastPathComponent ?? ""
+                        let altFile = AltFile.init(name: fileNameWithoutExtension, url: videoURL.path, type: FileType.VIDEO.rawValue)
+                        self.altFiles.append(altFile)
+                        self.tableView.beginUpdates()
+                        self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
+                        self.tableView.endUpdates()
+                        
+                    }
+                    picker.dismiss(animated: true, completion: nil)
+                }
             }
+
     }
     
     func createVideoThumbnail(from url: String) -> UIImage
@@ -537,18 +597,214 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             return UIImage()
         }
     }
+    // MARK: - API and local Saving/Uploading functions
     
-    // MARK: - API Functions
-    
-    func filterForCategories() {
+    @objc func saveAndUpload() {
+        let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
+        let descriptionCell = tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
+        let notesCell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
+        if titleCell.textView.text.isEmpty || descriptionCell.textView.text.isEmpty || notesCell.textView.text.isEmpty {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        } else if !resourceSelected {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        } else if !collectionSelected {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        } else {
+            let savedName = createLocalEntry()
+            let networkVC = NetworkViewController()
+            networkVC.modalPresentationStyle = .overCurrentContext
+            networkVC.modalTransitionStyle = .crossDissolve
+            let oldEntries = getLocalEntriesFromDisk()
+            
+            let currentEntry = oldEntries.first { (entry) -> Bool in
+                if entry.localFileName == savedName {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            networkVC.localEntry = currentEntry
+            self.navigationController?.present(networkVC, animated: true, completion: nil)
+            //            httpUpload()
+            //            createResourceSpaceEntry(fileName: savedName)
+            //            addResourceToCollection()
+            //            self.navigationController?.popToRootViewController(animated: true)
+        }
         
     }
+    
+    func createLocalEntry() -> String {
+        let titleCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
+        let descriptionCell = self.tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
+        let notesCell = self.tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
+        var newEntry = LocalEntry()
+        newEntry.name = titleCell.textView.text
+        newEntry.description = descriptionCell.textView.text
+        newEntry.notes = notesCell.textView.text
+        newEntry.collectionRef = self.entryReference
+        
+        // TODO: save main photo
+        // TODO: save each alternative file if available
+        switch resourceType
+        {
+        case .PHOTO:
+            var savedImageName = ""
+            if let possibleImageURL = self.imageURL {
+                savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
+            } else {
+                savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
+            }
+            newEntry.localFileName = savedImageName
+            newEntry.fileType = FileType.PHOTO.rawValue
+            newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+            updateLocalEntries(with: newEntry)
+            return savedImageName
+            
+        case .VIDEO:
+            let savedVideoName = saveVideoAtDocumentDirectory(videoData: self.videoData!)
+            saveExistingImageAtDocumentDirectory(with: savedVideoName, image: videoThumbnail!)
+            newEntry.localFileName = savedVideoName
+            newEntry.fileType = FileType.VIDEO.rawValue
+            newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+            newEntry.videoURL = getDocumentsURL().appendingPathComponent(savedVideoName).relativePath
+            updateLocalEntries(with: newEntry)
+            return savedVideoName
+            
+        case .AUDIO:
+            
+            let URL: URL = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".caf")
+            
+            if(FileManager.default.fileExists(atPath: URL.relativePath))
+            {
+                let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            else
+            {
+                newEntry.fileType = FileType.AUDIO.rawValue
+                newEntry.localFileName = "audio"
+                newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+                newEntry.audioURL = URL.relativePath
+                var oldEntries = getLocalEntriesFromDisk()
+                oldEntries.append(newEntry)
+                saveLocalEntriesToDisk(entries: oldEntries)
+                
+                do
+                {
+                    let audioData: Data = try Data(contentsOf: getDocumentsURL().appendingPathComponent("tempAudioFile.caf"))
+                    
+                    do
+                    {
+                        try audioData.write(to: URL)
+                    }
+                    catch
+                    {
+                        let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write pdf to file", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                }
+                catch
+                {
+                    print(error)
+                }
+                
+                return URL.lastPathComponent
+            }
+        case .DOCUMENT:
+            let URL: URL = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".pdf")
+            
+            if(FileManager.default.fileExists(atPath: URL.relativePath))
+            {
+                let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            else
+            {
+                newEntry.localFileName = localFileName!
+                newEntry.fileType = FileType.DOCUMENT.rawValue
+                newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+                newEntry.pdfDocURL = URL.relativePath
+                var oldEntries = getLocalEntriesFromDisk()
+                oldEntries.append(newEntry)
+                saveLocalEntriesToDisk(entries: oldEntries)
+                
+                do
+                {
+                    let pdfData: Data = try Data(contentsOf: self.pdfURL!)
+                    
+                    do
+                    {
+                        try pdfData.write(to: URL)
+                    }
+                    catch
+                    {
+                        let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write pdf to file", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                }
+                catch
+                {
+                    print(error)
+                }
+                
+                return URL.lastPathComponent
+            }
+
+        }
+        return "no"
+    }
+    
+    //    func saveVideoToDisk() -> Bool
+    //    {
+    //        let documentsDirectory = getDocumentsURL()
+    //
+    //        videoUrl = documentsDirectory!.appendingPathComponent("\(titleBox!.text!).mov")
+    //
+    //        if(fileManager!.fileExists(atPath: videoUrl!.relativePath))
+    //        {
+    //            let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
+    //            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+    //            self.present(alert, animated: true, completion: nil)
+    //            return false
+    //        }
+    //        else
+    //        {
+    //
+    //            do
+    //            {
+    //                try videoData!.write(to: videoUrl!)
+    //            }
+    //            catch
+    //            {
+    //                let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
+    //                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+    //                self.present(alert, animated: true, completion: nil)
+    //            }
+    //        }
+    //        return true
+    //    }
+    
+    func httpUpload() {
+        
+    }
+    
+    func createResourceSpaceEntry(fileName: String) {
+        
+    }
+    
+    func addResourceToCollection() {
+        
+    }
+    
+    // MARK: - API Functions
     
     func loadCollectionAndCategoryArrays() {
         self.subcategoryTitles.removeAll()
         self.collectionTitles.removeAll()
-        
-//        self.allHazards.removeAll()
         self.allCategories.removeAll()
         self.allCollections.removeAll()
         // retrieve all top-level categories and collections
@@ -572,7 +828,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             if self.collectionTitles.contains(where: { (insideName) -> Bool in
                 insideName == collection.name
             }) {
-                
+            
             } else {
                 self.collectionTitles.append(collection.name)
             }
@@ -620,10 +876,10 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.collectionTitles.insert("Please select an item", at: 0)
     }
     
+    
     func loadOnlyCollectionArray() {
         self.collectionTitles.removeAll()
         self.allCollections.removeAll()
-        
         let categoryArray = self.categoryDictionary[self.selectedSubcategory!]!
         
         // take care of collection items
@@ -651,11 +907,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.collectionTitles.insert("Please select an item", at: 0)
     }
     
+    
     @objc func collectAndShowHazards() {
-        removeAllPickerView()
-        self.showPicker = true
         collectHazards()
     }
+    
     
     @objc func collectAndShowCategories() {
         removeAllPickerView()
@@ -663,11 +919,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         toggleCategoryPickerView()
     }
     
+    
     @objc func collectAndShowCollections() {
         removeAllPickerView()
         self.showPicker = true
         toggleCollectionPickerView()
     }
+    
     
     @objc func collectHazards() {
         // Show activity indicator
@@ -701,12 +959,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 self.present(alert, animated: true, completion: nil)
             }
             filterAllHazardsAndReloadTable()
-            if self.refreshControl?.isRefreshing == true {
-                self.refreshControl?.endRefreshing()
-            }
-
         }
     }
+    
     
     func loadHazardsFromApi() {
         let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
@@ -734,26 +989,19 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     saveCompleteHazardsToDisk(hazards: self.allHazards)
                     self.filterAllHazardsAndReloadTable()
                     
-                    if self.refreshControl?.isRefreshing == true {
-                        self.refreshControl?.endRefreshing()
-                    }
                     self.activityIndicator.stopAnimating()
                     self.activityIndicator.isHidden = true
                     if let viewWithTag = self.view.viewWithTag(99) {
                         viewWithTag.removeFromSuperview()
                     }
-                    
-                    if self.showPicker {
-                        self.toggleHazardPickerView()
-                        self.showPicker = false
-                    }
-                    
+                    self.toggleHazardPickerView()
                 }
             } catch let jsonError {
                 print(jsonError)
             }
         }.resume()
     }
+    
     
     func filterAllHazardsAndReloadTable() {
         self.hazardsDictionary = self.allHazards.reduce([String: [Hazard]]()) {
@@ -794,234 +1042,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.hazardTitles.insert("Please select an item", at: 0)
     }
     
-
-    
-    private func displayErrorMessage(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let dismissAction = UIAlertAction(title: "Okay", style: .default, handler: {
-            (action) in alert.dismiss(animated: true, completion: nil)
-        })
-        alert.addAction(dismissAction)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    @objc func saveAndUpload() {
-        //TODO: check for empty fields
-        let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
-        let descriptionCell = tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
-        let notesCell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
-        if titleCell.textView.text.isEmpty || descriptionCell.textView.text.isEmpty || notesCell.textView.text.isEmpty {
-            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
-        } else if !resourceSelected {
-            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
-        } else if !collectionSelected {
-            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
-        } else {
-            
-            let savedName = createLocalEntry()
-            httpUpload()
-            createResourceSpaceEntry(fileName: savedName)
-            addResourceToCollection()
-            self.navigationController?.popToRootViewController(animated: true)
-        }
-        
-    }
-    
-    func createLocalEntry() -> String
-    {
-        let titleCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
-        let descriptionCell = self.tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
-        let notesCell = self.tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
-        var newEntry = LocalEntry()
-        newEntry.name = titleCell.textView.text
-        newEntry.description = descriptionCell.textView.text
-        newEntry.notes = notesCell.textView.text
-        newEntry.collectionRef = self.entryReference
-        
-        switch resourceType
-        {
-            case .PHOTOS:
-                var savedImageName = ""
-                if let possibleImageURL = self.imageURL {
-                    savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
-                } else {
-                    savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
-                }
-                newEntry.localFileName = savedImageName
-                newEntry.fileType = FileType.PHOTO.rawValue
-                newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-                var oldEntries = getLocalEntriesFromDisk()
-                oldEntries.append(newEntry)
-                saveLocalEntriesToDisk(entries: oldEntries)
-                return savedImageName
-            case .VIDEOS:
-                
-                videoUrl = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".mov")
-                
-                if(FileManager.default.fileExists(atPath: videoUrl!.relativePath))
-                {
-                    let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
-                else
-                {
-                    newEntry.localFileName = localFileName!
-                    newEntry.fileType = FileType.VIDEO.rawValue
-                    newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-                    newEntry.videoURL = videoUrl?.relativePath
-                    var oldEntries = getLocalEntriesFromDisk()
-                    oldEntries.append(newEntry)
-                    saveLocalEntriesToDisk(entries: oldEntries)
-                    
-                    do
-                    {
-                        try videoData!.write(to: videoUrl!)
-                    }
-                    catch
-                    {
-                        let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                    }
-                }
-            
-                return videoUrl!.lastPathComponent
-            
-            case .AUDIOS:
-            
-                let URL: URL = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".caf")
-                
-                if(FileManager.default.fileExists(atPath: URL.relativePath))
-                {
-                    let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
-                else
-                {
-                    newEntry.fileType = FileType.AUDIO.rawValue
-                    newEntry.localFileName = "audio"
-                    newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-                    newEntry.audioURL = URL.relativePath
-                    var oldEntries = getLocalEntriesFromDisk()
-                    oldEntries.append(newEntry)
-                    saveLocalEntriesToDisk(entries: oldEntries)
-                    
-                    do
-                    {
-                        let audioData: Data = try Data(contentsOf: getDocumentsURL().appendingPathComponent("tempAudioFile.caf"))
-
-                        do
-                        {
-                            try audioData.write(to: URL)
-                        }
-                        catch
-                        {
-                            let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write pdf to file", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                            self.present(alert, animated: true, completion: nil)
-                        }
-                    }
-                    catch
-                    {
-                        print(error)
-                    }
-
-                    return URL.lastPathComponent
-            }
-
-            
-            case .PDFS:
-            
-                let URL: URL = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".pdf")
-                
-                if(FileManager.default.fileExists(atPath: URL.relativePath))
-                {
-                    let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
-                else
-                {
-                    newEntry.localFileName = localFileName!
-                    newEntry.fileType = FileType.DOCUMENT.rawValue
-                    newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-                    newEntry.pdfDocURL = URL.relativePath
-                    var oldEntries = getLocalEntriesFromDisk()
-                    oldEntries.append(newEntry)
-                    saveLocalEntriesToDisk(entries: oldEntries)
-
-                    do
-                    {
-                        let pdfData: Data = try Data(contentsOf: self.pdfURL!)
-                        
-                        do
-                        {
-                            try pdfData.write(to: URL)
-                        }
-                        catch
-                        {
-                            let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write pdf to file", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                            self.present(alert, animated: true, completion: nil)
-                        }
-                    }
-                    catch
-                    {
-                        print(error)
-                    }
-                    
-                    return URL.lastPathComponent
-                }
-
-            }
-            return "no"
-    }
-    
-//    func saveVideoToDisk() -> Bool
-//    {
-//        let documentsDirectory = getDocumentsURL()
-//
-//        videoUrl = documentsDirectory!.appendingPathComponent("\(titleBox!.text!).mov")
-//
-//        if(fileManager!.fileExists(atPath: videoUrl!.relativePath))
-//        {
-//            let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-//            self.present(alert, animated: true, completion: nil)
-//            return false
-//        }
-//        else
-//        {
-//
-//            do
-//            {
-//                try videoData!.write(to: videoUrl!)
-//            }
-//            catch
-//            {
-//                let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-//                self.present(alert, animated: true, completion: nil)
-//            }
-//        }
-//        return true
-//    }
-    
-    
-    func httpUpload() {
-        
-    }
-    
-    func createResourceSpaceEntry(fileName: String) {
-    
-    }
-    
-    func addResourceToCollection() {
-    
-    }
-    
     // MARK: - Table view
     
     override func viewDidAppear(_ animated: Bool) {
@@ -1046,9 +1066,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         
         imagePickerController.delegate = self
         
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl?.addTarget(self, action: #selector(collectHazards), for: .valueChanged)
-        
         navigationItem.title = "New Local Entry"
         navigationController?.navigationBar.prefersLargeTitles = false
         self.tableView.register(LocalEntryTableViewCell.self, forCellReuseIdentifier: infoCellId)
@@ -1056,6 +1073,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.tableView.register(HazardTableViewCell.self, forCellReuseIdentifier: hazardCellId)
         self.tableView.register(SubcategoryTableViewCell.self, forCellReuseIdentifier: subcategoryCellId)
         self.tableView.register(CollectionTableViewCell.self, forCellReuseIdentifier: collectionCellId)
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: additionalButtonCellId)
+        self.tableView.register(AlternativeTableViewCell.self, forCellReuseIdentifier: alternativeFileCellId)
         self.tableView.tableFooterView = UIView(frame: .zero)
         
         navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
@@ -1074,7 +1093,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 4
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -1089,27 +1108,38 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 return 3
             }
             else {
-                //TODO: return 3 or 4 depending on hazard selection
-                print("tableView: numberOfRowsInSection: should not happen")
+                // tableView: numberOfRowsInSection: should not happen
                 return 4
             }
         }
-        else {
+        else if section == 1 {
             return 3
+        }
+        else if section == 2 {
+            return 1
+        }
+        else {
+            return self.altFiles.count
         }
     }
     
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
-    }
+//    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+//        return nil
+//    }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let title: String
         if section == 0 {
             title = "Resource Info"
         }
-        else {
+        else if section == 1 {
             title = "Entry Info"
+        }
+        else if section == 2 {
+            title = "Alternative Files"
+        }
+        else {
+            title = " "
         }
         return title
     }
@@ -1118,7 +1148,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         if indexPath.section == 0 {
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
-                cell.insertButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
+                cell.insertButton.addTarget(self, action: #selector(showFileSourceActionSheet), for: .touchUpInside)
                 cell.cellLabel.becomeFirstResponder()
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Resource"
@@ -1129,27 +1159,20 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     cell.insertButton.setImage(previewImage, for: .normal)
                     cell.layoutSubviews()
                 }
-                else if(videoThumbnail != nil)
-                {
-                    cell.resourceSet = true
-                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
-                    cell.insertButton.setImage(videoThumbnail, for: .normal)
-                    cell.layoutSubviews()
-                }
-                else if(imageForPDF != nil)
-                {
-                    cell.resourceSet = true
-                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
-                    cell.insertButton.setImage(imageForPDF, for: .normal)
-                    cell.layoutSubviews()
-                }
-                else if(audioImage != nil)
-                {
-                    cell.resourceSet = true
-                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
-                    cell.insertButton.setImage(audioImage, for: .normal)
-                    cell.layoutSubviews()
-                }
+//                else if(videoThumbnail != nil)
+//                {
+//                    cell.resourceSet = true
+//                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
+//                    cell.insertButton.setImage(videoThumbnail, for: .normal)
+//                    cell.layoutSubviews()
+//                }
+//                else if(imageForPDF != nil)
+//                {
+//                    cell.resourceSet = true
+//                    cell.insertButton.imageView?.contentMode = .scaleAspectFill
+//                    cell.insertButton.setImage(imageForPDF, for: .normal)
+//                    cell.layoutSubviews()
+//                }
                 return cell
             }
             if indexPath.row == 1 {
@@ -1214,7 +1237,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 return cell
             }
         }
-        else {
+        else if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
             
             
@@ -1237,9 +1260,45 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 return cell
             }
         }
+        else if indexPath.section == 2 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: additionalButtonCellId, for: indexPath)
+            cell.textLabel?.textColor = view.tintColor
+            cell.textLabel?.text = "Add alternative file..."
+            return cell
+        }
+        else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: alternativeFileCellId, for: indexPath) as! AlternativeTableViewCell
+            let altFile = self.altFiles[indexPath.row]
+            cell.separatorInset = .zero
+            cell.altImageView.image = getImageFromDocumentDirectory(imageName: altFile.name + ".jpeg")
+            cell.cellLabel.text = altFile.name
+            cell.fileLabel.text = altFile.type
+
+            return cell
+        }
+    }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 2 {
+            tableView.deselectRow(at: indexPath, animated: true)
+            showResourceTypeActionSheet()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 3 {
+            if editingStyle == .delete {
+                let altFile = self.altFiles[indexPath.row]
+                deleteAltFile(with: altFile)
+                self.altFiles.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .left)
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 3 {
+            return 75
+        }
         return UITableViewAutomaticDimension
     }
     
@@ -1252,5 +1311,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
 
     // MARK: - Navigation
 
-
+    private func displayErrorMessage(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let dismissAction = UIAlertAction(title: "Okay", style: .default, handler: {
+            (action) in alert.dismiss(animated: true, completion: nil)
+        })
+        alert.addAction(dismissAction)
+        present(alert, animated: true, completion: nil)
+    }
 }

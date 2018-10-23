@@ -15,7 +15,7 @@ class LocalResourceTableViewCell: UITableViewCell {
     var cellLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.textColor = UIColor.blue
+        label.textColor = UIView().tintColor
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.preferredFont(forTextStyle: .caption1)
         label.textAlignment = .right
@@ -24,7 +24,7 @@ class LocalResourceTableViewCell: UITableViewCell {
     
     let cellDivider: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.gray
+        view.backgroundColor = UIColor(white: 0.90, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

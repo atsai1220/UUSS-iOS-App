@@ -51,9 +51,16 @@ struct LocalEntry: Codable {
     var submissionStatus: String?
     var pdfDocURL: String?
     var audioURL: String?
+    var altFiles: [AltFile]?
 }
 
 // field ID to value string pairs.
 struct metadataJSON: Codable {
     var foo: String?
+}
+
+struct AltFile: Codable {
+    var name: String
+    var url: String
+    var type: String
 }
