@@ -10,6 +10,11 @@ import Foundation
 import UIKit
 import AVFoundation
 
+protocol SaveAudioDelegate: class
+{
+    func saveAudio(with url: URL)
+}
+
 class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPlayerDelegate
 {
     private var recordButton: UIButton?
@@ -30,12 +35,17 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     private var audioFileName: String = "tempAudioFile"
     private var recordSettings: [String: Any]?
     var collectionReference: String = ""
+    weak var saveAudioDelegate: SaveAudioDelegate?
+    private var isLocal: Bool = false
+    private var origLength: Double = 0
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
-        self.view.backgroundColor = UIColor.black
+        self.view.backgroundColor = .black
+        
+        setUpNotifications()
         
         audioPlaybackViewController = AudioPlaybackViewController()
         audioPlaybackViewController!.view.translatesAutoresizingMaskIntoConstraints = false
@@ -46,7 +56,7 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         audioPlaybackViewController!.garbageButton!.isEnabled = false
         audioPlaybackViewController!.saveButton!.isEnabled = false
         self.view.addSubview(audioPlaybackViewController!.view)
-
+        
         recordButton = UIButton()
         recordButton!.layer.cornerRadius = 25
         recordButton!.layer.borderWidth = 2
@@ -78,7 +88,7 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[time]-|", options: [], metrics: nil, views: views))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[playView]-|", options: [], metrics: nil, views: views))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[time]-50-[recBtn(>=50,<=100)]", options: [], metrics: nil, views: views))
-//        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[progBar]-|", options: [], metrics: nil, views: views))
+        //        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[progBar]-|", options: [], metrics: nil, views: views))
         self.view.addConstraint(NSLayoutConstraint.init(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: recordButton!, attribute: .bottom, multiplier: 1.0, constant: 95.0))
         
         let guide = self.view.safeAreaLayoutGuide
@@ -98,13 +108,14 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
                 self.urlPath = self.fileManager!.urls(for: .documentDirectory, in: .userDomainMask)
                 self.soundFileURL = self.urlPath![0].appendingPathComponent("\(self.audioFileName).caf")
                 self.recordSettings =  [AVEncoderAudioQualityKey: AVAudioQuality.min.rawValue,
-                                       AVEncoderBitRateKey: 16,
-                                       AVNumberOfChannelsKey: 2,
-                                       AVSampleRateKey: 44100.0] as [String : Any]
+                                        AVEncoderBitRateKey: 16,
+                                        AVNumberOfChannelsKey: 2,
+                                        AVSampleRateKey: 44100.0] as [String : Any]
                 
                 do
                 {
                     try self.audioRecorder = AVAudioRecorder(url: self.soundFileURL!, settings: self.recordSettings!)
+                    
                 }
                 catch let error as NSError
                 {
@@ -143,41 +154,40 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     
     @objc func saveAudio()
     {
+        timer!.invalidate()
         audioPlayer?.stop()
-        var localAudioEntry = LocalEntry()
+        let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         
-        let alert: UIAlertController = UIAlertController(title: "Save", message: "Enter a file name.", preferredStyle: .alert)
-        alert.addTextField(configurationHandler: {(textfield) in
+        do
+        {
+            let data = try Data(contentsOf: soundFileURL!)
+            soundFileURL = docDir?.appendingPathComponent("tempFile.caf")
             
-            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: {(alertAction) in
-                
-                self.audioFileName = textfield.text!
-                localAudioEntry.localFileName = self.audioFileName
-                localAudioEntry.collectionRef = self.collectionReference
-                localAudioEntry.fileType = FileType.AUDIO.rawValue
-                let newURL = self.urlPath![0].appendingPathComponent("\(self.audioFileName).caf")
-                
-                self.saveNewFile(origURL: self.soundFileURL!, newURL: newURL)
-                var oldEntries = getLocalEntriesFromDisk()
-                oldEntries.append(localAudioEntry)
-                saveLocalEntriesToDisk(entries: oldEntries)
-                self.navigationController?.popToRootViewController(animated: true)
-                
-            }))
+            do
+            {
+                try data.write(to: soundFileURL!)
+                printDocDir()
+            }
+            catch
+            {
+                print(error)
+            }
             
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {(alertAction) in
-                    alert.dismiss(animated: true, completion: nil)
-                }))
-            })
+        }
+        catch
+        {
+            print(error)
+        }
         
-        self.present(alert, animated: true, completion: nil)
+        saveAudioDelegate?.saveAudio(with: soundFileURL!)
+        navigationController?.popViewController(animated: true)
     }
     
     func saveNewFile(origURL: URL, newURL: URL)
     {
         do
         {
-            self.soundFileURL = try self.fileManager?.replaceItemAt(newURL, withItemAt: newURL)
+            soundFileURL = try self.fileManager?.replaceItemAt(newURL, withItemAt: newURL)
         }
         catch
         {
@@ -191,7 +201,10 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     {
         do
         {
+            timer!.invalidate()
+            seconds = 0
             audioPlaybackViewController!.progressBar?.setProgress(0.0, animated: false)
+            audioPlaybackViewController?.playButton?.setImage(UIImage(named: "play"), for: .normal)
             audioPlaybackViewController!.playButton?.isEnabled = false
             audioPlaybackViewController!.garbageButton?.isEnabled = false
             audioPlaybackViewController!.saveButton?.isEnabled = false
@@ -218,11 +231,13 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         {
             audioPlaybackViewController?.playButton?.setImage(UIImage(named: "pause"), for: .normal)
             audioPlayer!.play()
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(decreaseTime), userInfo: nil, repeats: true)
         }
         else if(audioPlayer!.isPlaying)
         {
             audioPlaybackViewController?.playButton?.setImage(UIImage(named: "play"), for: .normal)
             audioPlayer!.pause()
+            timer!.invalidate()
         }
     }
     
@@ -243,11 +258,12 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
             audioPlaybackViewController!.garbageButton?.isEnabled = true
             audioPlaybackViewController!.saveButton?.isEnabled = true
             recordingTime = timeLabel!.text
-            audioPlaybackViewController!.recordLength!.text = recordingTime
+            audioPlaybackViewController!.recordLength!.text = "-" + recordingTime!
+            seconds = audioRecorder!.currentTime
+            origLength = seconds
             audioRecorder!.stop()
             timer!.invalidate()
             timeLabel!.text =  "00:00:00"
-            seconds = 0
             recordButton!.setTitle("Record", for: .normal)
             recordButton!.backgroundColor = UIColor.gray
             self.recordButton!.isEnabled = false
@@ -274,10 +290,10 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     
     func updateString(time:TimeInterval) -> String
     {
-       let hours = Int(time) / 3600
-       let minutes = Int(time) / 60 % 60
-       let seconds = Int(time) % 60
-       return String(format: "%02i:%02i:%02i", hours, minutes, seconds)
+        let hours = Int(time) / 3600
+        let minutes = Int(time) / 60 % 60
+        let seconds = Int(time) % 60
+        return String(format: "%02i:%02i:%02i", hours, minutes, seconds)
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -309,10 +325,76 @@ class AudioViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         
     }
     
+    @objc func decreaseTime()
+    {
+        seconds = seconds - 1
+        print("seconds" + String(seconds))
+        audioPlaybackViewController?.recordLength?.text = updateDecreasedString(time: seconds)
+    }
+    
+    func updateDecreasedString(time:TimeInterval) -> String
+    {
+        let hours = Int(time) / 3600
+        let minutes = Int(time) / 60 % 60
+        let seconds = Int(time) % 60
+        let time = String(format: "-%02i:%02i:%02i", hours, minutes, seconds)
+        print("Time " + time)
+        return String(format: "-%02i:%02i:%02i", hours, minutes, seconds)
+    }
+    
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool)
     {
+        timer!.invalidate()
+        seconds = origLength
+        audioPlaybackViewController!.recordLength!.text = "-" + recordingTime!
         audioPlaybackViewController?.progressBar?.setProgress(0.0, animated: false)
         audioPlaybackViewController?.playButton?.setImage(UIImage(named: "play"), for: .normal)
+    }
+    
+    func setUpNotifications()
+    {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self,
+                                       selector: #selector(handleInterruption),
+                                       name: .AVAudioSessionInterruption,
+                                       object: nil)
+    }
+    
+    @objc func handleInterruption(notification: Notification)
+    {
+        guard let userInfo = notification.userInfo,
+            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+            let type = AVAudioSessionInterruptionType(rawValue: typeValue) else {
+                return
+        }
+        if type == .began
+        {
+            timer!.invalidate()
+            
+            if(audioRecorder!.isRecording)
+            {
+                audioRecorder!.pause()
+            }
+            else if(audioPlayer!.isPlaying)
+            {
+                self.audioPlaybackViewController?.playButton?.setImage(UIImage(named: "play"), for: .normal)
+                audioPlayer!.pause()
+            }
+        }
+        else if type == .ended
+        {
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSessionInterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume)
+                {
+                    if(recordButton!.titleLabel!.text == "Stop" && recordButton!.isEnabled)
+                    {
+                        audioRecorder!.record()
+                        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+                    }
+                }
+            }
+        }
     }
 }
 

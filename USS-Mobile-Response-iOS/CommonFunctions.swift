@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 extension String {
     func sha256() -> String? {
@@ -327,6 +328,8 @@ func deleteAltFile(with altFile: AltFile) {
 //    }
 }
 
+
+
 func getStringContentsOfFile(fileName: String) -> String? {
     let filePath = getDocumentsURL().appendingPathComponent(fileName)
     if FileManager.default.fileExists(atPath: filePath.path) {
@@ -341,6 +344,33 @@ func getStringContentsOfFile(fileName: String) -> String? {
     else {
         return nil
     }
+}
+
+func convertToMp3(with cafFile: URL, name: String) {
+    let outputURL = getDocumentsURL().appendingPathComponent(name + ".mp3")
+    let asset = AVAsset.init(url: cafFile)
+    let exportSession = AVAssetExportSession.init(asset: asset, presetName: AVAssetExportPresetHighestQuality)
+    let fileManager = FileManager.default
+    // Removing existing file
+    do {
+        try fileManager.removeItem(at: outputURL)
+    } catch {
+        print("Error")
+    }
+    exportSession?.outputFileType = AVFileType.mp3
+    exportSession?.outputURL = outputURL
+    exportSession?.metadata = asset.metadata
+    exportSession?.exportAsynchronously(completionHandler: {
+        if (exportSession?.status == .completed) {
+             print("AV export succeeded.")
+        }
+        else if (exportSession?.status == .cancelled) {
+            print("AV export cancelled.")
+        }
+        else {
+            print ("Error is \(String(describing: exportSession?.error))")
+        }
+    })
 }
 
 enum FileType: String

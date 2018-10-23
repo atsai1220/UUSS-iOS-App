@@ -42,7 +42,14 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             }
  
         case FileType.AUDIO.rawValue:
-            print("uploading audio")
+            var audioData: Data?
+            do {
+                let cafPath = getDocumentsURL().appendingPathComponent(item.localFileName! + ".caf")
+                convertToMp3(with: cafPath, name: item.localFileName!)
+                
+            } catch {
+                
+            }
         case FileType.DOCUMENT.rawValue:
             print("uploading document")
         default:
