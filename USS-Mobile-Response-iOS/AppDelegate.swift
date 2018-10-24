@@ -166,31 +166,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
         let tempDir = docDir?.appendingPathComponent("tmp/\(url.lastPathComponent)")
         //TODO: Delete from Documents/Inbox
-        
+
         do
         {
-            // import either pdf or mp3
-  
-            let importedFile: Data = try Data(contentsOf: url)
+            try fileManager.moveItem(at: url, to: tempDir!)
+            NotificationCenter.default.post(name: Notification.Name("New data"), object: nil)
             
-            
-            do
-            {
-                try importedFile.write(to: tempDir!)
-                NotificationCenter.default.post(name: Notification.Name("New data"), object: nil)
-                
-            }
-            catch
-            {
-                print(error)
-                return false
-            }
         }
         catch
         {
-            print(error)
+            print(error.localizedDescription)
             return false
         }
+
 
         return true
     }
