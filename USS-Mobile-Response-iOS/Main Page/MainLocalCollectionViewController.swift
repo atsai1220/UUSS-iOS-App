@@ -11,7 +11,7 @@ import PDFKit
 
 private let reuseIdentifier = "Cell"
 
-class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, PDFModalDoneDelegate, MainCellDelegate
+class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, ImportModalDoneDelegate, MainCellDelegate
 {
     func deleteThis(cellIndexPath: IndexPath) {
         print(cellIndexPath.row)
@@ -57,13 +57,10 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 //        }
 //    }
     
-    func headerDoneButtonPressed(_: Bool)
-    {
-        pdfModalViewController?.dismiss(animated: true, completion: nil)
-    }
+
     
     var localEntries: [LocalEntry] = []
-    var pdfModalViewController: PdfFileModalViewController?
+    var importModalViewController: ImportModalViewController?
     
     var myCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -128,31 +125,34 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 //            doneEditingButton.widthAnchor.constraint(equalToConstant: 70.0)
 //            ])
         
-        pdfModalViewController = PdfFileModalViewController()
-        pdfModalViewController?.modalDoneDelegate = self
+        importModalViewController = ImportModalViewController()
+        importModalViewController?.modalDoneDelegate = self
     }
+    
+    // MARK: - File Import Modal VC
     
     @objc func newFilesAdded()
     {
-        if(pdfModalViewController!.isViewLoaded && (pdfModalViewController!.view!.window != nil))
+        if(importModalViewController!.isViewLoaded && (importModalViewController!.view!.window != nil))
         {
             return
         }
         else
         {
-            pdfModalViewController!.modalPresentationStyle = .overCurrentContext
-            navigationController!.present(pdfModalViewController!, animated: true, completion: nil)
+            importModalViewController!.modalPresentationStyle = .overFullScreen
+            importModalViewController!.modalTransitionStyle = .crossDissolve
+            navigationController!.present(importModalViewController!, animated: true, completion: nil)
         }
     }
     
-    
-    override func viewWillAppear(_ animated: Bool)
+    func headerDoneButtonPressed(_: Bool)
     {
-        super.viewWillAppear(animated)
-        editMode = false
-        self.localEntries = getLocalEntriesFromDisk()
-        self.collectionView?.reloadData()
+        importModalViewController?.modalTransitionStyle = .crossDissolve
+        importModalViewController?.dismiss(animated: true, completion: nil)
     }
+    
+    
+
 
     /*
     // MARK: - Navigation
@@ -233,6 +233,14 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 //            }
             flowLayout.invalidateLayout()
     }
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        editMode = false
+        self.localEntries = getLocalEntriesFromDisk()
+        self.collectionView?.reloadData()
+    }
 
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
@@ -288,11 +296,12 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     }
     */
 
-    
+    /*
     // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
     override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
         return true
     }
+    */
     
     /*
     override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {

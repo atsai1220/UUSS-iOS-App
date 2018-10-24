@@ -161,6 +161,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool
     {
+        
         let fileManager: FileManager = FileManager.default
         let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
         let tempDir = docDir?.appendingPathComponent("tmp/\(url.lastPathComponent)")
@@ -168,11 +169,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         
         do
         {
-            let pdfFile: Data = try Data(contentsOf: url)
+            // import either pdf or mp3
+  
+            let importedFile: Data = try Data(contentsOf: url)
+            
             
             do
             {
-                try pdfFile.write(to: tempDir!)
+                try importedFile.write(to: tempDir!)
                 NotificationCenter.default.post(name: Notification.Name("New data"), object: nil)
                 
             }

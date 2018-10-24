@@ -20,8 +20,8 @@
 		1C497F18217FC69E006E273F /* LocalResourceTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C9217F86C200DE68D3 /* LocalResourceTypeTableViewCell.swift */; };
 		1C497F19217FC6A0006E273F /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217CB217F86C200DE68D3 /* PhotoPickerViewController.swift */; };
 		1C497F1A217FC6A4006E273F /* SubcategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C3217F86C200DE68D3 /* SubcategoryTableViewCell.swift */; };
-		1C497F1B217FC6AD006E273F /* PdfFileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */; };
-		1C497F1C217FC6C1006E273F /* PdfTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F082175220F00281DB9 /* PdfTableViewController.swift */; };
+		1C497F1B217FC6AD006E273F /* ImportModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F052175220F00281DB9 /* ImportModalViewController.swift */; };
+		1C497F1C217FC6C1006E273F /* ImportTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F082175220F00281DB9 /* ImportTableViewController.swift */; };
 		1C497F1D217FC6C4006E273F /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F062175220F00281DB9 /* PDFViewController.swift */; };
 		1C497F1E217FC73F006E273F /* PdfCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F072175220F00281DB9 /* PdfCollectionViewController.swift */; };
 		1C497F1F217FC742006E273F /* DocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */; };
@@ -111,10 +111,10 @@
 		1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickerViewController.swift; sourceTree = "<group>"; };
 		F6028FEC2143303700429805 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		F60773662135F38A009F6962 /* AudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewController.swift; sourceTree = "<group>"; };
-		F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfFileModalViewController.swift; sourceTree = "<group>"; };
+		F60C9F052175220F00281DB9 /* ImportModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportModalViewController.swift; sourceTree = "<group>"; };
 		F60C9F062175220F00281DB9 /* PDFViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFViewController.swift; sourceTree = "<group>"; };
 		F60C9F072175220F00281DB9 /* PdfCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfCollectionViewController.swift; sourceTree = "<group>"; };
-		F60C9F082175220F00281DB9 /* PdfTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfTableViewController.swift; sourceTree = "<group>"; };
+		F60C9F082175220F00281DB9 /* ImportTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportTableViewController.swift; sourceTree = "<group>"; };
 		F60C9F0D21754A6500281DB9 /* LocalPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPlaybackViewController.swift; sourceTree = "<group>"; };
 		F60C9F0F21754D0A00281DB9 /* LocalAudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAudioViewController.swift; sourceTree = "<group>"; };
 		F621E6BA217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveAnnotationViewController.swift; sourceTree = "<group>"; };
@@ -347,9 +347,9 @@
 			isa = PBXGroup;
 			children = (
 				F60C9F072175220F00281DB9 /* PdfCollectionViewController.swift */,
-				F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */,
-				F60C9F082175220F00281DB9 /* PdfTableViewController.swift */,
 				F60C9F062175220F00281DB9 /* PDFViewController.swift */,
+				F60C9F082175220F00281DB9 /* ImportTableViewController.swift */,
+				F60C9F052175220F00281DB9 /* ImportModalViewController.swift */,
 				1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */,
 			);
 			path = PDF;
@@ -490,8 +490,8 @@
 				1C497F1F217FC742006E273F /* DocumentPickerViewController.swift in Sources */,
 				1C497F1E217FC73F006E273F /* PdfCollectionViewController.swift in Sources */,
 				1C497F1D217FC6C4006E273F /* PDFViewController.swift in Sources */,
-				1C497F1C217FC6C1006E273F /* PdfTableViewController.swift in Sources */,
-				1C497F1B217FC6AD006E273F /* PdfFileModalViewController.swift in Sources */,
+				1C497F1C217FC6C1006E273F /* ImportTableViewController.swift in Sources */,
+				1C497F1B217FC6AD006E273F /* ImportModalViewController.swift in Sources */,
 				1C497F1A217FC6A4006E273F /* SubcategoryTableViewCell.swift in Sources */,
 				1C497F19217FC6A0006E273F /* PhotoPickerViewController.swift in Sources */,
 				1C497F18217FC69E006E273F /* LocalResourceTypeTableViewCell.swift in Sources */,

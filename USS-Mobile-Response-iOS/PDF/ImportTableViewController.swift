@@ -13,7 +13,7 @@ protocol TableViewControllerDelegate: class
     func tableViewDone(_: Bool)
 }
 
-class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearDataDelegate, ImportAllDelegate
+class ImportTableViewController: UITableViewController, DoneWithImportDelegate, ClearDataDelegate, ImportAllDelegate
 {
     func importAll()
     {
@@ -30,7 +30,7 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
        
         let alert: UIAlertController = UIAlertController(title: "Files Imported", message: "Your files were imported to your documents library", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {(alert: UIAlertAction) -> Void in
-            self.dismissPDFForm(true)
+            self.dismissImportForm(true)
         }))
         self.present(alert, animated: true, completion: nil)
         
@@ -57,7 +57,7 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
         tableView.reloadData()
     }
     
-    func dismissPDFForm(_: Bool)
+    func dismissImportForm(_: Bool)
     {
         tableVCDelegate?.tableViewDone(true)
     }
@@ -72,8 +72,8 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
         makeImportDir()
         checkForPdfFilesAndLoad()
         tableView.layer.cornerRadius = 15.0
-        tableView.register(PdfTableCell.self, forCellReuseIdentifier: "cell")
-        tableView.register(PdfTableHeader.self, forHeaderFooterViewReuseIdentifier: "header")
+        tableView.register(ImportTableCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ImportTableHeader.self, forHeaderFooterViewReuseIdentifier: "header")
     }
     
     
@@ -123,7 +123,7 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as! PdfTableHeader
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as! ImportTableHeader
         header.doneDelegate = self
         header.clearDelegate = self
         header.importAllDelegate = self
@@ -138,9 +138,14 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! PdfTableCell
-        
-        cell.pdfTitle.text = tableData[indexPath.row].lastPathComponent
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! ImportTableCell
+        cell.importTitle.text = tableData[indexPath.row].lastPathComponent
+        let fileExtension = tableData[indexPath.row].pathExtension
+        if fileExtension == "pdf" {
+            cell.fileImageView.image = UIImage(named: "pdf")
+        } else {
+            cell.fileImageView.image = UIImage(named: "mp3")
+        }
         
         return cell
     }
@@ -174,7 +179,7 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
         
         let alert: UIAlertController = UIAlertController(title: "File Imported", message: "Your file was imported to your documents library", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {(alert: UIAlertAction) -> Void in
-            self.dismissPDFForm(true)
+            self.dismissImportForm(true)
         }))
         self.present(alert, animated: true, completion: nil)
     }
@@ -199,7 +204,7 @@ class PdfTableViewController: UITableViewController, DoneWithPDFDelegate, ClearD
 
 }
 
-class PdfTableCell: UITableViewCell
+class ImportTableCell: UITableViewCell
 {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
@@ -211,14 +216,14 @@ class PdfTableCell: UITableViewCell
         fatalError("init(coder:) has not been implemented")
     }
 
-    let pdfLogo: UIImageView =
+    let fileImageView: UIImageView =
     {
         var image: UIImageView = UIImageView(image: UIImage(named: "pdf"))
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
 
-    let pdfTitle: UILabel =
+    let importTitle: UILabel =
     {
         var label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -229,23 +234,23 @@ class PdfTableCell: UITableViewCell
 
     func setUpViews()
     {
-        addSubview(pdfLogo)
-        addSubview(pdfTitle)
+        addSubview(fileImageView)
+        addSubview(importTitle)
 
         NSLayoutConstraint.activate([
-            pdfLogo.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10.0),
-            pdfLogo.topAnchor.constraint(equalTo: self.topAnchor, constant: 2.0),
-            pdfLogo.heightAnchor.constraint(equalToConstant: 40.0),
-            pdfLogo.widthAnchor.constraint(equalToConstant: 40.0),
-            pdfTitle.leadingAnchor.constraint(equalTo: pdfLogo.trailingAnchor, constant: 15.0),
-            pdfTitle.centerYAnchor.constraint(equalTo: pdfLogo.centerYAnchor),
+            fileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10.0),
+            fileImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 2.0),
+            fileImageView.heightAnchor.constraint(equalToConstant: 40.0),
+            fileImageView.widthAnchor.constraint(equalToConstant: 40.0),
+            importTitle.leadingAnchor.constraint(equalTo: fileImageView.trailingAnchor, constant: 15.0),
+            importTitle.centerYAnchor.constraint(equalTo: fileImageView.centerYAnchor),
             ])
     }
 }
 
-protocol DoneWithPDFDelegate: class
+protocol DoneWithImportDelegate: class
 {
-    func dismissPDFForm(_:Bool)
+    func dismissImportForm(_:Bool)
 }
 protocol ClearDataDelegate: class
 {
@@ -256,9 +261,9 @@ protocol ImportAllDelegate: class
     func importAll()
 }
 
-class PdfTableHeader: UITableViewHeaderFooterView
+class ImportTableHeader: UITableViewHeaderFooterView
 {
-    weak var doneDelegate: DoneWithPDFDelegate?
+    weak var doneDelegate: DoneWithImportDelegate?
     weak var clearDelegate: ClearDataDelegate?
     weak var importAllDelegate: ImportAllDelegate?
     let fileManager: FileManager = FileManager.default
@@ -333,7 +338,7 @@ class PdfTableHeader: UITableViewHeaderFooterView
     
     @objc func doneWithPdfForm()
     {
-        doneDelegate?.dismissPDFForm(true)
+        doneDelegate?.dismissImportForm(true)
         
     }
     

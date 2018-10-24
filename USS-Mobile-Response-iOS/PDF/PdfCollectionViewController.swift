@@ -20,6 +20,7 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
     func deleteCell(indexPath: IndexPath)
     {
         //Get url to delete from imports folder
+        print(indexPath.row)
         let url: URL = dataSource[indexPath.row]
         //Delete from data source
         dataSource.remove(at: indexPath.row)

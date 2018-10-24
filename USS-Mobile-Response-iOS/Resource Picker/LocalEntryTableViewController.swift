@@ -612,7 +612,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         } else {
             let savedName = createLocalEntry()
             let networkVC = NetworkViewController()
-            networkVC.modalPresentationStyle = .overCurrentContext
+            networkVC.modalPresentationStyle = .overFullScreen
             networkVC.modalTransitionStyle = .crossDissolve
             let oldEntries = getLocalEntriesFromDisk()
             
