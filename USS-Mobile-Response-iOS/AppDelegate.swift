@@ -165,21 +165,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         let fileManager: FileManager = FileManager.default
         let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
         let tempDir = docDir?.appendingPathComponent("tmp/\(url.lastPathComponent)")
-        //TODO: Delete from Documents/Inbox
-
         do
         {
-            try fileManager.moveItem(at: url, to: tempDir!)
+            let importedFile: Data = try Data(contentsOf: url)
+            try importedFile.write(to: tempDir!)
             NotificationCenter.default.post(name: Notification.Name("New data"), object: nil)
-            
         }
         catch
         {
             print(error.localizedDescription)
             return false
         }
-
-
         return true
     }
 }

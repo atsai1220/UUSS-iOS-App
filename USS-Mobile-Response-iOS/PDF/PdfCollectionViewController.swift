@@ -72,7 +72,7 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
     }
     
     var dataSource: [URL] = []
-    let importDir: URL = getDocumentsURL().appendingPathComponent("import")
+    let importDir: URL = getDocumentsURL().appendingPathComponent("pdf-import")
     var pdfImage: PDFView = PDFView()
     weak var pdfDelegate: PDFDelegate?
     static var showDelete: Bool = false
@@ -167,7 +167,7 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
         {
             while let file = importEnum!.nextObject()
             {
-                if(!dataSource.contains(getDocumentsURL().appendingPathComponent("import").appendingPathComponent(file as! String)))
+                if(!dataSource.contains(getDocumentsURL().appendingPathComponent("pdf-import").appendingPathComponent(file as! String)))
                 {
                     dataSource.append(importDir.appendingPathComponent(file as! String))
                 }

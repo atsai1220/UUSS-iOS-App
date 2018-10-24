@@ -21,7 +21,12 @@ class ImportTableViewController: UITableViewController, DoneWithImportDelegate, 
         {
             let file: Data = fileManager.contents(atPath: tableData[i].relativePath)!
             let fileName: String = tableData[i].lastPathComponent
-            fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)
+            let fileExtension: String = tableData[i].pathExtension
+            if fileExtension == "pdf" {
+                fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("pdf-import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)
+            } else {
+                fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("mp3-import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)
+            }
             printImportDir()
         }
         
@@ -47,10 +52,17 @@ class ImportTableViewController: UITableViewController, DoneWithImportDelegate, 
                 {
                     print("file removed")
                 }
+                let dirURL = getDocumentsURL()
+                let inboxDirURL = dirURL.appendingPathComponent("Inbox", isDirectory: true)
+                let filePaths = try fileManager.contentsOfDirectory(atPath: inboxDirURL.path)
+                for path in filePaths {
+                    let filePath = inboxDirURL.appendingPathComponent(path)
+                    try fileManager.removeItem(at: filePath)
+                }
             }
             catch
             {
-                print(error)
+                print(error.localizedDescription)
             }
         }
         tableData.removeAll()
@@ -70,7 +82,7 @@ class ImportTableViewController: UITableViewController, DoneWithImportDelegate, 
     {
         super.viewDidLoad()
         makeImportDir()
-        checkForPdfFilesAndLoad()
+        checkforImportFilesAndLoad()
         tableView.layer.cornerRadius = 15.0
         tableView.register(ImportTableCell.self, forCellReuseIdentifier: "cell")
         tableView.register(ImportTableHeader.self, forHeaderFooterViewReuseIdentifier: "header")
@@ -79,11 +91,12 @@ class ImportTableViewController: UITableViewController, DoneWithImportDelegate, 
     
     func makeImportDir()
     {
-        let importDir: URL = getDocumentsURL().appendingPathComponent("import")
-        
+        let pdfImportDir: URL = getDocumentsURL().appendingPathComponent("pdf-import")
+        let mp3ImportDir: URL = getDocumentsURL().appendingPathComponent("mp3-import")
         do
         {
-            try fileManager.createDirectory(at: importDir, withIntermediateDirectories: false, attributes: nil)
+            try fileManager.createDirectory(at: pdfImportDir, withIntermediateDirectories: false, attributes: nil)
+            try fileManager.createDirectory(at: mp3ImportDir, withIntermediateDirectories: false, attributes: nil)
         }
         catch
         {
@@ -95,10 +108,10 @@ class ImportTableViewController: UITableViewController, DoneWithImportDelegate, 
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(checkForPdfFilesAndLoad), name: Notification.Name("New data"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkforImportFilesAndLoad), name: Notification.Name("New data"), object: nil)
     }
     
-    @objc func checkForPdfFilesAndLoad()
+    @objc func checkforImportFilesAndLoad()
     {
         let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
         let tempDocDir = docDir!.appendingPathComponent("tmp")
@@ -107,7 +120,6 @@ class ImportTableViewController: UITableViewController, DoneWithImportDelegate, 
         while let file = filesEnumerator?.nextObject()
         {
             let fileURL = docDir!.appendingPathComponent("tmp").appendingPathComponent(file as! String)
-            print(fileURL)
             if(!tableData.contains(fileURL))
             {
                 tableData.append(fileURL)
@@ -152,14 +164,19 @@ class ImportTableViewController: UITableViewController, DoneWithImportDelegate, 
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        if(fileManager.fileExists(atPath: getDocumentsURL().appendingPathComponent("import").relativePath))
-        {
-            print("file exists")
-        }
+//        if(fileManager.fileExists(atPath: getDocumentsURL().appendingPathComponent("import").relativePath))
+//        {
+//            print("file exists")
+//        }
         
         let file: Data = fileManager.contents(atPath: tableData[indexPath.row].relativePath)!
         let fileName: String = tableData[indexPath.row].lastPathComponent
-        fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)
+        let fileExtension = tableData[indexPath.row].pathExtension
+        if fileExtension == "pdf" {
+            fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("pdf-import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)
+        } else {
+            fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("mp3-import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)
+        }
         printImportDir()
         NotificationCenter.default.post(name: Notification.Name("Import Data"), object: nil)
 
@@ -169,7 +186,7 @@ class ImportTableViewController: UITableViewController, DoneWithImportDelegate, 
         }
         catch
         {
-            print(error)
+            print(error.localizedDescription)
         }
         
         tableData.remove(at: indexPath.row)
@@ -282,7 +299,7 @@ class ImportTableHeader: UITableViewHeaderFooterView
     var clearButton: UIButton =
     {
         var button: UIButton = UIButton(type: .system)
-        button.addTarget(self, action: #selector(clearPdf), for: .touchUpInside)
+        button.addTarget(self, action: #selector(clearData), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.titleLabel!.font = .systemFont(ofSize: 20.0)
         button.titleLabel!.textColor = .blue
@@ -331,7 +348,7 @@ class ImportTableHeader: UITableViewHeaderFooterView
             ])
     }
     
-    @objc func clearPdf()
+    @objc func clearData()
     {
         clearDelegate?.clearData()
     }
@@ -347,9 +364,13 @@ class ImportTableHeader: UITableViewHeaderFooterView
         //Write all the files to a documents/import/pdf
         do
         {
-            if(!fileManager.fileExists(atPath: getDocumentsURL().appendingPathComponent("import").relativePath))
+            if(!fileManager.fileExists(atPath: getDocumentsURL().appendingPathComponent("pdf-import").relativePath))
             {
-                try fileManager.createDirectory(at: getDocumentsURL().appendingPathComponent("import"), withIntermediateDirectories: false, attributes: nil)
+                try fileManager.createDirectory(at: getDocumentsURL().appendingPathComponent("pdf-import"), withIntermediateDirectories: false, attributes: nil)
+            }
+            if(!fileManager.fileExists(atPath: getDocumentsURL().appendingPathComponent("mp3-import").relativePath))
+            {
+                try fileManager.createDirectory(at: getDocumentsURL().appendingPathComponent("mp3-import"), withIntermediateDirectories: false, attributes: nil)
             }
             importAllDelegate?.importAll()
         }
