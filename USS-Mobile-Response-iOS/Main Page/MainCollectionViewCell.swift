@@ -207,16 +207,10 @@ class MainCollectionViewCell: UICollectionViewCell {
     func hideDeleteButton() {
         if let superView = self.superview {
             if deleteViewButton.isDescendant(of: superView) {
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.deleteViewButton.alpha = 0.0
-                }) { (done) in
-                    if done {
-                        self.deleteViewButton.removeFromSuperview()
-                    }
-                }
+                UIView.animate(withDuration: 0.3, animations: { self.deleteViewButton.alpha = 0.0 })
+                deleteViewButton.removeFromSuperview()
             }
         }
-
     }
     
     func toggleDeleteButtion() {

@@ -331,11 +331,15 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             self.resourceType = FileType.VIDEO
             self.showFileSourceActionSheet()
         }))
-        actionSheet.addAction(UIAlertAction(title: "Audio (.MP4)", style: .default, handler: { (action: UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "Audio (.MP3)", style: .default, handler: { (action: UIAlertAction) in
             self.resourceType = FileType.AUDIO
             // TODO: implement showing and receiving audio files as alternative file
-            let audioViewController = AudioViewController()
-            self.navigationController?.pushViewController(audioViewController, animated: true)
+            let layout = UICollectionViewFlowLayout()
+            layout.scrollDirection = .vertical
+            layout.sectionInset = UIEdgeInsets(top: 25.0, left: 20.0, bottom: 25.0, right: 20.0)
+            let mp3CollectionVC = Mp3CollectionViewController(collectionViewLayout: layout)
+//            mp3CollectionVC.mp3Delegate = self
+            self.navigationController?.pushViewController(mp3CollectionVC, animated: true)
         }))
         actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
             self.resourceType = FileType.DOCUMENT
@@ -343,9 +347,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
             layout.scrollDirection = .vertical
             layout.sectionInset = UIEdgeInsets(top: 25.0, left: 10.0, bottom: 2.0, right: 10.0)
-            self.pdfCollectionViewController = PdfCollectionViewController(collectionViewLayout: layout)
-            self.pdfCollectionViewController?.pdfDelegate = self
-            self.navigationController?.pushViewController(self.pdfCollectionViewController!, animated: true)
+            let pdfCollectionVC = PdfCollectionViewController(collectionViewLayout: layout)
+            pdfCollectionVC.pdfDelegate = self
+            self.navigationController?.pushViewController(pdfCollectionVC, animated: true)
+//            self.pdfCollectionViewController = PdfCollectionViewController(collectionViewLayout: layout)
+//            self.pdfCollectionViewController?.pdfDelegate = self
+//            self.navigationController?.pushViewController(self.pdfCollectionViewController!, animated: true)
             
         }))
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(alert: UIAlertAction)-> Void in
