@@ -12,7 +12,7 @@ import CoreLocation
 import MobileCoreServices
 import PDFKit
 
-class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PDFDelegate, SaveAudioDelegate
+class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PDFDelegate, Mp3Delegate
 {
     let infoCellId = "infoCellId"
     let resourceCellId = "resourceCellId"
@@ -338,7 +338,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             layout.scrollDirection = .vertical
             layout.sectionInset = UIEdgeInsets(top: 25.0, left: 20.0, bottom: 25.0, right: 20.0)
             let mp3CollectionVC = Mp3CollectionViewController(collectionViewLayout: layout)
-//            mp3CollectionVC.mp3Delegate = self
+            mp3CollectionVC.mp3Delegate = self
             self.navigationController?.pushViewController(mp3CollectionVC, animated: true)
         }))
         actionSheet.addAction(UIAlertAction(title: "Documents (.PDF)", style: .default, handler: { (action: UIAlertAction) in
@@ -432,6 +432,15 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
     }
     
+    // MARK: - MP3 functions
+    
+    func returnMp3(with mp3URL: URL) {
+        let altFile = AltFile.init(name: mp3URL.deletingPathExtension().lastPathComponent, url: mp3URL.path, type: FileType.AUDIO.rawValue)
+        self.altFiles.append(altFile)
+        self.tableView.beginUpdates()
+        self.tableView.reloadSections(IndexSet([3]), with: .fade)
+        self.tableView.endUpdates()
+    }
     
     // MARK: - PDF functions
     
@@ -441,14 +450,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         imageForPDF = drawPDFfromURL(url: pdfURL)
         localFileName = saveExistingImageAtDocumentDirectory(image: imageForPDF!)
         resourceSelected = true
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-    }
-    
-    func saveAudio(with url: URL)
-    {
-        audioImage = UIImage(named: "audio")
-        resourceSelected = true
-        
         tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
     }
     
@@ -1277,10 +1278,16 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             let cell = tableView.dequeueReusableCell(withIdentifier: alternativeFileCellId, for: indexPath) as! AlternativeTableViewCell
             let altFile = self.altFiles[indexPath.row]
             cell.separatorInset = .zero
-            cell.altImageView.image = getImageFromDocumentDirectory(imageName: altFile.name + ".jpeg")
+            
             cell.cellLabel.text = altFile.name
             cell.fileLabel.text = altFile.type
 
+            if altFile.type == FileType.PHOTO.rawValue || altFile.type == FileType.VIDEO.rawValue {
+                cell.altImageView.image = getImageFromDocumentDirectory(imageName: altFile.name + ".jpeg")
+            } else {
+                cell.altImageView.image = UIImage(named: "audio")
+            }
+            
             return cell
         }
     }
