@@ -446,11 +446,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     func returnPDF(with pdfURL: URL)
     {
-        self.pdfURL = pdfURL
-        imageForPDF = drawPDFfromURL(url: pdfURL)
-        localFileName = saveExistingImageAtDocumentDirectory(image: imageForPDF!)
-        resourceSelected = true
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        let altFile = AltFile.init(name: pdfURL.deletingPathExtension().lastPathComponent, url: pdfURL.path, type: FileType.DOCUMENT.rawValue)
+        let pdfImage = drawPDFfromURL(url: pdfURL)
+        saveExistingImageAtDocumentDirectory(with: pdfURL.lastPathComponent, image: pdfImage!)
+        self.altFiles.append(altFile)
+        self.tableView.beginUpdates()
+        self.tableView.reloadSections(IndexSet([3]), with: .fade)
+        self.tableView.endUpdates()
     }
     
     func drawPDFfromURL(url: URL) -> UIImage?
@@ -1284,8 +1286,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
 
             if altFile.type == FileType.PHOTO.rawValue || altFile.type == FileType.VIDEO.rawValue {
                 cell.altImageView.image = getImageFromDocumentDirectory(imageName: altFile.name + ".jpeg")
-            } else {
+            } else if altFile.type == FileType.AUDIO.rawValue {
                 cell.altImageView.image = UIImage(named: "audio")
+            } else {
+                let pdfImage = getImageFromDocumentDirectory(imageName: altFile.name + ".jpeg")
+                cell.altImageView.image = pdfImage
             }
             
             return cell
