@@ -693,11 +693,14 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(URL(string: altFile.url)!.lastPathComponent)
             
             do {
-                try FileManager.default.copyItem(at: URL(string: altFile.url)!, to: localEntryURL)
+//                let test = URL(string: altFile.url)!
+//                let okay = test.absoluteURL
+//                let test2 = localEntryURL.path
+                try FileManager.default.copyItem(at: URL(fileURLWithPath: altFile.url), to: localEntryURL)
             } catch {
                 print(error.localizedDescription)
             }
-            altFile.url = localEntryURL.absoluteString
+            altFile.url = localEntryURL.path
         }
         
         newEntry.localFileName = savedImageName

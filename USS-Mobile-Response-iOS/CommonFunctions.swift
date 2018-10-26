@@ -283,6 +283,16 @@ func getImageFromDocumentDirectory(imageName: String) -> UIImage? {
     }
 }
 
+func getImageFromLocalEntriesDirectory(imageName: String) -> UIImage? {
+    let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(imageName).path
+    if FileManager.default.fileExists(atPath: imagePath) {
+        return UIImage(contentsOfFile: imagePath)
+    }
+    else {
+        return nil
+    }
+}
+
 func getVideoFromDocumentDirectory(videoName: String) -> Data? {
     let videoData: Data?
     do {
