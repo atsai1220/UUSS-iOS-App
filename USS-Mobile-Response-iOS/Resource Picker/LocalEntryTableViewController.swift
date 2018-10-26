@@ -432,7 +432,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     // MARK: - MP3 functions
     
     func returnMp3(with mp3URL: URL) {
-        let altFile = AltFile.init(name: mp3URL.deletingPathExtension().lastPathComponent, url: mp3URL.path, type: FileType.AUDIO.rawValue)
+        var altFile = AltFile.init(name: mp3URL.deletingPathExtension().lastPathComponent, url: mp3URL.path, type: FileType.AUDIO.rawValue)
         self.altFiles.append(altFile)
         self.tableView.beginUpdates()
         self.tableView.reloadSections(IndexSet([3]), with: .fade)
@@ -443,7 +443,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     func returnPDF(with pdfURL: URL)
     {
-        let altFile = AltFile.init(name: pdfURL.deletingPathExtension().lastPathComponent, url: pdfURL.path, type: FileType.DOCUMENT.rawValue)
+        var altFile = AltFile.init(name: pdfURL.deletingPathExtension().lastPathComponent, url: pdfURL.path, type: FileType.DOCUMENT.rawValue)
         let pdfImage = drawPDFfromURL(url: pdfURL)
         saveExistingImageAtDocumentDirectory(with: pdfURL.lastPathComponent, image: pdfImage!)
         self.altFiles.append(altFile)
@@ -552,14 +552,14 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                         let imageName = saveExistingImageAtDocumentDirectory(image: image!)
                         let imagePath = getDocumentsURL().appendingPathComponent(imageName).path
                         let fileNameWithoutExtension = NSURL(fileURLWithPath: imageName).deletingPathExtension?.lastPathComponent ?? ""
-                        let altFile = AltFile.init(name: fileNameWithoutExtension, url: imagePath, type: FileType.PHOTO.rawValue)
+                        var altFile = AltFile.init(name: fileNameWithoutExtension, url: imagePath, type: FileType.PHOTO.rawValue)
                         self.altFiles.append(altFile)
                     } else {
                         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                             let imageName = saveExistingImageAtDocumentDirectory(image: image)
                             let imageURL = getDocumentsURL().appendingPathComponent(imageName)
                             let fileNameWithoutExtension = NSURL(fileURLWithPath: imageName).deletingPathExtension?.lastPathComponent ?? ""
-                            let altFile = AltFile.init(name: fileNameWithoutExtension, url: imageURL.path, type: FileType.PHOTO.rawValue)
+                            var altFile = AltFile.init(name: fileNameWithoutExtension, url: imageURL.path, type: FileType.PHOTO.rawValue)
                             self.altFiles.append(altFile)
                         }
                     }
@@ -572,7 +572,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                         let image = createVideoThumbnail(from: videoURL.absoluteString)
                         let videoName = saveExistingImageAtDocumentDirectory(image: image)
                         let fileNameWithoutExtension = NSURL(fileURLWithPath: videoName).deletingPathExtension?.lastPathComponent ?? ""
-                        let altFile = AltFile.init(name: fileNameWithoutExtension, url: videoURL.path, type: FileType.VIDEO.rawValue)
+                        var altFile = AltFile.init(name: fileNameWithoutExtension, url: videoURL.path, type: FileType.VIDEO.rawValue)
                         self.altFiles.append(altFile)
                         self.tableView.beginUpdates()
                         self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
@@ -642,6 +642,24 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         
     }
     
+    func createLocalEntryDirectory() {
+        let fileManager: FileManager = FileManager.default
+        let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+        let tempDocDir = docDir!.appendingPathComponent("local-entries")
+        
+        if(!fileManager.fileExists(atPath: tempDocDir.relativePath))
+        {
+            do
+            {
+                try fileManager.createDirectory(at: tempDocDir, withIntermediateDirectories: false, attributes: nil)
+            }
+            catch
+            {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     func createLocalEntry() -> String {
         let titleCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
         let descriptionCell = self.tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
@@ -652,13 +670,36 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         newEntry.notes = notesCell.textView.text
         newEntry.collectionRef = self.entryReference
         
-        // TODO: save main photo
+        // Create/check for local resource entry folder
+        createLocalEntryDirectory()
+        
+        // Copy image to local entries directory
         var savedImageName = ""
         if let possibleImageURL = self.imageURL {
             savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
         } else {
             savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
         }
+        let savedImageURL = getDocumentsURL().appendingPathComponent(savedImageName)
+        let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(savedImageName)
+        do {
+            try FileManager.default.moveItem(at: savedImageURL, to: localEntryURL)
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        // Copy each alt file to local entry directory
+        for var altFile in self.altFiles {
+            let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(URL(string: altFile.url)!.lastPathComponent)
+            
+            do {
+                try FileManager.default.copyItem(at: URL(string: altFile.url)!, to: localEntryURL)
+            } catch {
+                print(error.localizedDescription)
+            }
+            altFile.url = localEntryURL.absoluteString
+        }
+        
         newEntry.localFileName = savedImageName
         newEntry.fileType = FileType.PHOTO.rawValue
         newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
@@ -1280,7 +1321,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
         else {
             let cell = tableView.dequeueReusableCell(withIdentifier: alternativeFileCellId, for: indexPath) as! AlternativeTableViewCell
-            let altFile = self.altFiles[indexPath.row]
+            var altFile = self.altFiles[indexPath.row]
             cell.separatorInset = .zero
             
             cell.cellLabel.text = altFile.name
