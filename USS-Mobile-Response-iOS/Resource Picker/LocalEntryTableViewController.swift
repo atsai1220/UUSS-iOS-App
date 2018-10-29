@@ -636,14 +636,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 }
             }
             networkVC.localEntry = currentEntry
-            self.navigationController?.present(networkVC, animated: true, completion: {
-                print("completion function")
-//                self.navigationController?.popToRootViewController(animated: true)
-            })
+            self.navigationController?.present(networkVC, animated: true, completion: nil)
             //            httpUpload()
             //            createResourceSpaceEntry(fileName: savedName)
             //            addResourceToCollection()
-//                        self.navigationController?.popToRootViewController(animated: true)
+            self.navigationController?.popToRootViewController(animated: true)
         }
         
     }

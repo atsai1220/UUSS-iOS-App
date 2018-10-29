@@ -14,6 +14,7 @@ protocol NetWorkManagerDelegate {
     func dismissProgressBar()
     func showProgressBar()
     func dismissProgressController()
+    func popToRootController()
 }
 
 class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
@@ -65,6 +66,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         }
         mainOperation.onDidUpload = { (uploadResult) in
             if let result = uploadResult {
+                // TODO: parse http response
                 self.result.append(result)
             }
         }
@@ -73,36 +75,37 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         }
         queue.addOperation(mainOperation)
         
-        if let altFiles = item.altFiles {
-            for altFile in altFiles {
-                let altOperation = UploadAltFileOperation(altFile: altFile)
-                altOperation.onProgress = { (progress) in
-                    self.updateDelegateWith(progress: progress)
-                }
-                altOperation.onDidUpload = { (uploadResult) in
-                    if let result = uploadResult {
-                            
-                        self.result.append(result)
-                    }
-                }
-                if let lastOp = queue.operations.last {
-                    altOperation.addDependency(lastOp)
-                }
-                queue.addOperation(altOperation)
+        for altFile in item.altFiles ?? [] {
+            let altOperation = UploadAltFileOperation(altFile: altFile)
+            altOperation.onProgress = { (progress) in
+                print("PROGRESSSSSS: " + String(progress))
+//                print(progress)
+//                self.updateDelegateWith(progress: progress)
             }
-        } else {
-            print("no alt files")
+            altOperation.onDidUpload = { (uploadResult) in
+                if let result = uploadResult {
+                    // TODO: parse http response
+                    self.result.append(result)
+                }
+            }
+            if let lastOp = queue.operations.last {
+                altOperation.addDependency(lastOp)
+            }
+            queue.addOperation(altOperation)
         }
         
         let finishOperation = BlockOperation { [unowned self] in
             self.dismissProgressController()
-            print(self.result)
-            print("OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG ")
+            for result in self.result {
+                print(result)
+            }
+            self.delegate?.popToRootController()
         }
         if let lastOp = queue.operations.last {
             finishOperation.addDependency(lastOp)
         }
         queue.addOperation(finishOperation)
+        
         queue.isSuspended = false
     }
     
@@ -143,7 +146,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         let configuration = URLSessionConfiguration.default
         
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-        
+
         let task = session.dataTask(with: request) {
             (data, response, error) in
             guard let data = data, response != nil, error == nil else {
@@ -151,9 +154,8 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                 return
             }
             let dataString = String(data: data, encoding: .utf8)
-            completionBlock(dataString!)
-//            print(dataString!)
             DispatchQueue.main.async {
+                completionBlock(dataString!)
             }
             
         }

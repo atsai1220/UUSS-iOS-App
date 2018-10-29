@@ -17,6 +17,7 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     var progressBar = UIProgressView()
     
     func uploadProgressWith(progress: Float) {
+        print("updating progress barrrr")
         if let altFiles = localEntry?.altFiles {
             progressBar.progress = progress / Float(altFiles.count)
         } else {
@@ -39,6 +40,13 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     
     func dismissProgressController() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    func popToRootController() {
+        print("popping")
+//        if let navigationController = self.window?.rootViewController as? UINavigationController {
+//            navigationController.popToRootViewController(animated: true)
+//        }
     }
     
     override func viewDidLoad() {

@@ -15,7 +15,16 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 {
     func deleteThis(cellIndexPath: IndexPath) {
         print(cellIndexPath.row)
-        if self.localEntries.count > 0 {
+        if cellIndexPath.row == 1 && self.localEntries.count == 1 {
+            var trashEntries = getTrashEntriesFromDisk()
+            trashEntries.append(self.localEntries[0])
+            saveTrashEntriesToDisk(entries: trashEntries)
+            self.localEntries.remove(at: 0)
+            collectionView?.deleteItems(at: [IndexPath(row: 0, section: 0)])
+            saveLocalEntriesToDisk(entries: self.localEntries)
+            self.collectionView?.reloadData()
+        }
+        else if self.localEntries.count > 0 {
             var trashEntries = getTrashEntriesFromDisk()
             trashEntries.append(self.localEntries[cellIndexPath.row])
             saveTrashEntriesToDisk(entries: trashEntries)
