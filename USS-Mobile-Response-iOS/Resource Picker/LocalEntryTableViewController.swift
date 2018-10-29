@@ -361,6 +361,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.present(actionSheet, animated: true, completion: nil)
     }
     
+    @objc func selectingMainImage() {
+        self.resourceType = .PHOTO
+        self.pickingForAltFiles = false
+        showFileSourceActionSheet()
+    }
+    
     @objc private func showFileSourceActionSheet() {
         switch resourceType {
         case .PHOTO:
@@ -618,26 +624,26 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
         } else {
             let savedName = createLocalEntry()
-//            let networkVC = NetworkViewController()
-//            networkVC.modalPresentationStyle = .overFullScreen
-//            networkVC.modalTransitionStyle = .crossDissolve
-//            let oldEntries = getLocalEntriesFromDisk()
-//
-//            let currentEntry = oldEntries.first { (entry) -> Bool in
-//                if entry.localFileName == savedName {
-//                    return true
-//                } else {
-//                    return false
-//                }
-//            }
-//            networkVC.localEntry = currentEntry
-//            self.navigationController?.present(networkVC, animated: true, completion: {
+            let networkVC = NetworkViewController()
+            networkVC.modalPresentationStyle = .overFullScreen
+            networkVC.modalTransitionStyle = .crossDissolve
+            let oldEntries = getLocalEntriesFromDisk()
+            let currentEntry = oldEntries.first { (entry) -> Bool in
+                if entry.localFileName == savedName {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            networkVC.localEntry = currentEntry
+            self.navigationController?.present(networkVC, animated: true, completion: {
+                print("completion function")
 //                self.navigationController?.popToRootViewController(animated: true)
-//            })
+            })
             //            httpUpload()
             //            createResourceSpaceEntry(fileName: savedName)
             //            addResourceToCollection()
-                        self.navigationController?.popToRootViewController(animated: true)
+//                        self.navigationController?.popToRootViewController(animated: true)
         }
         
     }
@@ -690,12 +696,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         
         // Copy each alt file to local entry directory
         for var altFile in self.altFiles {
-            let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(URL(string: altFile.url)!.lastPathComponent)
+            let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(URL(fileURLWithPath: altFile.url).lastPathComponent)
             
             do {
-//                let test = URL(string: altFile.url)!
-//                let okay = test.absoluteURL
-//                let test2 = localEntryURL.path
                 try FileManager.default.copyItem(at: URL(fileURLWithPath: altFile.url), to: localEntryURL)
             } catch {
                 print(error.localizedDescription)
@@ -708,7 +711,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
         newEntry.altFiles = self.altFiles
         updateLocalEntries(with: newEntry)
-        return "debugSavedName"
+        return newEntry.localFileName!
         // TODO: save each alternative file if available
 //        switch resourceType
 //        {
@@ -1218,7 +1221,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         if indexPath.section == 0 {
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
-                cell.insertButton.addTarget(self, action: #selector(showFileSourceActionSheet), for: .touchUpInside)
+                cell.insertButton.addTarget(self, action: #selector(selectingMainImage), for: .touchUpInside)
+                self.resourceType = .PHOTO
                 cell.cellLabel.becomeFirstResponder()
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Resource"

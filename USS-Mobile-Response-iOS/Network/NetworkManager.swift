@@ -12,49 +12,112 @@ import UIKit
 protocol NetWorkManagerDelegate {
     func uploadProgressWith(progress: Float)
     func dismissProgressBar()
+    func showProgressBar()
+    func dismissProgressController()
 }
 
 class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
     
     var delegate: NetWorkManagerDelegate?
+    var localEntry: LocalEntry!
 
-    func uploadResource(item: LocalEntry) {
-        switch item.fileType {
-        case FileType.PHOTO.rawValue:
-            let image = getImageFromDocumentDirectory(imageName: item.localFileName!)
-            let imageData = UIImageJPEGRepresentation(image!, 0.9)
-            if (imageData == nil) { return }
-            let boundary = generateBoundaryString()
-            let fullFormData = resourceDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
-            sendPostRequestWith(body: fullFormData, boundary: boundary)
-        
-        case FileType.VIDEO.rawValue:
-            var movieData: Data?
-            do {
-                let path = URL(fileURLWithPath: item.videoURL!)
-                movieData = try Data(contentsOf: path)
-                let boundary = generateBoundaryString()
-                let fullFormData = resourceDataToFormData(data: movieData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
-                sendPostRequestWith(body: fullFormData, boundary: boundary)
-            } catch {
-                dismissProgressBar()
-                displayErrorMessage(title: "Error", message: "Video upload error.")
+    func httpUpload(item: LocalEntry) {
+        // handle main image
+        self.localEntry = item
+        let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(localEntry.localFileName!).path
+        let image = UIImage(contentsOfFile: imagePath)
+        let imageData = UIImageJPEGRepresentation(image!, 0.9)
+        if (imageData == nil) { return }
+        let boundary = generateBoundaryString()
+        let fullFormData = resourceDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
+        sendPostRequestWith(body: fullFormData, boundary: boundary)
+
+        // handle alternative files
+        var count = 1
+        if let altFiles = item.altFiles {
+            if altFiles.count == 0 {
+                print("ALT FILE IS ZERO COUNT")
+                self.dismissProgressController()
             }
- 
-        case FileType.AUDIO.rawValue:
-            var audioData: Data?
-            do {
-                let cafPath = getDocumentsURL().appendingPathComponent(item.localFileName! + ".caf")
-                convertToMp3(with: cafPath, name: item.localFileName!)
-                
-            } catch {
-                
+            showProgressBar()
+            for altFile in altFiles {
+                do {
+                    let path = URL(fileURLWithPath: altFile.url)
+                    let fileData = try Data(contentsOf: path)
+                    let boundary = generateBoundaryString()
+                    let fileExtension = URL(fileURLWithPath: altFile.url).pathExtension
+                    let fullFormData = resourceDataToFormData(data: fileData as NSData, boundary: boundary, fileName: altFile.name + "." + fileExtension, type: altFile.type)
+                    sendPostRequestForAltWith(body: fullFormData, boundary: boundary, maxCount: altFiles.count, currentCount: count)
+                } catch {
+                    dismissProgressController()
+                    displayErrorMessage(title: "Error", message: "Upload error.")
+                }
+                count += 1
             }
-        case FileType.DOCUMENT.rawValue:
-            print("uploading document")
-        default:
-            print("NetworkManager: should never happen")
+        } else {
+            dismissProgressController()
         }
+    }
+    
+    func uploadAlternativeFiles(altFiles: [AltFile]) {
+        
+    }
+    
+    // TODO: add JSON metadata
+    func createResource(resourceType: Int = 1, archivalState: Int = 0, serverFileURL: String) {
+        
+    }
+    
+    func addAlternativeFile(resourceId: Int, name: String, description: String, fileName: String, fileExtension: String, fileSize: Int, fileURL: String) {
+        
+    }
+    
+    func addResourceToCollection(resourceId: Int, collectionId: Int) {
+        
+    }
+
+    func sendPostRequestForAltWith(body fullFormData: Data, boundary: String, maxCount: Int, currentCount: Int) {
+        let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
+        let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=http_upload"
+        let signature = "&sign=" + (privateKey + queryString).sha256()!
+        let completeURL = urlString + queryString + signature
+        guard let url = URL(string: completeURL) else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Keep-Alive", forHTTPHeaderField: "Connection")
+        request.setValue("multipart/form-data; boundary=" + boundary, forHTTPHeaderField: "Content-Type")
+        
+        request.setValue(String(fullFormData.count), forHTTPHeaderField: "Content-Length")
+        request.httpBody = fullFormData
+        request.httpShouldHandleCookies = false
+        
+        let configuration = URLSessionConfiguration.default
+        
+        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+        
+        let task = session.dataTask(with: request) {
+            (data, response, error) in
+            guard let data = data, response != nil, error == nil else {
+                self.displayErrorMessage(title: "Alert", message: "There was an error.")
+                return
+            }
+            let dataString = String(data: data, encoding: .utf8)
+            print(dataString!)
+            DispatchQueue.main.async {
+                if currentCount == maxCount {
+//                    self.dismissProgressController()
+                                        self.dismissProgressBar()
+                } else {
+//                    self.dismissProgressBar()
+//                    self.showProgressBar()
+                }
+                
+            }
+            
+        }
+        task.resume()
     }
     
     func sendPostRequestWith(body fullFormData: Data, boundary: String) {
@@ -85,11 +148,12 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                 return
             }
             let dataString = String(data: data, encoding: .utf8)
-            print(dataString ?? "Undecodable result")
-            
+            print(dataString!)
             DispatchQueue.main.async {
-                print("done")
+//                self.dismissProgressController()
+                self.dismissProgressBar()
             }
+            
         }
         task.resume()
     }
@@ -174,6 +238,14 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
     func dismissProgressBar() {
         delegate?.dismissProgressBar()
+    }
+    
+    func showProgressBar() {
+        delegate?.showProgressBar()
+    }
+    
+    func dismissProgressController() {
+        delegate?.dismissProgressController()
     }
     
 }
