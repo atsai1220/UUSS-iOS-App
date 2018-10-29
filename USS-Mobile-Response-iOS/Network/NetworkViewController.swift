@@ -18,7 +18,7 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     
     func uploadProgressWith(progress: Float) {
         if let altFiles = localEntry?.altFiles {
-            progressBar.progress = progress
+            progressBar.progress = progress / Float(altFiles.count)
         } else {
             progressBar.progress = progress
         }
@@ -46,7 +46,7 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
         
         let networkManager = NetworkManager()
         networkManager.delegate = self
-        networkManager.httpUpload(item: self.localEntry!)
+        networkManager.uploadFiles(item: self.localEntry!)
         
         view.backgroundColor = UIColor.gray.withAlphaComponent(0.75)
         view.isOpaque = false

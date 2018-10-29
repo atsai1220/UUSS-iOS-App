@@ -8,11 +8,11 @@
 
 import Foundation
 
-class UploadFileOperation: NetworkOperation {
+class UploadAltFileOperation: NetworkOperation {
     let altFile: AltFile
     private let networkManager = NetworkManager()
     
-    var onDidUpload: ((_ url: String?) -> Void)!
+    var onDidUpload: ((_ uploadResult: String?) -> Void)!
     var onProgress: (( _ progress: Float) -> Void)!
     
     init(altFile: AltFile) {
@@ -24,10 +24,12 @@ class UploadFileOperation: NetworkOperation {
     }
     
     private func uploadFile() {
-//        networkManager.uploadFile(fileURL, progressBlock: onProgress) { [unowned self] (url, error) in
-//            self.onDidUpload(url)
-//            self.finished(error: error)
-//
-//        }
+        print("upload alt")
+        networkManager.uploadAltFile(altFile: altFile) {
+            (httpResult) in
+            self.onDidUpload(httpResult)
+            self.finished(error: "upload alt")
+        }
+//        self.finished(error: "upload alt")
     }
 }

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1C043CA020CAA90E006A9D69 /* ServerList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C043C9F20CAA90E006A9D69 /* ServerList.plist */; };
+		1C47BE4F21869F480004A76E /* NetworkOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C47BE4E21869F480004A76E /* NetworkOperation.swift */; };
+		1C47BE792186BAB60004A76E /* UploadMainFileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C47BE782186BAB60004A76E /* UploadMainFileOperation.swift */; };
+		1C47BE7B2186BAD50004A76E /* UploadAltFileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C47BE7A2186BAD40004A76E /* UploadAltFileOperation.swift */; };
 		1C497F0E217FC67C006E273F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C98E8A121759616008565E9 /* NetworkManager.swift */; };
 		1C497F0F217FC680006E273F /* NetworkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C98E8A321759621008565E9 /* NetworkViewController.swift */; };
 		1C497F10217FC683006E273F /* HazardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB03733217A8B980085191C /* HazardManager.swift */; };
@@ -83,6 +86,9 @@
 		1C1E6D5220D64D2E00D7FB56 /* ServerTableNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTableNavigationController.swift; sourceTree = "<group>"; };
 		1C403E3920D010A6000DB616 /* AddServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServerViewController.swift; sourceTree = "<group>"; };
 		1C403E3F20D3A8EC000DB616 /* ServerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTableViewController.swift; sourceTree = "<group>"; };
+		1C47BE4E21869F480004A76E /* NetworkOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperation.swift; sourceTree = "<group>"; };
+		1C47BE782186BAB60004A76E /* UploadMainFileOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadMainFileOperation.swift; sourceTree = "<group>"; };
+		1C47BE7A2186BAD40004A76E /* UploadAltFileOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadAltFileOperation.swift; sourceTree = "<group>"; };
 		1C4D76B020C1569700458079 /* MainNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationController.swift; sourceTree = "<group>"; };
 		1C4D76B220C159AE00458079 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1C4D76B420C16ACC00458079 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
@@ -262,6 +268,9 @@
 				1C98E8A121759616008565E9 /* NetworkManager.swift */,
 				1C98E8A321759621008565E9 /* NetworkViewController.swift */,
 				1CB03733217A8B980085191C /* HazardManager.swift */,
+				1C47BE4E21869F480004A76E /* NetworkOperation.swift */,
+				1C47BE7A2186BAD40004A76E /* UploadAltFileOperation.swift */,
+				1C47BE782186BAB60004A76E /* UploadMainFileOperation.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -465,6 +474,7 @@
 				1C497F40217FC7C4006E273F /* LoginViewController.swift in Sources */,
 				1C497F3F217FC7C1006E273F /* ServerTableNavigationController.swift in Sources */,
 				1C497F3E217FC7BD006E273F /* ServerTableViewController.swift in Sources */,
+				1C47BE7B2186BAD50004A76E /* UploadAltFileOperation.swift in Sources */,
 				1C946C382181653000B19EF3 /* LocalEntryTableViewController.swift in Sources */,
 				1C497F3D217FC7BA006E273F /* AddServerViewController.swift in Sources */,
 				1C497F3C217FC7B7006E273F /* AboutViewController.swift in Sources */,
@@ -474,11 +484,13 @@
 				1CA8DA82218151EB008AC505 /* PdfCollectionViewCell.swift in Sources */,
 				1C497F38217FC7AC006E273F /* RoundedImageView.swift in Sources */,
 				1C497F37217FC7A9006E273F /* MainLocalCollectionViewController.swift in Sources */,
+				1C47BE792186BAB60004A76E /* UploadMainFileOperation.swift in Sources */,
 				1C497F36217FC7A5006E273F /* MainCollectionViewCell.swift in Sources */,
 				1C497F35217FC7A2006E273F /* MainTableViewCell.swift in Sources */,
 				1C497F34217FC79F006E273F /* MainTrashTableViewController.swift in Sources */,
 				1C946C3C2181653000B19EF3 /* LocalResourceTableViewCell.swift in Sources */,
 				1CA8DA84218156C2008AC505 /* Mp3CollectionViewCell.swift in Sources */,
+				1C47BE4F21869F480004A76E /* NetworkOperation.swift in Sources */,
 				1C497F33217FC79C006E273F /* MainTabBarController.swift in Sources */,
 				1C574C6D21814D3200983BA1 /* Mp3CollectionViewController.swift in Sources */,
 				1C497F32217FC799006E273F /* MainNavigationController.swift in Sources */,

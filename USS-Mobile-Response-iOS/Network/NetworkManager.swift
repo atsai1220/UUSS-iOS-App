@@ -19,44 +19,91 @@ protocol NetWorkManagerDelegate {
 class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
     
     var delegate: NetWorkManagerDelegate?
-    var localEntry: LocalEntry!
-
-    func httpUpload(item: LocalEntry) {
+    var result: [String] = []
+    
+    private lazy var queue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
+    
+    func uploadMainFile(item: LocalEntry, completionBlock: @escaping (_ httpResult: String?) -> Void) {
         // handle main image
-        self.localEntry = item
-        let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(localEntry.localFileName!).path
+        let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(item.localFileName!).path
         let image = UIImage(contentsOfFile: imagePath)
         let imageData = UIImageJPEGRepresentation(image!, 0.9)
         if (imageData == nil) { return }
         let boundary = generateBoundaryString()
         let fullFormData = resourceDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
-        sendPostRequestWith(body: fullFormData, boundary: boundary)
-
-        // handle alternative files
-        var count = 1
-        if let altFiles = item.altFiles {
-            if altFiles.count == 0 {
-                print("ALT FILE IS ZERO COUNT")
-                self.dismissProgressController()
+        sendPostRequestWith(body: fullFormData, boundary: boundary) {
+            (httpResult) in
+            completionBlock(httpResult)
+        }
+    }
+    
+    func uploadAltFile(altFile: AltFile, completionBlock: @escaping (_ httpResult: String?) -> Void) {
+        do {
+            let path = URL(fileURLWithPath: altFile.url)
+            let fileData = try Data(contentsOf: path)
+            let boundary = generateBoundaryString()
+            let fileExtension = URL(fileURLWithPath: altFile.url).pathExtension
+            let fullFormData = resourceDataToFormData(data: fileData as NSData, boundary: boundary, fileName: altFile.name + "." + fileExtension, type: altFile.type)
+            sendPostRequestWith(body: fullFormData, boundary: boundary) {
+                (httpResult) in
+                completionBlock(httpResult)
             }
-            showProgressBar()
+        } catch {
+            dismissProgressController()
+            displayErrorMessage(title: "Error", message: "Upload error.")
+        }
+    }
+    
+    func uploadFiles(item: LocalEntry) {
+        let mainOperation = UploadMainFileOperation(file: item)
+        mainOperation.onProgress = { (progress) in
+            self.updateDelegateWith(progress: progress)
+        }
+        mainOperation.onDidUpload = { (uploadResult) in
+            if let result = uploadResult {
+                self.result.append(result)
+            }
+        }
+        if let lastOp = queue.operations.last {
+            mainOperation.addDependency(lastOp)
+        }
+        queue.addOperation(mainOperation)
+        
+        if let altFiles = item.altFiles {
             for altFile in altFiles {
-                do {
-                    let path = URL(fileURLWithPath: altFile.url)
-                    let fileData = try Data(contentsOf: path)
-                    let boundary = generateBoundaryString()
-                    let fileExtension = URL(fileURLWithPath: altFile.url).pathExtension
-                    let fullFormData = resourceDataToFormData(data: fileData as NSData, boundary: boundary, fileName: altFile.name + "." + fileExtension, type: altFile.type)
-                    sendPostRequestForAltWith(body: fullFormData, boundary: boundary, maxCount: altFiles.count, currentCount: count)
-                } catch {
-                    dismissProgressController()
-                    displayErrorMessage(title: "Error", message: "Upload error.")
+                let altOperation = UploadAltFileOperation(altFile: altFile)
+                altOperation.onProgress = { (progress) in
+                    self.updateDelegateWith(progress: progress)
                 }
-                count += 1
+                altOperation.onDidUpload = { (uploadResult) in
+                    if let result = uploadResult {
+                            
+                        self.result.append(result)
+                    }
+                }
+                if let lastOp = queue.operations.last {
+                    altOperation.addDependency(lastOp)
+                }
+                queue.addOperation(altOperation)
             }
         } else {
-            dismissProgressController()
+            print("no alt files")
         }
+        
+        let finishOperation = BlockOperation { [unowned self] in
+            self.dismissProgressController()
+            print(self.result)
+            print("OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG ")
+        }
+        if let lastOp = queue.operations.last {
+            finishOperation.addDependency(lastOp)
+        }
+        queue.addOperation(finishOperation)
+        queue.isSuspended = false
     }
     
     func uploadAlternativeFiles(altFiles: [AltFile]) {
@@ -75,52 +122,8 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     func addResourceToCollection(resourceId: Int, collectionId: Int) {
         
     }
-
-    func sendPostRequestForAltWith(body fullFormData: Data, boundary: String, maxCount: Int, currentCount: Int) {
-        let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
-        let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
-        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=http_upload"
-        let signature = "&sign=" + (privateKey + queryString).sha256()!
-        let completeURL = urlString + queryString + signature
-        guard let url = URL(string: completeURL) else { return }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Keep-Alive", forHTTPHeaderField: "Connection")
-        request.setValue("multipart/form-data; boundary=" + boundary, forHTTPHeaderField: "Content-Type")
-        
-        request.setValue(String(fullFormData.count), forHTTPHeaderField: "Content-Length")
-        request.httpBody = fullFormData
-        request.httpShouldHandleCookies = false
-        
-        let configuration = URLSessionConfiguration.default
-        
-        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-        
-        let task = session.dataTask(with: request) {
-            (data, response, error) in
-            guard let data = data, response != nil, error == nil else {
-                self.displayErrorMessage(title: "Alert", message: "There was an error.")
-                return
-            }
-            let dataString = String(data: data, encoding: .utf8)
-            print(dataString!)
-            DispatchQueue.main.async {
-                if currentCount == maxCount {
-//                    self.dismissProgressController()
-                                        self.dismissProgressBar()
-                } else {
-//                    self.dismissProgressBar()
-//                    self.showProgressBar()
-                }
-                
-            }
-            
-        }
-        task.resume()
-    }
     
-    func sendPostRequestWith(body fullFormData: Data, boundary: String) {
+    func sendPostRequestWith(body fullFormData: Data, boundary: String, completionBlock: @escaping (_ httpResult: String?) -> Void) {
         let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
         let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
         let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=http_upload"
@@ -148,10 +151,9 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                 return
             }
             let dataString = String(data: data, encoding: .utf8)
-            print(dataString!)
+            completionBlock(dataString!)
+//            print(dataString!)
             DispatchQueue.main.async {
-//                self.dismissProgressController()
-                self.dismissProgressBar()
             }
             
         }
