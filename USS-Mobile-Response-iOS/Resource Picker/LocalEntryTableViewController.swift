@@ -66,6 +66,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     // Alt files related
     var pickingForAltFiles = false
     var altFiles: [AltFile] = []
+    var localEntry: LocalEntry?
     
     // MARK: - Picker View
     
@@ -438,7 +439,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     // MARK: - MP3 functions
     
     func returnMp3(with mp3URL: URL) {
-        var altFile = AltFile.init(name: mp3URL.deletingPathExtension().lastPathComponent, url: mp3URL.path, type: FileType.AUDIO.rawValue)
+        let altFile = AltFile.init(name: mp3URL.deletingPathExtension().lastPathComponent, url: mp3URL.path, type: FileType.AUDIO.rawValue)
         self.altFiles.append(altFile)
         self.tableView.beginUpdates()
         self.tableView.reloadSections(IndexSet([3]), with: .fade)
@@ -449,7 +450,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     func returnPDF(with pdfURL: URL)
     {
-        var altFile = AltFile.init(name: pdfURL.deletingPathExtension().lastPathComponent, url: pdfURL.path, type: FileType.DOCUMENT.rawValue)
+        let altFile = AltFile.init(name: pdfURL.deletingPathExtension().lastPathComponent, url: pdfURL.path, type: FileType.DOCUMENT.rawValue)
         let pdfImage = drawPDFfromURL(url: pdfURL)
         saveExistingImageAtDocumentDirectory(with: pdfURL.lastPathComponent, image: pdfImage!)
         self.altFiles.append(altFile)
@@ -558,14 +559,14 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                         let imageName = saveExistingImageAtDocumentDirectory(image: image!)
                         let imagePath = getDocumentsURL().appendingPathComponent(imageName).path
                         let fileNameWithoutExtension = NSURL(fileURLWithPath: imageName).deletingPathExtension?.lastPathComponent ?? ""
-                        var altFile = AltFile.init(name: fileNameWithoutExtension, url: imagePath, type: FileType.PHOTO.rawValue)
+                        let altFile = AltFile.init(name: fileNameWithoutExtension, url: imagePath, type: FileType.PHOTO.rawValue)
                         self.altFiles.append(altFile)
                     } else {
                         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                             let imageName = saveExistingImageAtDocumentDirectory(image: image)
                             let imageURL = getDocumentsURL().appendingPathComponent(imageName)
                             let fileNameWithoutExtension = NSURL(fileURLWithPath: imageName).deletingPathExtension?.lastPathComponent ?? ""
-                            var altFile = AltFile.init(name: fileNameWithoutExtension, url: imageURL.path, type: FileType.PHOTO.rawValue)
+                            let altFile = AltFile.init(name: fileNameWithoutExtension, url: imageURL.path, type: FileType.PHOTO.rawValue)
                             self.altFiles.append(altFile)
                         }
                     }
@@ -578,12 +579,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                         let image = createVideoThumbnail(from: videoURL.absoluteString)
                         let videoName = saveExistingImageAtDocumentDirectory(image: image)
                         let fileNameWithoutExtension = NSURL(fileURLWithPath: videoName).deletingPathExtension?.lastPathComponent ?? ""
-                        var altFile = AltFile.init(name: fileNameWithoutExtension, url: videoURL.path, type: FileType.VIDEO.rawValue)
+                        let altFile = AltFile.init(name: fileNameWithoutExtension, url: videoURL.path, type: FileType.VIDEO.rawValue)
                         self.altFiles.append(altFile)
                         self.tableView.beginUpdates()
                         self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
                         self.tableView.endUpdates()
-                        
                     }
                     picker.dismiss(animated: true, completion: nil)
                 }
@@ -702,157 +702,14 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             }
             altFile.url = localEntryURL.path
         }
-        
         newEntry.localFileName = savedImageName
         newEntry.fileType = FileType.PHOTO.rawValue
         newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
         newEntry.altFiles = self.altFiles
         updateLocalEntries(with: newEntry)
         return newEntry.localFileName!
-        // TODO: save each alternative file if available
-//        switch resourceType
-//        {
-//        case .PHOTO:
-//            var savedImageName = ""
-//            if let possibleImageURL = self.imageURL {
-//                savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
-//            } else {
-//                savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
-//            }
-//            newEntry.localFileName = savedImageName
-//            newEntry.fileType = FileType.PHOTO.rawValue
-//            newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-//            updateLocalEntries(with: newEntry)
-//            return savedImageName
-//
-//        case .VIDEO:
-//            let savedVideoName = saveVideoAtDocumentDirectory(videoData: self.videoData!)
-//            saveExistingImageAtDocumentDirectory(with: savedVideoName, image: videoThumbnail!)
-//            newEntry.localFileName = savedVideoName
-//            newEntry.fileType = FileType.VIDEO.rawValue
-//            newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-//            newEntry.videoURL = getDocumentsURL().appendingPathComponent(savedVideoName).relativePath
-//            updateLocalEntries(with: newEntry)
-//            return savedVideoName
-//
-//        case .AUDIO:
-//
-//            let URL: URL = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".caf")
-//
-//            if(FileManager.default.fileExists(atPath: URL.relativePath))
-//            {
-//                let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-//                self.present(alert, animated: true, completion: nil)
-//            }
-//            else
-//            {
-//                newEntry.fileType = FileType.AUDIO.rawValue
-//                newEntry.localFileName = "audio"
-//                newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-//                newEntry.audioURL = URL.relativePath
-//                var oldEntries = getLocalEntriesFromDisk()
-//                oldEntries.append(newEntry)
-//                saveLocalEntriesToDisk(entries: oldEntries)
-//
-//                do
-//                {
-//                    let audioData: Data = try Data(contentsOf: getDocumentsURL().appendingPathComponent("tempAudioFile.caf"))
-//
-//                    do
-//                    {
-//                        try audioData.write(to: URL)
-//                    }
-//                    catch
-//                    {
-//                        let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write pdf to file", preferredStyle: .alert)
-//                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-//                        self.present(alert, animated: true, completion: nil)
-//                    }
-//                }
-//                catch
-//                {
-//                    print(error)
-//                }
-//
-//                return URL.lastPathComponent
-//            }
-//        case .DOCUMENT:
-//            let URL: URL = getDocumentsURL().appendingPathComponent("\(titleCell.textView.text!)" + ".pdf")
-//
-//            if(FileManager.default.fileExists(atPath: URL.relativePath))
-//            {
-//                let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-//                self.present(alert, animated: true, completion: nil)
-//            }
-//            else
-//            {
-//                newEntry.localFileName = localFileName!
-//                newEntry.fileType = FileType.DOCUMENT.rawValue
-//                newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-//                newEntry.pdfDocURL = URL.relativePath
-//                var oldEntries = getLocalEntriesFromDisk()
-//                oldEntries.append(newEntry)
-//                saveLocalEntriesToDisk(entries: oldEntries)
-//
-//                do
-//                {
-//                    let pdfData: Data = try Data(contentsOf: self.pdfURL!)
-//
-//                    do
-//                    {
-//                        try pdfData.write(to: URL)
-//                    }
-//                    catch
-//                    {
-//                        let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write pdf to file", preferredStyle: .alert)
-//                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-//                        self.present(alert, animated: true, completion: nil)
-//                    }
-//                }
-//                catch
-//                {
-//                    print(error)
-//                }
-//
-//                return URL.lastPathComponent
-//            }
-//
-//        }
-//        return "no"
     }
-    
-    //    func saveVideoToDisk() -> Bool
-    //    {
-    //        let documentsDirectory = getDocumentsURL()
-    //
-    //        videoUrl = documentsDirectory!.appendingPathComponent("\(titleBox!.text!).mov")
-    //
-    //        if(fileManager!.fileExists(atPath: videoUrl!.relativePath))
-    //        {
-    //            let alert: UIAlertController = UIAlertController(title: "File Error", message: "This file already exists. Please select a different title", preferredStyle: .alert)
-    //            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-    //            self.present(alert, animated: true, completion: nil)
-    //            return false
-    //        }
-    //        else
-    //        {
-    //
-    //            do
-    //            {
-    //                try videoData!.write(to: videoUrl!)
-    //            }
-    //            catch
-    //            {
-    //                let alert: UIAlertController = UIAlertController(title: "Error", message: "Could not write video to file", preferredStyle: .alert)
-    //                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-    //                self.present(alert, animated: true, completion: nil)
-    //            }
-    //        }
-    //        return true
-    //    }
-    
+
     func httpUpload() {
         
     }
@@ -1111,7 +968,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        if let localEntry = self.localEntry {
+            print(localEntry.name!)
+        }
     }
     
     override func viewDidLoad() {

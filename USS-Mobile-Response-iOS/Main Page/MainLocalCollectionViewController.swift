@@ -14,7 +14,6 @@ private let reuseIdentifier = "Cell"
 class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, ImportModalDoneDelegate, MainCellDelegate
 {
     func deleteThis(cellIndexPath: IndexPath) {
-        print(cellIndexPath.row)
         if cellIndexPath.row == 1 && self.localEntries.count == 1 {
             var trashEntries = getTrashEntriesFromDisk()
             trashEntries.append(self.localEntries[0])
@@ -46,28 +45,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         
     }
     
-//    func deleteThis(cellIndexPath: IndexPath) {
-//
-//    }
-    
-//    func deleteThis(cell: MainCollectionViewCell) {
-//        print("test")
-//        let indexPath = collectionView?.indexPath(for: cell)
-//        if let indexPath = collectionView?.indexPath(for: cell) {
-//            var trashEntries = getTrashEntriesFromDisk()
-//            trashEntries.append(self.localEntries[indexPath.row])
-//            saveTrashEntriesToDisk(entries: trashEntries)
-//            self.localEntries.remove(at: indexPath.row)
-//            collectionView?.deleteItems(at: [indexPath])
-//            saveLocalEntriesToDisk(entries: self.localEntries)
-//
-//        } else {
-//            print("could not find indexpath")
-//        }
-//    }
-    
-
-    
     var localEntries: [LocalEntry] = []
     var importModalViewController: ImportModalViewController?
     
@@ -80,24 +57,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         cv.backgroundColor = UIColor.white
         return cv
     }()
-    
-//    let doneEditingButton: UIButton =
-//    {
-//        let button: UIButton = UIButton(type: .roundedRect)
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.layer.cornerRadius = 12
-//        button.layer.borderWidth = 2
-//        button.backgroundColor = UIColor.white
-//        button.layer.shadowOpacity = 0.5
-//        button.layer.shadowColor = UIColor.black.cgColor
-//        button.layer.shadowOffset = CGSize(width: 0.0, height:3.0)
-//        button.layer.shadowRadius = 3.0
-//        button.layer.borderColor = UIColor.black.cgColor
-//        button.setTitle("Done", for: .normal)
-//
-//        return button
-//
-//    }()
     
     override init(collectionViewLayout layout: UICollectionViewLayout)
     {
@@ -124,15 +83,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         myCollectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView = myCollectionView
         myCollectionView.backgroundColor = UIColor(red: 211/225, green: 211/225, blue: 211/225, alpha: 1)
-        
-//        view.addSubview(doneEditingButton)
-//
-//        NSLayoutConstraint.activate([
-//            doneEditingButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0),
-//            doneEditingButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0),
-//            doneEditingButton.heightAnchor.constraint(equalToConstant: 25.0),
-//            doneEditingButton.widthAnchor.constraint(equalToConstant: 70.0)
-//            ])
         
         importModalViewController = ImportModalViewController()
         importModalViewController?.modalDoneDelegate = self
@@ -260,11 +210,12 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         holdGesture.minimumPressDuration = TimeInterval(exactly: 2.0)!
         collectionView.addGestureRecognizer(holdGesture)
         
-        
-        
         switch localMedia.fileType
         {
             case FileType.PHOTO.rawValue:
+                let localEntryVC = LocalEntryTableViewController()
+                localEntryVC.localEntry = localMedia
+                self.navigationController?.pushViewController(localEntryVC, animated: true)
                 break
             case FileType.VIDEO.rawValue:
                 
