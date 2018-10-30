@@ -10,10 +10,9 @@ import Foundation
 
 class UploadAltFileOperation: NetworkOperation {
     let altFile: AltFile
-    private let networkManager = NetworkManager()
+    var networkManager: NetworkManager?
     
     var onDidUpload: ((_ uploadResult: String?) -> Void)!
-    var onProgress: (( _ progress: Float) -> Void)!
     
     init(altFile: AltFile) {
         self.altFile = altFile
@@ -25,7 +24,7 @@ class UploadAltFileOperation: NetworkOperation {
     
     private func uploadFile() {
         print("upload alt")
-        networkManager.uploadAltFile(altFile: altFile) {
+        networkManager?.uploadAltFile(altFile: altFile) {
             (httpResult) in
             self.onDidUpload(httpResult)
             self.finished(error: "upload alt")

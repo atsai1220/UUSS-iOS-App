@@ -41,10 +41,14 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     
     func popToRootController() {
         print("popping")
-        DispatchQueue.main.async {
-            self.navigationController?.popToRootViewController(animated: true)
-        }
+//        DispatchQueue.main.async {
+//            self.navigationController?.popToRootViewController(animated: true)
+//        }
         
+    }
+    
+    deinit {
+        print("deallocate")
     }
     
     override func viewDidLoad() {

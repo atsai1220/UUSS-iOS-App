@@ -640,7 +640,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             //            httpUpload()
             //            createResourceSpaceEntry(fileName: savedName)
             //            addResourceToCollection()
-            self.navigationController?.popToRootViewController(animated: true)
+//            self.navigationController?.popToRootViewController(animated: true)
         }
         
     }

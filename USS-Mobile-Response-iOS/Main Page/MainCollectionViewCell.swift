@@ -88,17 +88,6 @@ class MainCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
-//    let deleteViewIcon: RoundedImageView =
-//    {
-//        let icon: RoundedImageView = RoundedImageView()
-//        icon.translatesAutoresizingMaskIntoConstraints = false
-//        icon.layer.cornerRadius = self.frame.size.width / 2
-//        icon.backgroundColor = UIColor.red
-//        icon.alpha = 0.0
-//        icon.image = UIImage(named: "minus")
-//        return icon
-//    }()
-    
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = ""
@@ -138,7 +127,6 @@ class MainCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         backgroundColor = UIColor.white
         setupViews()
-        
     }
     
     required init?(coder aDecoder: NSCoder) {

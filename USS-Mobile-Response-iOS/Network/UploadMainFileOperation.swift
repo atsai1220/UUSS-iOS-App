@@ -10,10 +10,9 @@ import Foundation
 
 class UploadMainFileOperation: NetworkOperation {
     let file: LocalEntry
-    private let networkManager = NetworkManager()
+    var networkManager: NetworkManager?
     
     var onDidUpload: ((_ uploadResult: String?) -> Void)!
-    var onProgress: (( _ progress: Float) -> Void)!
     
     init(file: LocalEntry) {
         self.file = file
@@ -24,8 +23,8 @@ class UploadMainFileOperation: NetworkOperation {
     }
     
     private func uploadFile() {
-        print("uploading main")
-        networkManager.uploadMainFile(item: file) {
+  
+        networkManager?.uploadMainFile(item: file) {
             (httpResult) in
             self.onDidUpload(httpResult)
             self.finished(error: "upload main")

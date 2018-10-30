@@ -22,6 +22,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     var delegate: NetWorkManagerDelegate?
     var result: [String] = []
     
+    
     private lazy var queue: OperationQueue = {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
@@ -61,9 +62,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
     func uploadFiles(item: LocalEntry) {
         let mainOperation = UploadMainFileOperation(file: item)
-        mainOperation.onProgress = { (progress) in
-            self.updateDelegateWith(progress: progress)
-        }
+        mainOperation.networkManager = self
         mainOperation.onDidUpload = { (uploadResult) in
             if let result = uploadResult {
                 // TODO: parse http response
@@ -77,11 +76,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         
         for altFile in item.altFiles ?? [] {
             let altOperation = UploadAltFileOperation(altFile: altFile)
-            altOperation.onProgress = { (progress) in
-                print("PROGRESSSSSS: " + String(progress))
-//                print(progress)
-//                self.updateDelegateWith(progress: progress)
-            }
+            altOperation.networkManager = self
             altOperation.onDidUpload = { (uploadResult) in
                 if let result = uploadResult {
                     // TODO: parse http response
@@ -99,7 +94,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             for result in self.result {
                 print(result)
             }
-            self.delegate?.popToRootController()
+//            self.delegate?.popToRootController()
         }
         if let lastOp = queue.operations.last {
             finishOperation.addDependency(lastOp)
@@ -145,8 +140,9 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         
         let configuration = URLSessionConfiguration.default
         
-        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-
+   
+        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        
         let task = session.dataTask(with: request) {
             (data, response, error) in
             guard let data = data, response != nil, error == nil else {
@@ -160,6 +156,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             
         }
         task.resume()
+        
     }
     
     
@@ -219,8 +216,10 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
-        let uploadProgress: Float = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
-        updateDelegateWith(progress: uploadProgress)
+        DispatchQueue.main.async {
+            let uploadProgress: Float = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
+           self.updateDelegateWith(progress: uploadProgress)
+        }
     }
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
 //        print(response)
