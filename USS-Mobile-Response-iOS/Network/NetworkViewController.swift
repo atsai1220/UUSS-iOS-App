@@ -19,16 +19,11 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     func uploadProgressWith(progress: Float) {
         print("uploadProgressWith: updating progress bar")
         progressBar.progress = progress
-        
         view.layoutSubviews()
-//        if progressBar.progress == 1 {
-//            self.dismiss(animated: true, completion: nil)
-//        }
     }
     
     func dismissProgressBar() {
         progressBar.removeFromSuperview()
-//        self.dismiss(animated: true, completion: nil)
     }
     
     func showProgressBar() {
@@ -36,7 +31,7 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     }
     
     func dismissProgressController() {
-        self.dismiss(animated: true, completion: nil)
+//        self.dismiss(animated: true, completion: nil)
     }
     
     func popToRootController() {

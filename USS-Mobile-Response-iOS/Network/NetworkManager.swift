@@ -29,6 +29,10 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         return queue
     }()
     
+    func parseHttpResponse(result: String) {
+//        print(result)
+    }
+    
     func uploadMainFile(item: LocalEntry, completionBlock: @escaping (_ httpResult: String?) -> Void) {
         // handle main image
         let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(item.localFileName!).path
@@ -66,6 +70,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         mainOperation.onDidUpload = { (uploadResult) in
             if let result = uploadResult {
                 // TODO: parse http response
+                self.parseHttpResponse(result: result)
                 self.result.append(result)
             }
         }
@@ -139,7 +144,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         request.httpShouldHandleCookies = false
         
         let configuration = URLSessionConfiguration.default
-        
+        configuration.timeoutIntervalForRequest = 10.0
    
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         
@@ -149,8 +154,27 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                 self.displayErrorMessage(title: "Alert", message: "There was an error.")
                 return
             }
+            if error != nil {
+                if error!._code == NSURLErrorTimedOut {
+                    DispatchQueue.main.async {
+                        self.displayErrorMessage(title: "Connection error", message: "Connection to server timed out.")
+                        return
+                    }
+                }
+            }
             let dataString = String(data: data, encoding: .utf8)
             DispatchQueue.main.async {
+                do {
+                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
+                    guard let jsonArray = jsonResponse as? [[String: Any]] else {
+                        return
+                    }
+                    print(jsonArray)
+                    guard let location = jsonArray[0]["title"] as? String else { return }
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
                 completionBlock(dataString!)
             }
             

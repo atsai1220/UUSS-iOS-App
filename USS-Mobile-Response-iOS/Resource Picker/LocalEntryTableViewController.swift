@@ -892,9 +892,23 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         let signature = "&sign=" + (privateKey + queryString).sha256()!
         let completeURL = urlString + queryString + signature
         guard let url = URL(string: completeURL) else { return }
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 10.0
+        let session = URLSession(configuration: configuration)
+        
+        session.dataTask(with: url) { (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
+                if error!._code == NSURLErrorTimedOut {
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        self.activityIndicator.isHidden = true
+                        if let viewWithTag = self.view.viewWithTag(99) {
+                            viewWithTag.removeFromSuperview()
+                        }
+                        self.displayErrorMessage(title: "Connection error", message: "Connection to server timed out.")
+                    }
+                }
             }
             guard let data = data else { return }
             // JSON decodign and parsing
@@ -921,7 +935,37 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             } catch let jsonError {
                 print(jsonError)
             }
-        }.resume()
+            }.resume()
+//        URLSession.shared.dataTask(with: url) { (data, response, error) in
+//            if error != nil {
+//                print(error!.localizedDescription)
+//            }
+//            guard let data = data else { return }
+//            // JSON decodign and parsing
+//            do {
+//                // decode retrieved data with JSONDecoder
+//                let resourceSpaceData = try JSONDecoder().decode([Hazard].self, from: data)
+//                // return to main queue
+//                DispatchQueue.main.async {
+//                    // parse and filter JSON results
+//                    self.allHazards = resourceSpaceData.filter({
+//                        $0.theme == "Geologic Hazards" && $0.theme2 != ""
+//                    })
+//                    // save to disk in case of connectivity lost
+//                    saveCompleteHazardsToDisk(hazards: self.allHazards)
+//                    self.filterAllHazardsAndReloadTable()
+//
+//                    self.activityIndicator.stopAnimating()
+//                    self.activityIndicator.isHidden = true
+//                    if let viewWithTag = self.view.viewWithTag(99) {
+//                        viewWithTag.removeFromSuperview()
+//                    }
+//                    self.toggleHazardPickerView()
+//                }
+//            } catch let jsonError {
+//                print(jsonError)
+//            }
+//        }.resume()
     }
     
     
