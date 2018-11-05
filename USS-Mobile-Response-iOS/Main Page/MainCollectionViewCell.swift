@@ -44,7 +44,8 @@ class MainCollectionViewCell: UICollectionViewCell {
             switch setting?.fileType
             {
             case FileType.PHOTO.rawValue:
-                let localImage = getImageFromDocumentDirectory(imageName: (setting?.imageName)!)
+                let localImage = getImageFromLocalEntriesDirectory(imageName: setting!.imageName)
+//                let localImage = getImageFromDocumentDirectory(imageName: (setting?.imageName)!)
                 self.iconImageView.image = localImage
                 self.nameLabel.text = setting?.name
             case FileType.AUDIO.rawValue:
@@ -87,17 +88,6 @@ class MainCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
-//    let deleteViewIcon: RoundedImageView =
-//    {
-//        let icon: RoundedImageView = RoundedImageView()
-//        icon.translatesAutoresizingMaskIntoConstraints = false
-//        icon.layer.cornerRadius = self.frame.size.width / 2
-//        icon.backgroundColor = UIColor.red
-//        icon.alpha = 0.0
-//        icon.image = UIImage(named: "minus")
-//        return icon
-//    }()
-    
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = ""
@@ -137,7 +127,6 @@ class MainCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         backgroundColor = UIColor.white
         setupViews()
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -207,16 +196,10 @@ class MainCollectionViewCell: UICollectionViewCell {
     func hideDeleteButton() {
         if let superView = self.superview {
             if deleteViewButton.isDescendant(of: superView) {
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.deleteViewButton.alpha = 0.0
-                }) { (done) in
-                    if done {
-                        self.deleteViewButton.removeFromSuperview()
-                    }
-                }
+                UIView.animate(withDuration: 0.3, animations: { self.deleteViewButton.alpha = 0.0 })
+                deleteViewButton.removeFromSuperview()
             }
         }
-
     }
     
     func toggleDeleteButtion() {

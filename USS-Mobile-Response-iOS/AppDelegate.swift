@@ -161,33 +161,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool
     {
+        
         let fileManager: FileManager = FileManager.default
         let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
         let tempDir = docDir?.appendingPathComponent("tmp/\(url.lastPathComponent)")
-        //TODO: Delete from Documents/Inbox
-        
         do
         {
-            let pdfFile: Data = try Data(contentsOf: url)
-            
-            do
-            {
-                try pdfFile.write(to: tempDir!)
-                NotificationCenter.default.post(name: Notification.Name("New data"), object: nil)
-                
-            }
-            catch
-            {
-                print(error)
-                return false
-            }
+            let importedFile: Data = try Data(contentsOf: url)
+            try importedFile.write(to: tempDir!)
+            NotificationCenter.default.post(name: Notification.Name("New data"), object: nil)
         }
         catch
         {
-            print(error)
+            print(error.localizedDescription)
             return false
         }
-
         return true
     }
 }

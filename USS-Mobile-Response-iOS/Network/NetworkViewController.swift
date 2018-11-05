@@ -17,15 +17,38 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     var progressBar = UIProgressView()
     
     func uploadProgressWith(progress: Float) {
+        print("uploadProgressWith: updating progress bar")
         progressBar.progress = progress
+        
         view.layoutSubviews()
-        if progressBar.progress == 1 {
-            self.dismiss(animated: true, completion: nil)
-        }
+//        if progressBar.progress == 1 {
+//            self.dismiss(animated: true, completion: nil)
+//        }
     }
     
     func dismissProgressBar() {
+        progressBar.removeFromSuperview()
+//        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func showProgressBar() {
+        view.addSubview(progressBar)
+    }
+    
+    func dismissProgressController() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    func popToRootController() {
+        print("popping")
+//        DispatchQueue.main.async {
+//            self.navigationController?.popToRootViewController(animated: true)
+//        }
+        
+    }
+    
+    deinit {
+        print("deallocate")
     }
     
     override func viewDidLoad() {
@@ -33,7 +56,7 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
         
         let networkManager = NetworkManager()
         networkManager.delegate = self
-        networkManager.uploadResource(item: self.localEntry!)
+        networkManager.uploadFiles(item: self.localEntry!)
         
         view.backgroundColor = UIColor.gray.withAlphaComponent(0.75)
         view.isOpaque = false

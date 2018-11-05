@@ -283,6 +283,16 @@ func getImageFromDocumentDirectory(imageName: String) -> UIImage? {
     }
 }
 
+func getImageFromLocalEntriesDirectory(imageName: String) -> UIImage? {
+    let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(imageName).path
+    if FileManager.default.fileExists(atPath: imagePath) {
+        return UIImage(contentsOfFile: imagePath)
+    }
+    else {
+        return nil
+    }
+}
+
 func getVideoFromDocumentDirectory(videoName: String) -> Data? {
     let videoData: Data?
     do {
@@ -389,14 +399,26 @@ enum SubmissionStatus: String {
 
 func printImportDir()
 {
-    let importDir: URL = getDocumentsURL().appendingPathComponent("import")
-    let dirEnum = FileManager.default.enumerator(atPath: importDir.relativePath)
+    let pdfImportDir: URL = getDocumentsURL().appendingPathComponent("pdf-import")
+    let mp3ImportDir: URL = getDocumentsURL().appendingPathComponent("mp3-import")
+    let pdfDirEnum = FileManager.default.enumerator(atPath: pdfImportDir.relativePath)
+    let mp3DirEnum = FileManager.default.enumerator(atPath: mp3ImportDir.relativePath)
     
-    print("Import Directory\n")
+    print("PDF Import Directory\n")
     
-    if(dirEnum != nil)
+    if(pdfDirEnum != nil)
     {
-        while let file = dirEnum!.nextObject()
+        while let file = pdfDirEnum!.nextObject()
+        {
+            print(file)
+        }
+    }
+    print("\n")
+
+    print("MP3 Import Directory\n")
+    if(mp3DirEnum != nil)
+    {
+        while let file = mp3DirEnum!.nextObject()
         {
             print(file)
         }

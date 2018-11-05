@@ -11,13 +11,21 @@ import PDFKit
 
 private let reuseIdentifier = "Cell"
 
-class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, PDFModalDoneDelegate, MainCellDelegate
+class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, ImportModalDoneDelegate, MainCellDelegate
 {
     func deleteThis(cellIndexPath: IndexPath)
     {
-        let localEntry: LocalEntry = localEntries[cellIndexPath.row]
-        
-        if self.localEntries.count > 0
+        if cellIndexPath.row == 1 && self.localEntries.count == 1
+        {
+            var trashEntries = getTrashEntriesFromDisk()
+            trashEntries.append(self.localEntries[0])
+            saveTrashEntriesToDisk(entries: trashEntries)
+            self.localEntries.remove(at: 0)
+            collectionView?.deleteItems(at: [IndexPath(row: 0, section: 0)])
+            saveLocalEntriesToDisk(entries: self.localEntries)
+            self.collectionView?.reloadData()
+        }
+        else if self.localEntries.count > 0
         {
             var trashEntries = getTrashEntriesFromDisk()
             trashEntries.append(self.localEntries[cellIndexPath.row])
@@ -31,8 +39,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         {
             self.editMode = false
         }
-        
-        NotificationCenter.default.post(name: Notification.Name("Local Entry Deleted"), object: nil, userInfo: [AnyHashable(localEntry.name): [localEntry.dataLat, localEntry.dataLong]])
     }
     
     
@@ -43,33 +49,8 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         
     }
     
-//    func deleteThis(cellIndexPath: IndexPath) {
-//
-//    }
-    
-//    func deleteThis(cell: MainCollectionViewCell) {
-//        print("test")
-//        let indexPath = collectionView?.indexPath(for: cell)
-//        if let indexPath = collectionView?.indexPath(for: cell) {
-//            var trashEntries = getTrashEntriesFromDisk()
-//            trashEntries.append(self.localEntries[indexPath.row])
-//            saveTrashEntriesToDisk(entries: trashEntries)
-//            self.localEntries.remove(at: indexPath.row)
-//            collectionView?.deleteItems(at: [indexPath])
-//            saveLocalEntriesToDisk(entries: self.localEntries)
-//
-//        } else {
-//            print("could not find indexpath")
-//        }
-//    }
-    
-    func headerDoneButtonPressed(_: Bool)
-    {
-        pdfModalViewController?.dismiss(animated: true, completion: nil)
-    }
-    
     var localEntries: [LocalEntry] = []
-    var pdfModalViewController: PdfFileModalViewController?
+    var importModalViewController: ImportModalViewController?
     
     var myCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -80,24 +61,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         cv.backgroundColor = UIColor.white
         return cv
     }()
-    
-//    let doneEditingButton: UIButton =
-//    {
-//        let button: UIButton = UIButton(type: .roundedRect)
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.layer.cornerRadius = 12
-//        button.layer.borderWidth = 2
-//        button.backgroundColor = UIColor.white
-//        button.layer.shadowOpacity = 0.5
-//        button.layer.shadowColor = UIColor.black.cgColor
-//        button.layer.shadowOffset = CGSize(width: 0.0, height:3.0)
-//        button.layer.shadowRadius = 3.0
-//        button.layer.borderColor = UIColor.black.cgColor
-//        button.setTitle("Done", for: .normal)
-//
-//        return button
-//
-//    }()
     
     override init(collectionViewLayout layout: UICollectionViewLayout)
     {
@@ -125,40 +88,34 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         self.collectionView = myCollectionView
         myCollectionView.backgroundColor = UIColor(red: 211/225, green: 211/225, blue: 211/225, alpha: 1)
         
-//        view.addSubview(doneEditingButton)
-//
-//        NSLayoutConstraint.activate([
-//            doneEditingButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0),
-//            doneEditingButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0),
-//            doneEditingButton.heightAnchor.constraint(equalToConstant: 25.0),
-//            doneEditingButton.widthAnchor.constraint(equalToConstant: 70.0)
-//            ])
-        
-        pdfModalViewController = PdfFileModalViewController()
-        pdfModalViewController?.modalDoneDelegate = self
+        importModalViewController = ImportModalViewController()
+        importModalViewController?.modalDoneDelegate = self
     }
+    
+    // MARK: - File Import Modal VC
     
     @objc func newFilesAdded()
     {
-        if(pdfModalViewController!.isViewLoaded && (pdfModalViewController!.view!.window != nil))
+        if(importModalViewController!.isViewLoaded && (importModalViewController!.view!.window != nil))
         {
             return
         }
         else
         {
-            pdfModalViewController!.modalPresentationStyle = .overCurrentContext
-            navigationController!.present(pdfModalViewController!, animated: true, completion: nil)
+            importModalViewController!.modalPresentationStyle = .overFullScreen
+            importModalViewController!.modalTransitionStyle = .crossDissolve
+            navigationController!.present(importModalViewController!, animated: true, completion: nil)
         }
     }
     
-    
-    override func viewWillAppear(_ animated: Bool)
+    func headerDoneButtonPressed(_: Bool)
     {
-        super.viewWillAppear(animated)
-        editMode = false
-        self.localEntries = getLocalEntriesFromDisk()
-        self.collectionView?.reloadData()
+        importModalViewController?.modalTransitionStyle = .crossDissolve
+        importModalViewController?.dismiss(animated: true, completion: nil)
     }
+    
+    
+
 
     /*
     // MARK: - Navigation
@@ -239,6 +196,14 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 //            }
             flowLayout.invalidateLayout()
     }
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        editMode = false
+        self.localEntries = getLocalEntriesFromDisk()
+        self.collectionView?.reloadData()
+    }
 
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
@@ -249,11 +214,12 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         holdGesture.minimumPressDuration = TimeInterval(exactly: 2.0)!
         collectionView.addGestureRecognizer(holdGesture)
         
-        
-        
         switch localMedia.fileType
         {
             case FileType.PHOTO.rawValue:
+                let localEntryVC = LocalEntryTableViewController()
+                localEntryVC.localEntry = localMedia
+                self.navigationController?.pushViewController(localEntryVC, animated: true)
                 break
             case FileType.VIDEO.rawValue:
                 
@@ -294,11 +260,12 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
     }
     */
 
-    
+    /*
     // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
     override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
         return true
     }
+    */
     
     /*
     override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {

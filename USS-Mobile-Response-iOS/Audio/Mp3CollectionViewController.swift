@@ -1,40 +1,33 @@
-//
-//  PdfCollectionViewController.swift
-//  USS-Mobile-Response-iOS
-//
-//  Created by Charlie Barber on 10/11/18.
-//  Copyright © 2018 Andrew Tsai. All rights reserved.
-//
+////
+////  Mp3CollectionViewController.swift
+////  USS-Mobile-Response-iOS
+////
+////  Created by Andrew Tsai on 10/24/18.
+////  Copyright © 2018 Andrew Tsai. All rights reserved.
+////
 
 import UIKit
 import PDFKit
 
-
-protocol PDFDelegate: class
-{
-    func returnPDF(with pdfURL: URL)
+protocol Mp3Delegate: class {
+    func returnMp3(with mp3URL: URL)
 }
 
-class PdfCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CellHoldDelegate, DeleteCellDelegate {
+class Mp3CollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CellHoldDelegate, DeleteCellDelegate {
     
     var dataSource: [URL] = []
-    let importDir: URL = getDocumentsURL().appendingPathComponent("pdf-import")
-//    var pdfImage: PDFView = PDFView()
-    weak var pdfDelegate: PDFDelegate?
+    let cellId = "mp3Cell"
+    let importDir: URL = getDocumentsURL().appendingPathComponent("mp3-import")
+    weak var mp3Delegate: Mp3Delegate?
     static var showDelete: Bool = false
     static var inDeleteMode: Bool = false
     
     // MARK: - Delegate functions
     func deleteCell(indexPath: IndexPath)
     {
-        //Get url to delete from imports folder
-        print(indexPath.row)
         let url: URL = dataSource[indexPath.row]
-        //Delete from data source
         dataSource.remove(at: indexPath.row)
-        //Delete from collection view
         collectionView?.deleteItems(at: [indexPath])
-        //Delete from imports folder
         do
         {
             try FileManager.default.removeItem(at: url)
@@ -50,12 +43,11 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
     {
         //Check the Documents/import folder and load all the data into the dataSource
         let importEnum = FileManager.default.enumerator(atPath: importDir.relativePath)
-        
         if(importEnum != nil)
         {
             while let file = importEnum!.nextObject()
             {
-                if(!dataSource.contains(getDocumentsURL().appendingPathComponent("pdf-import").appendingPathComponent(file as! String)))
+                if(!dataSource.contains(getDocumentsURL().appendingPathComponent("mp3-import").appendingPathComponent(file as! String)))
                 {
                     dataSource.append(importDir.appendingPathComponent(file as! String))
                 }
@@ -71,15 +63,16 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
         
         for cell in cells!
         {
-            (cell as! PdfCollectionViewCell).showDeleteButton = true
-            (cell as! PdfCollectionViewCell).setUpView()
+            (cell as! Mp3CollectionViewCell).showDeleteButton = true
+            (cell as! Mp3CollectionViewCell).setupView()
         }
     }
     
     func toggleDoneButton()
     {
-        if(PdfCollectionViewController.inDeleteMode)
+        if(Mp3CollectionViewController.inDeleteMode)
         {
+    
             navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitDeleteMode)), animated: false)
             
         }
@@ -88,17 +81,17 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
             navigationItem.setRightBarButtonItems(nil, animated: true)
         }
     }
-
+    
     @objc func exitDeleteMode()
     {
-        PdfCollectionViewController.inDeleteMode = false
+        Mp3CollectionViewController.inDeleteMode = false
         toggleDoneButton()
         let cells = collectionView?.visibleCells
         
         for cell in cells!
         {
-            (cell as! PdfCollectionViewCell).showDeleteButton = false
-            (cell as! PdfCollectionViewCell).setUpView()
+            (cell as! Mp3CollectionViewCell).showDeleteButton = false
+            (cell as! Mp3CollectionViewCell).setupView()
         }
     }
     
@@ -118,7 +111,7 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
     {
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor(red: 211/225, green: 211/225, blue: 211/225, alpha: 1)
-        collectionView?.register(PdfCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView?.register(Mp3CollectionViewCell.self, forCellWithReuseIdentifier: cellId)
         NotificationCenter.default.addObserver(self, selector: #selector(loadData), name: Notification.Name("Import Data"), object: nil)
     }
     
@@ -127,7 +120,7 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
         super.viewWillAppear(animated)
         loadData()
     }
-
+    
     override func viewDidAppear(_ animated: Bool)
     {
         super.viewDidAppear(animated)
@@ -139,16 +132,14 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
         return dataSource.count
     }
     
-
-    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PdfCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! Mp3CollectionViewCell
         
         cell.cellHoldDelegate = self
         cell.deleteCellDelegate = self
-        cell.pdfImage.document = PDFDocument(url: dataSource[indexPath.row])
-        cell.pdfTitle.text = dataSource[indexPath.row].lastPathComponent
+//        cell.pdfImage.document = PDFDocument(url: dataSource[indexPath.row])
+        cell.mp3Title.text = dataSource[indexPath.row].lastPathComponent
         cell.indexPath = indexPath
         
         return cell
@@ -156,10 +147,8 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
-        let document: PDFDocument = PDFDocument(url: dataSource[indexPath.row])!
-        // TODO: not sure what this is for
-        // pdfImage.document = document
-        pdfDelegate?.returnPDF(with: dataSource[indexPath.row])
+//        let document: PDFDocument = PDFDocument(url: dataSource[indexPath.row])!
+        mp3Delegate?.returnMp3(with: dataSource[indexPath.row])
         navigationController?.popViewController(animated: true)
     }
     
@@ -171,8 +160,9 @@ class PdfCollectionViewController: UICollectionViewController, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
-        return CGSize(width: collectionView.frame.size.width / 2 - 20, height: 200)
+        return CGSize(width: collectionView.frame.size.width - 50, height: 150)
     }
 }
+
 
 

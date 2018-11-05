@@ -12,52 +12,116 @@ import UIKit
 protocol NetWorkManagerDelegate {
     func uploadProgressWith(progress: Float)
     func dismissProgressBar()
+    func showProgressBar()
+    func dismissProgressController()
+    func popToRootController()
 }
 
 class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
     
     var delegate: NetWorkManagerDelegate?
-
-    func uploadResource(item: LocalEntry) {
-        switch item.fileType {
-        case FileType.PHOTO.rawValue:
-            let image = getImageFromDocumentDirectory(imageName: item.localFileName!)
-            let imageData = UIImageJPEGRepresentation(image!, 0.9)
-            if (imageData == nil) { return }
-            let boundary = generateBoundaryString()
-            let fullFormData = resourceDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
-            sendPostRequestWith(body: fullFormData, boundary: boundary)
-        
-        case FileType.VIDEO.rawValue:
-            var movieData: Data?
-            do {
-                let path = URL(fileURLWithPath: item.videoURL!)
-                movieData = try Data(contentsOf: path)
-                let boundary = generateBoundaryString()
-                let fullFormData = resourceDataToFormData(data: movieData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
-                sendPostRequestWith(body: fullFormData, boundary: boundary)
-            } catch {
-                dismissProgressBar()
-                displayErrorMessage(title: "Error", message: "Video upload error.")
-            }
- 
-        case FileType.AUDIO.rawValue:
-            var audioData: Data?
-            do {
-                let cafPath = getDocumentsURL().appendingPathComponent(item.localFileName! + ".caf")
-                convertToMp3(with: cafPath, name: item.localFileName!)
-                
-            } catch {
-                
-            }
-        case FileType.DOCUMENT.rawValue:
-            print("uploading document")
-        default:
-            print("NetworkManager: should never happen")
+    var result: [String] = []
+    
+    
+    private lazy var queue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
+    
+    func uploadMainFile(item: LocalEntry, completionBlock: @escaping (_ httpResult: String?) -> Void) {
+        // handle main image
+        let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(item.localFileName!).path
+        let image = UIImage(contentsOfFile: imagePath)
+        let imageData = UIImageJPEGRepresentation(image!, 0.9)
+        if (imageData == nil) { return }
+        let boundary = generateBoundaryString()
+        let fullFormData = resourceDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
+        sendPostRequestWith(body: fullFormData, boundary: boundary) {
+            (httpResult) in
+            completionBlock(httpResult)
         }
     }
     
-    func sendPostRequestWith(body fullFormData: Data, boundary: String) {
+    func uploadAltFile(altFile: AltFile, completionBlock: @escaping (_ httpResult: String?) -> Void) {
+        do {
+            let path = URL(fileURLWithPath: altFile.url)
+            let fileData = try Data(contentsOf: path)
+            let boundary = generateBoundaryString()
+            let fileExtension = URL(fileURLWithPath: altFile.url).pathExtension
+            let fullFormData = resourceDataToFormData(data: fileData as NSData, boundary: boundary, fileName: altFile.name + "." + fileExtension, type: altFile.type)
+            sendPostRequestWith(body: fullFormData, boundary: boundary) {
+                (httpResult) in
+                completionBlock(httpResult)
+            }
+        } catch {
+            dismissProgressController()
+            displayErrorMessage(title: "Error", message: "Upload error.")
+        }
+    }
+    
+    func uploadFiles(item: LocalEntry) {
+        let mainOperation = UploadMainFileOperation(file: item)
+        mainOperation.networkManager = self
+        mainOperation.onDidUpload = { (uploadResult) in
+            if let result = uploadResult {
+                // TODO: parse http response
+                self.result.append(result)
+            }
+        }
+        if let lastOp = queue.operations.last {
+            mainOperation.addDependency(lastOp)
+        }
+        queue.addOperation(mainOperation)
+        
+        for altFile in item.altFiles ?? [] {
+            let altOperation = UploadAltFileOperation(altFile: altFile)
+            altOperation.networkManager = self
+            altOperation.onDidUpload = { (uploadResult) in
+                if let result = uploadResult {
+                    // TODO: parse http response
+                    self.result.append(result)
+                }
+            }
+            if let lastOp = queue.operations.last {
+                altOperation.addDependency(lastOp)
+            }
+            queue.addOperation(altOperation)
+        }
+        
+        let finishOperation = BlockOperation { [unowned self] in
+            self.dismissProgressController()
+            for result in self.result {
+                print(result)
+            }
+//            self.delegate?.popToRootController()
+        }
+        if let lastOp = queue.operations.last {
+            finishOperation.addDependency(lastOp)
+        }
+        queue.addOperation(finishOperation)
+        
+        queue.isSuspended = false
+    }
+    
+    func uploadAlternativeFiles(altFiles: [AltFile]) {
+        
+    }
+    
+    // TODO: add JSON metadata
+    func createResource(resourceType: Int = 1, archivalState: Int = 0, serverFileURL: String) {
+        
+    }
+    
+    func addAlternativeFile(resourceId: Int, name: String, description: String, fileName: String, fileExtension: String, fileSize: Int, fileURL: String) {
+        
+    }
+    
+    func addResourceToCollection(resourceId: Int, collectionId: Int) {
+        
+    }
+    
+    func sendPostRequestWith(body fullFormData: Data, boundary: String, completionBlock: @escaping (_ httpResult: String?) -> Void) {
         let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
         let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
         let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=http_upload"
@@ -76,7 +140,8 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         
         let configuration = URLSessionConfiguration.default
         
-        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+   
+        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         
         let task = session.dataTask(with: request) {
             (data, response, error) in
@@ -85,13 +150,13 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                 return
             }
             let dataString = String(data: data, encoding: .utf8)
-            print(dataString ?? "Undecodable result")
-            
             DispatchQueue.main.async {
-                print("done")
+                completionBlock(dataString!)
             }
+            
         }
         task.resume()
+        
     }
     
     
@@ -151,8 +216,10 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
-        let uploadProgress: Float = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
-        updateDelegateWith(progress: uploadProgress)
+        DispatchQueue.main.async {
+            let uploadProgress: Float = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
+           self.updateDelegateWith(progress: uploadProgress)
+        }
     }
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
 //        print(response)
@@ -174,6 +241,14 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
     func dismissProgressBar() {
         delegate?.dismissProgressBar()
+    }
+    
+    func showProgressBar() {
+        delegate?.showProgressBar()
+    }
+    
+    func dismissProgressController() {
+        delegate?.dismissProgressController()
     }
     
 }
