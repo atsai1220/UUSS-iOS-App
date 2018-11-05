@@ -642,6 +642,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         newEntry.description = descriptionCell.textView.text
         newEntry.notes = notesCell.textView.text
         newEntry.collectionRef = self.entryReference
+        newEntry.dataLat = locationManager.location!.coordinate.latitude
+        newEntry.dataLong = locationManager.location!.coordinate.longitude
         
         // TODO: save main photo
         // TODO: save each alternative file if available

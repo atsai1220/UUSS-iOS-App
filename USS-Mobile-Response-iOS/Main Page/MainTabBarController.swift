@@ -148,7 +148,7 @@ class MainTabBarController: UITabBarController
         navigationItem.title = "Main"
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        let localViewCotnroller: MainLocalCollectionViewController = MainLocalCollectionViewController(collectionViewLayout: UICollectionViewLayout())
+        let localViewController: MainLocalCollectionViewController = MainLocalCollectionViewController(collectionViewLayout: UICollectionViewLayout())
         
         let trashViewController: MainTrashTableViewController = MainTrashTableViewController()
         
@@ -156,11 +156,11 @@ class MainTabBarController: UITabBarController
         
 //        let tableVC = MapTableViewController()
         
-        localViewCotnroller.tabBarItem = UITabBarItem(title: "Local", image: UIImage(named: "baggage"), tag: 0)
+        localViewController.tabBarItem = UITabBarItem(title: "Local", image: UIImage(named: "baggage"), tag: 0)
         mapViewController.tabBarItem = UITabBarItem(title: "Maps", image: UIImage(named: "map"), tag: 1)
         trashViewController.tabBarItem = UITabBarItem(title: "Trash", image: UIImage(named: "bin"), tag: 2)
         
-        self.setViewControllers([localViewCotnroller, mapViewController, trashViewController], animated: true)
+        self.setViewControllers([localViewController, mapViewController, trashViewController], animated: true)
     }
     
     override func viewWillLayoutSubviews()

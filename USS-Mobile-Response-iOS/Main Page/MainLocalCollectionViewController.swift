@@ -13,9 +13,12 @@ private let reuseIdentifier = "Cell"
 
 class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, PDFModalDoneDelegate, MainCellDelegate
 {
-    func deleteThis(cellIndexPath: IndexPath) {
-        print(cellIndexPath.row)
-        if self.localEntries.count > 0 {
+    func deleteThis(cellIndexPath: IndexPath)
+    {
+        let localEntry: LocalEntry = localEntries[cellIndexPath.row]
+        
+        if self.localEntries.count > 0
+        {
             var trashEntries = getTrashEntriesFromDisk()
             trashEntries.append(self.localEntries[cellIndexPath.row])
             saveTrashEntriesToDisk(entries: trashEntries)
@@ -24,9 +27,12 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
             saveLocalEntriesToDisk(entries: self.localEntries)
             self.collectionView?.reloadData()
         }
-        if self.localEntries.count == 0 {
+        if self.localEntries.count == 0
+        {
             self.editMode = false
         }
+        
+        NotificationCenter.default.post(name: Notification.Name("Local Entry Deleted"), object: nil, userInfo: [AnyHashable(localEntry.name): [localEntry.dataLat, localEntry.dataLong]])
     }
     
     

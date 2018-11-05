@@ -41,9 +41,6 @@
 		1C98E8A221759616008565E9 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C98E8A121759616008565E9 /* NetworkManager.swift */; };
 		1C98E8A421759621008565E9 /* NetworkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C98E8A321759621008565E9 /* NetworkViewController.swift */; };
 		1CB03734217A8B980085191C /* HazardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB03733217A8B980085191C /* HazardManager.swift */; };
-		1CB851A62173E04000863B87 /* PdfFileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A12173E04000863B87 /* PdfFileModalViewController.swift */; };
-		1CB851A72173E04000863B87 /* PdfCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A22173E04000863B87 /* PdfCollectionViewController.swift */; };
-		1CB851A92173E04000863B87 /* DocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */; };
 		F6028FED2143303700429805 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6028FEC2143303700429805 /* AnnotationView.swift */; };
 		F60773672135F38A009F6962 /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60773662135F38A009F6962 /* AudioViewController.swift */; };
 		F60C9F092175221000281DB9 /* PdfFileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */; };
@@ -52,7 +49,7 @@
 		F60C9F0C2175221000281DB9 /* PdfTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F082175220F00281DB9 /* PdfTableViewController.swift */; };
 		F60C9F0E21754A6500281DB9 /* LocalPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F0D21754A6500281DB9 /* LocalPlaybackViewController.swift */; };
 		F60C9F1021754D0A00281DB9 /* LocalAudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F0F21754D0A00281DB9 /* LocalAudioViewController.swift */; };
-		F621E6BB217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F621E6BA217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift */; };
+		F621E6BB217E5D4F00F8BDB3 /* SaveToFavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F621E6BA217E5D4F00F8BDB3 /* SaveToFavoritesViewController.swift */; };
 		F62217CC217F86C200DE68D3 /* SubcategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C3217F86C200DE68D3 /* SubcategoryTableViewCell.swift */; };
 		F62217CD217F86C200DE68D3 /* LocalResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C4217F86C200DE68D3 /* LocalResourceTableViewCell.swift */; };
 		F62217CE217F86C200DE68D3 /* AlternativeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C5217F86C200DE68D3 /* AlternativeTableViewCell.swift */; };
@@ -62,16 +59,15 @@
 		F62217D2217F86C200DE68D3 /* LocalResourceTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217C9217F86C200DE68D3 /* LocalResourceTypeTableViewCell.swift */; };
 		F62217D3217F86C200DE68D3 /* HazardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217CA217F86C200DE68D3 /* HazardTableViewCell.swift */; };
 		F62217D4217F86C200DE68D3 /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217CB217F86C200DE68D3 /* PhotoPickerViewController.swift */; };
-		F624BCDF216FF594002D891D /* PdfCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F624BCDE216FF594002D891D /* PdfCollectionViewController.swift */; };
 		F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */; };
 		F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */; };
 		F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6340E7721658C8900A3168E /* RoundedImageView.swift */; };
+		F66E5E4E218A3F5B00F70AC4 /* MapFavoritesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66E5E4D218A3F5B00F70AC4 /* MapFavoritesTableViewController.swift */; };
 		F6A9278A217A732900797EC2 /* PresentationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A92789217A732900797EC2 /* PresentationViewController.swift */; };
 		F6A9278C217A7D4100797EC2 /* MapSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */; };
 		F6A9278F217A867F00797EC2 /* PresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A9278E217A867F00797EC2 /* PresentationManager.swift */; };
 		F6A92791217A880200797EC2 /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A92790217A880200797EC2 /* PresentationAnimator.swift */; };
 		F6CDB5B52134BCB90016C036 /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */; };
-		F6CDB5B72134BCCD0016C036 /* MpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CDB5B62134BCCC0016C036 /* MpViewController.swift */; };
 		F6D2785D214C6DE800490350 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D2785C214C6DE800490350 /* VideoViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -112,10 +108,6 @@
 		1C98E8A121759616008565E9 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		1C98E8A321759621008565E9 /* NetworkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkViewController.swift; sourceTree = "<group>"; };
 		1CB03733217A8B980085191C /* HazardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardManager.swift; sourceTree = "<group>"; };
-		1CB851A12173E04000863B87 /* PdfFileModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfFileModalViewController.swift; sourceTree = "<group>"; };
-		1CB851A22173E04000863B87 /* PdfCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfCollectionViewController.swift; sourceTree = "<group>"; };
-		1CB851A32173E04000863B87 /* PdfTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfTableViewController.swift; sourceTree = "<group>"; };
-		1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickerViewController.swift; sourceTree = "<group>"; };
 		F6028FEC2143303700429805 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		F60773662135F38A009F6962 /* AudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewController.swift; sourceTree = "<group>"; };
 		F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfFileModalViewController.swift; sourceTree = "<group>"; };
@@ -124,7 +116,7 @@
 		F60C9F082175220F00281DB9 /* PdfTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfTableViewController.swift; sourceTree = "<group>"; };
 		F60C9F0D21754A6500281DB9 /* LocalPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPlaybackViewController.swift; sourceTree = "<group>"; };
 		F60C9F0F21754D0A00281DB9 /* LocalAudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAudioViewController.swift; sourceTree = "<group>"; };
-		F621E6BA217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveAnnotationViewController.swift; sourceTree = "<group>"; };
+		F621E6BA217E5D4F00F8BDB3 /* SaveToFavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveToFavoritesViewController.swift; sourceTree = "<group>"; };
 		F62217C3217F86C200DE68D3 /* SubcategoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SubcategoryTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/SubcategoryTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F62217C4217F86C200DE68D3 /* LocalResourceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalResourceTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/LocalResourceTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F62217C5217F86C200DE68D3 /* AlternativeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlternativeTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/AlternativeTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
@@ -134,16 +126,15 @@
 		F62217C9217F86C200DE68D3 /* LocalResourceTypeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalResourceTypeTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/LocalResourceTypeTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F62217CA217F86C200DE68D3 /* HazardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HazardTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/HazardTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F62217CB217F86C200DE68D3 /* PhotoPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotoPickerViewController.swift; path = "USS-Mobile-Response-iOS/Resource Picker/PhotoPickerViewController.swift"; sourceTree = SOURCE_ROOT; };
-		F624BCDE216FF594002D891D /* PdfCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCollectionViewController.swift; sourceTree = "<group>"; };
 		F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackViewController.swift; sourceTree = "<group>"; };
 		F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackViewController.swift; sourceTree = "<group>"; };
 		F6340E7721658C8900A3168E /* RoundedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedImageView.swift; sourceTree = "<group>"; };
+		F66E5E4D218A3F5B00F70AC4 /* MapFavoritesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapFavoritesTableViewController.swift; sourceTree = "<group>"; };
 		F6A92789217A732900797EC2 /* PresentationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationViewController.swift; sourceTree = "<group>"; };
 		F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsViewController.swift; sourceTree = "<group>"; };
 		F6A9278E217A867F00797EC2 /* PresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationManager.swift; sourceTree = "<group>"; };
 		F6A92790217A880200797EC2 /* PresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationAnimator.swift; sourceTree = "<group>"; };
 		F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAnnotation.swift; sourceTree = "<group>"; };
-		F6CDB5B62134BCCC0016C036 /* MpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MpViewController.swift; sourceTree = "<group>"; };
 		F6D2785C214C6DE800490350 /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -261,7 +252,6 @@
 				1C76A8BB2126204A00EE51A8 /* MainTableViewCell.swift */,
 				1C5F8E9921604135002773AA /* MainCollectionViewCell.swift */,
 				1C5F8E9B21604175002773AA /* MainLocalCollectionViewController.swift */,
-				F6340E7721658C8900A3168E /* RoundedImageView.swift */,
 			);
 			path = "Main Page";
 			sourceTree = "<group>";
@@ -323,13 +313,14 @@
 		F60C9F11217938AB00281DB9 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				F6CDB5B62134BCCC0016C036 /* MpViewController.swift */,
 				F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */,
 				F6028FEC2143303700429805 /* AnnotationView.swift */,
 				1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */,
 				1C0DD397212768F900D656F7 /* MapViewController.swift */,
 				F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */,
-				F621E6BA217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift */,
+				F621E6BA217E5D4F00F8BDB3 /* SaveToFavoritesViewController.swift */,
+				F6340E7721658C8900A3168E /* RoundedImageView.swift */,
+				F66E5E4D218A3F5B00F70AC4 /* MapFavoritesTableViewController.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -358,11 +349,6 @@
 				F60C9F052175220F00281DB9 /* PdfFileModalViewController.swift */,
 				F60C9F082175220F00281DB9 /* PdfTableViewController.swift */,
 				F60C9F062175220F00281DB9 /* PDFViewController.swift */,
-				F624BCDE216FF594002D891D /* PdfCollectionViewController.swift */,
-				1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */,
-				1CB851A22173E04000863B87 /* PdfCollectionViewController.swift */,
-				1CB851A12173E04000863B87 /* PdfFileModalViewController.swift */,
-				1CB851A32173E04000863B87 /* PdfTableViewController.swift */,
 			);
 			path = PDF;
 			sourceTree = "<group>";
@@ -481,9 +467,8 @@
 				1C1AE27D212FBEDD00F436FD /* Reachability.swift in Sources */,
 				F60C9F0E21754A6500281DB9 /* LocalPlaybackViewController.swift in Sources */,
 				1C1E6D5320D64D2E00D7FB56 /* ServerTableNavigationController.swift in Sources */,
-				F621E6BB217E5D4F00F8BDB3 /* SaveAnnotationViewController.swift in Sources */,
+				F621E6BB217E5D4F00F8BDB3 /* SaveToFavoritesViewController.swift in Sources */,
 				F6A9278A217A732900797EC2 /* PresentationViewController.swift in Sources */,
-				F624BCDF216FF594002D891D /* PdfCollectionViewController.swift in Sources */,
 				F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
 				F62217CE217F86C200DE68D3 /* AlternativeTableViewCell.swift in Sources */,
@@ -492,15 +477,13 @@
 				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
 				F60C9F0A2175221000281DB9 /* PDFViewController.swift in Sources */,
-				F6CDB5B72134BCCD0016C036 /* MpViewController.swift in Sources */,
 				F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */,
 				1C403E4020D3A8EC000DB616 /* ServerTableViewController.swift in Sources */,
-				1CB851A62173E04000863B87 /* PdfFileModalViewController.swift in Sources */,
 				1C601BB7210F821700629D6F /* SettingCell.swift in Sources */,
 				F62217CC217F86C200DE68D3 /* SubcategoryTableViewCell.swift in Sources */,
 				1C4D76B120C1569700458079 /* MainNavigationController.swift in Sources */,
-				F6CDB5B72134BCCD0016C036 /* MpViewController.swift in Sources */,
 				F6028FED2143303700429805 /* AnnotationView.swift in Sources */,
+				F66E5E4E218A3F5B00F70AC4 /* MapFavoritesTableViewController.swift in Sources */,
 				1C76A8BE21262F8F00EE51A8 /* AboutViewController.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
 				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
@@ -516,7 +499,6 @@
 				F60773672135F38A009F6962 /* AudioViewController.swift in Sources */,
 				1C4D76B520C16ACC00458079 /* MainTabBarController.swift in Sources */,
 				1C76A8B62124DEA900EE51A8 /* MapTableViewController.swift in Sources */,
-				1CB851A92173E04000863B87 /* DocumentPickerViewController.swift in Sources */,
 				F62217D2217F86C200DE68D3 /* LocalResourceTypeTableViewCell.swift in Sources */,
 				1C57E50120BF8387004E1270 /* AppDelegate.swift in Sources */,
 				1C601BA9210A6E7A00629D6F /* ApiResource.swift in Sources */,
@@ -530,7 +512,6 @@
 				F62217D4217F86C200DE68D3 /* PhotoPickerViewController.swift in Sources */,
 				F62217D0217F86C200DE68D3 /* LocalEntryTableViewCell.swift in Sources */,
 				1C4D76BB20C1826200458079 /* ProfileViewController.swift in Sources */,
-				1CB851A72173E04000863B87 /* PdfCollectionViewController.swift in Sources */,
 				1C98E8A221759616008565E9 /* NetworkManager.swift in Sources */,
 				F62217CD217F86C200DE68D3 /* LocalResourceTableViewCell.swift in Sources */,
 				F60773672135F38A009F6962 /* AudioViewController.swift in Sources */,

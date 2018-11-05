@@ -52,6 +52,8 @@ struct LocalEntry: Codable {
     var pdfDocURL: String?
     var audioURL: String?
     var altFiles: [AltFile]?
+    var dataLat: Double?
+    var dataLong: Double?
 }
 
 // field ID to value string pairs.

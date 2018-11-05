@@ -8,19 +8,19 @@
 
 import UIKit
 
-protocol CloseSaveAnnotationDelegate: class
+protocol CloseSaveToFavoritesDelegate: class
 {
     func closeView(_: Bool)
 }
 
 protocol SaveDelegate: class
 {
-    func saveAnnotationToFavorites(_: Bool)
+    func saveToFavoritesTable(_: Bool)
 }
 
-class SaveAnnotationViewController: UIViewController
+class SaveToFavoritesViewController: UIViewController
 {
-    weak var closeSaveAnnotationDelegate: CloseSaveAnnotationDelegate?
+    weak var closeSaveToFavoritesDelegate: CloseSaveToFavoritesDelegate?
     weak var saveDelegate: SaveDelegate?
     
     var titleLabel: UILabel =
@@ -158,11 +158,11 @@ class SaveAnnotationViewController: UIViewController
     
     @objc func closeView()
     {
-        closeSaveAnnotationDelegate!.closeView(true)
+        closeSaveToFavoritesDelegate!.closeView(true)
     }
     
     @objc func saveMap()
     {
-        saveDelegate!.saveAnnotationToFavorites(true)
+        saveDelegate!.saveToFavoritesTable(true)
     }
 }
