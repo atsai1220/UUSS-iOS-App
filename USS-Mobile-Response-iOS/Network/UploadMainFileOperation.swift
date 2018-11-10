@@ -12,7 +12,7 @@ class UploadMainFileOperation: NetworkOperation {
     let file: LocalEntry
     var networkManager: NetworkManager?
     
-    var onDidUpload: ((_ uploadResult: String?) -> Void)!
+    var onDidUpload: ((_ uploadResult: Data) -> Void)!
     
     init(file: LocalEntry) {
         self.file = file

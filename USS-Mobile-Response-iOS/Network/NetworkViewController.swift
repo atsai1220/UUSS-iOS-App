@@ -8,9 +8,15 @@
 
 import UIKit
 
+protocol NetworkViewControllerDelegate {
+    func popToRootController()
+}
+
 class NetworkViewController: UIViewController, NetWorkManagerDelegate {
 
     var localEntry: LocalEntry?
+    
+    var delegate: NetworkViewControllerDelegate?
     
     var progressBackground = UIView()
     
@@ -36,9 +42,11 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     
     func popToRootController() {
         print("popping")
-//        DispatchQueue.main.async {
-//            self.navigationController?.popToRootViewController(animated: true)
-//        }
+        DispatchQueue.main.async {
+            self.dismiss(animated: false, completion: {
+                self.delegate?.popToRootController()
+            })
+        }
         
     }
     

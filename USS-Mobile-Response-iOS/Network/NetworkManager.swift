@@ -20,7 +20,7 @@ protocol NetWorkManagerDelegate {
 class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
     
     var delegate: NetWorkManagerDelegate?
-    var result: [String] = []
+    var remoteFileLocations: [(String, String)] = []
     
     
     private lazy var queue: OperationQueue = {
@@ -29,11 +29,26 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         return queue
     }()
     
-    func parseHttpResponse(result: String) {
-//        print(result)
+    func parseHttpResponse(result: Data) {
+        do {
+            let jsonResponse = try JSONSerialization.jsonObject(with: result, options: [])
+            guard let jsonArray = jsonResponse as? [[String: Any]] else {
+                return
+            }
+            guard let status = jsonArray[0]["Status"] as? String else { return }
+            if status == "OK" {
+                guard let location = jsonArray[0]["Location"] as? String else { return }
+                guard var fileName = jsonArray[0]["Message"] as? String else { return }
+                fileName.removeFirst(9)
+                fileName.removeLast(19)
+                self.remoteFileLocations.append((fileName, location))
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
-    func uploadMainFile(item: LocalEntry, completionBlock: @escaping (_ httpResult: String?) -> Void) {
+    func uploadMainFile(item: LocalEntry, completionBlock: @escaping (_ httpResult: Data) -> Void) {
         // handle main image
         let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(item.localFileName!).path
         let image = UIImage(contentsOfFile: imagePath)
@@ -47,7 +62,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         }
     }
     
-    func uploadAltFile(altFile: AltFile, completionBlock: @escaping (_ httpResult: String?) -> Void) {
+    func uploadAltFile(altFile: AltFile, completionBlock: @escaping (_ httpResult: Data) -> Void) {
         do {
             let path = URL(fileURLWithPath: altFile.url)
             let fileData = try Data(contentsOf: path)
@@ -68,11 +83,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         let mainOperation = UploadMainFileOperation(file: item)
         mainOperation.networkManager = self
         mainOperation.onDidUpload = { (uploadResult) in
-            if let result = uploadResult {
-                // TODO: parse http response
-                self.parseHttpResponse(result: result)
-                self.result.append(result)
-            }
+            self.parseHttpResponse(result: uploadResult)
         }
         if let lastOp = queue.operations.last {
             mainOperation.addDependency(lastOp)
@@ -83,10 +94,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             let altOperation = UploadAltFileOperation(altFile: altFile)
             altOperation.networkManager = self
             altOperation.onDidUpload = { (uploadResult) in
-                if let result = uploadResult {
-                    // TODO: parse http response
-                    self.result.append(result)
-                }
+                self.parseHttpResponse(result: uploadResult)
             }
             if let lastOp = queue.operations.last {
                 altOperation.addDependency(lastOp)
@@ -95,11 +103,16 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         }
         
         let finishOperation = BlockOperation { [unowned self] in
-            self.dismissProgressController()
-            for result in self.result {
-                print(result)
-            }
-//            self.delegate?.popToRootController()
+//            self.dismissProgressController()
+//            for result in self.remoteFileLocations {
+//                print(result)
+//            }
+           
+            self.delegate?.popToRootController()
+            
+            
+//            print("DONE")
+//            print(self.remoteFileLocations)
         }
         if let lastOp = queue.operations.last {
             finishOperation.addDependency(lastOp)
@@ -126,7 +139,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         
     }
     
-    func sendPostRequestWith(body fullFormData: Data, boundary: String, completionBlock: @escaping (_ httpResult: String?) -> Void) {
+    func sendPostRequestWith(body fullFormData: Data, boundary: String, completionBlock: @escaping (_ httpResult: Data) -> Void) {
         let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
         let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
         let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=http_upload"
@@ -162,20 +175,8 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                     }
                 }
             }
-            let dataString = String(data: data, encoding: .utf8)
             DispatchQueue.main.async {
-                do {
-                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
-                    guard let jsonArray = jsonResponse as? [[String: Any]] else {
-                        return
-                    }
-                    print(jsonArray)
-                    guard let location = jsonArray[0]["title"] as? String else { return }
-                } catch {
-                    print(error.localizedDescription)
-                }
-                
-                completionBlock(dataString!)
+                completionBlock(data)
             }
             
         }

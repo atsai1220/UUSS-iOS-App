@@ -12,7 +12,7 @@ import CoreLocation
 import MobileCoreServices
 import PDFKit
 
-class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PDFDelegate, Mp3Delegate
+class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PDFDelegate, Mp3Delegate, NetworkViewControllerDelegate
 {
     let infoCellId = "infoCellId"
     let resourceCellId = "resourceCellId"
@@ -479,6 +479,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         return img
     }
     
+    // MARK: - NetworkViewController delegate functions
+    
+    func popToRootController() {
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+    
     // MARK: - Photo/Video functions
     
     func videoFormatIsAvailable(for sourceType: UIImagePickerControllerSourceType ) -> Bool
@@ -635,6 +641,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     return false
                 }
             }
+            networkVC.delegate = self
             networkVC.localEntry = currentEntry
             self.navigationController?.present(networkVC, animated: true, completion: nil)
             //            httpUpload()
