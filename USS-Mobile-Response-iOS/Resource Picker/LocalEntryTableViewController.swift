@@ -617,39 +617,41 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
     }
     // MARK: - API and local Saving/Uploading functions
-    
-    @objc func saveCheckAndUpload() {
+    @objc func saveCheck() -> Bool {
         let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
         let descriptionCell = tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
         let notesCell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
         if titleCell.textView.text.isEmpty || descriptionCell.textView.text.isEmpty || notesCell.textView.text.isEmpty {
-            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+            return false
         } else if !resourceSelected {
-            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+            return false
         } else if !collectionSelected {
-            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+            return false
         } else {
-            let savedName = createLocalEntry()
-            let networkVC = NetworkViewController()
-            networkVC.modalPresentationStyle = .overFullScreen
-            networkVC.modalTransitionStyle = .crossDissolve
-            let oldEntries = getLocalEntriesFromDisk()
-            let currentEntry = oldEntries.first { (entry) -> Bool in
-                if entry.localFileName == savedName {
-                    return true
-                } else {
-                    return false
-                }
-            }
-            networkVC.delegate = self
-            networkVC.localEntry = currentEntry
-            self.navigationController?.present(networkVC, animated: true, completion: nil)
-            //            httpUpload()
-            //            createResourceSpaceEntry(fileName: savedName)
-            //            addResourceToCollection()
-//            self.navigationController?.popToRootViewController(animated: true)
+            return true
         }
-        
+    }
+    
+    @objc func localSaveCheck() {
+        if saveCheck() {
+            let savedName = createLocalEntry()
+            self.navigationController?.popToRootViewController(animated: true)
+        } else {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        }
+    }
+    
+    @objc func saveCheckAndUpload() {
+        if saveCheck() {
+            // Create local entry
+            let savedName = createLocalEntry()
+            
+            // Upload via to remote server and create entries
+            httpUpload(localEntryName: savedName)
+    
+        } else {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        }
     }
     
     func createLocalEntryDirectory() {
@@ -717,16 +719,21 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         return newEntry.localFileName!
     }
 
-    func httpUpload() {
-        
-    }
-    
-    func createResourceSpaceEntry(fileName: String) {
-        
-    }
-    
-    func addResourceToCollection() {
-        
+    func httpUpload(localEntryName: String) {
+        let networkVC = NetworkViewController()
+        networkVC.modalPresentationStyle = .overFullScreen
+        networkVC.modalTransitionStyle = .crossDissolve
+        let oldEntries = getLocalEntriesFromDisk()
+        let currentEntry = oldEntries.first { (entry) -> Bool in
+            if entry.localFileName == localEntryName {
+                return true
+            } else {
+                return false
+            }
+        }
+        networkVC.delegate = self
+        networkVC.localEntry = currentEntry
+        self.navigationController?.present(networkVC, animated: true, completion: nil)
     }
     
     // MARK: - API Functions
@@ -1064,7 +1071,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.tableView.register(AlternativeTableViewCell.self, forCellReuseIdentifier: alternativeFileCellId)
         self.tableView.tableFooterView = UIView(frame: .zero)
         
-        let saveBarButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveCheckAndUpload))
+        let saveBarButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(localSaveCheck))
         let uploadBarButton = UIBarButtonItem(title: "Upload", style: .done, target: self, action: #selector(saveCheckAndUpload))
         
         

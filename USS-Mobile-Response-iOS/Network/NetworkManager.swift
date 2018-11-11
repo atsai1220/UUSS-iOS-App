@@ -95,6 +95,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             altOperation.networkManager = self
             altOperation.onDidUpload = { (uploadResult) in
                 self.parseHttpResponse(result: uploadResult)
+
             }
             if let lastOp = queue.operations.last {
                 altOperation.addDependency(lastOp)
@@ -103,6 +104,15 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         }
         
         // add operatino for creating resource and adding alt files
+        let createResourceOperation = CreateResourceOperation(resourceType: 1, archivalState: 0)
+        createResourceOperation.networkManager = self
+        createResourceOperation.onDidUpload = { (httpData) in
+            print(String(data: httpData, encoding: .utf8)!)
+        }
+        if let lastOp = self.queue.operations.last {
+            createResourceOperation.addDependency(lastOp)
+        }
+        queue.addOperation(createResourceOperation)
         
         let finishOperation = BlockOperation { [unowned self] in
             self.delegate?.popToRootController()
@@ -115,13 +125,22 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         queue.isSuspended = false
     }
     
-    func uploadAlternativeFiles(altFiles: [AltFile]) {
-        
-    }
     
+    /*
+     https://geodata.geology.utah.gov/api/?user=atsai-uuss&function=create_resource&param1=1&param2=0&param3=/hosts/geodata/var/www/html/ResourceSpace/include/../filestore/tmp/andrew3.JPG&param4=&param5=&param6=&param7=&sign=547e916e87e7386bebc54cebd2d98f2de9756ab6311bc96fc9a5cce2cfd7a0db
+     */
     // TODO: add JSON metadata
-    func createResource(resourceType: Int = 1, archivalState: Int = 0, serverFileURL: String) {
+    func createResource(resourceType: Int = 1, archivalState: Int = 0, completionBlock: @escaping (_ httpResult: Data) -> Void) {
+        let fileName = self.remoteFileLocations[0].0
+        let remoteLocation = self.remoteFileLocations[0].1
         
+        let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
+        let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=create_resource" + "&param1=" + String(resourceType) + "&param2=" + String(archivalState) + "&param3=" + self.remoteFileLocations[0].1 + "&param4=" + "&param5=" + "&param6=1" + "&param7="
+        let signature = "&sign=" + (privateKey + queryString).sha256()!
+        let completeURL = urlString + queryString + signature
+        guard let url = URL(string: completeURL) else { return }
+        sendGetRequest(url: url, completionBlock: completionBlock)
     }
     
     func addAlternativeFile(resourceId: Int, name: String, description: String, fileName: String, fileExtension: String, fileSize: Int, fileURL: String) {
@@ -130,6 +149,14 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
     func addResourceToCollection(resourceId: Int, collectionId: Int) {
         
+    }
+    
+    func sendGetRequest(url: URL, completionBlock: @escaping(_ httpResult: Data) -> Void) {
+        let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+            guard let data = data else { return }
+            completionBlock(data)
+        }
+        task.resume()
     }
     
     func sendPostRequestWith(body fullFormData: Data, boundary: String, completionBlock: @escaping (_ httpResult: Data) -> Void) {
