@@ -943,36 +943,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 print(jsonError)
             }
             }.resume()
-//        URLSession.shared.dataTask(with: url) { (data, response, error) in
-//            if error != nil {
-//                print(error!.localizedDescription)
-//            }
-//            guard let data = data else { return }
-//            // JSON decodign and parsing
-//            do {
-//                // decode retrieved data with JSONDecoder
-//                let resourceSpaceData = try JSONDecoder().decode([Hazard].self, from: data)
-//                // return to main queue
-//                DispatchQueue.main.async {
-//                    // parse and filter JSON results
-//                    self.allHazards = resourceSpaceData.filter({
-//                        $0.theme == "Geologic Hazards" && $0.theme2 != ""
-//                    })
-//                    // save to disk in case of connectivity lost
-//                    saveCompleteHazardsToDisk(hazards: self.allHazards)
-//                    self.filterAllHazardsAndReloadTable()
-//
-//                    self.activityIndicator.stopAnimating()
-//                    self.activityIndicator.isHidden = true
-//                    if let viewWithTag = self.view.viewWithTag(99) {
-//                        viewWithTag.removeFromSuperview()
-//                    }
-//                    self.toggleHazardPickerView()
-//                }
-//            } catch let jsonError {
-//                print(jsonError)
-//            }
-//        }.resume()
     }
     
     
@@ -1017,11 +987,53 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     // MARK: - Table view
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    func loadOldLocalEntry() {
         if let localEntry = self.localEntry {
-            print(localEntry.name!)
+            self.previewImage = getImageFromLocalEntriesDirectory(imageName: localEntry.localFileName!)
+            self.resourceSelected = true
+            navigationItem.title = localEntry.name!
+            
+            let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
+            let descriptionCell = tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
+            let notesCell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
+            
+            titleCell.textView.insertText(localEntry.name!)
+            descriptionCell.textView.insertText(localEntry.description!)
+            notesCell.textView.insertText(localEntry.notes!)
+            self.altFiles = localEntry.altFiles!
+            
+            self.tableView.layoutSubviews()
+            self.tableView.reloadData()
         }
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0{
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y != 0{
+                self.view.frame.origin.y += keyboardSize.height
+            }
+        }
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
+        
+        loadOldLocalEntry()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
     
     override func viewDidLoad() {
@@ -1057,8 +1069,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         
         
         navigationItem.setRightBarButtonItems([uploadBarButton, saveBarButton], animated: true)
-//        navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
     }
+    
+
     
     func textViewDidChange(_ textView: UITextView) {
         let size = textView.bounds.size

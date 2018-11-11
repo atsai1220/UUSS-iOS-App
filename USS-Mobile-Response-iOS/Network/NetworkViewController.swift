@@ -23,7 +23,6 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     var progressBar = UIProgressView()
     
     func uploadProgressWith(progress: Float) {
-        print("uploadProgressWith: updating progress bar")
         progressBar.progress = progress
         view.layoutSubviews()
     }
@@ -41,13 +40,11 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     }
     
     func popToRootController() {
-        print("popping")
         DispatchQueue.main.async {
             self.dismiss(animated: false, completion: {
                 self.delegate?.popToRootController()
             })
         }
-        
     }
     
     deinit {

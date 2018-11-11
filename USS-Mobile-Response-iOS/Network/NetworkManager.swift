@@ -102,17 +102,10 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             queue.addOperation(altOperation)
         }
         
+        // add operatino for creating resource and adding alt files
+        
         let finishOperation = BlockOperation { [unowned self] in
-//            self.dismissProgressController()
-//            for result in self.remoteFileLocations {
-//                print(result)
-//            }
-           
             self.delegate?.popToRootController()
-            
-            
-//            print("DONE")
-//            print(self.remoteFileLocations)
         }
         if let lastOp = queue.operations.last {
             finishOperation.addDependency(lastOp)
