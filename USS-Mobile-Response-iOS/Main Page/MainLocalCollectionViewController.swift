@@ -15,6 +15,8 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 {
     func deleteThis(cellIndexPath: IndexPath)
     {
+        let localEntry: LocalEntry = localEntries[cellIndexPath.row]
+        
         if cellIndexPath.row == 1 && self.localEntries.count == 1
         {
             var trashEntries = getTrashEntriesFromDisk()
@@ -39,6 +41,9 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
         {
             self.editMode = false
         }
+        
+        NotificationCenter.default.post(name: Notification.Name("Local Entry Deleted"), object: nil, userInfo: [AnyHashable(localEntry.name): [localEntry.dataLat, localEntry.dataLong]])
+
     }
     
     

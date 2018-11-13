@@ -108,7 +108,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         
         view.backgroundColor = UIColor.lightGray
         
-
+        NotificationCenter.default.addObserver(self, selector: #selector(deleteAnnotation), name: Notification.Name("Local Entry Deleted"), object: nil)
+        
         swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
         swipeUpGestureRecognizer!.direction = .up
         swipeDownGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
@@ -323,7 +324,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(deleteAnnotation), name: Notification.Name("Local Entry Deleted"), object: nil)
         loadAnnotations()
     }
     
