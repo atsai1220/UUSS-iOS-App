@@ -47,7 +47,7 @@ class SaveToFavoritesViewController: UIViewController
     {
         var label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "4119 N. Edgewood Dr"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 15.0)
         
         return label
@@ -57,7 +57,7 @@ class SaveToFavoritesViewController: UIViewController
     {
         var label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Provo, Utah 84604"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 15.0)
         
         return label
@@ -67,7 +67,7 @@ class SaveToFavoritesViewController: UIViewController
     {
         var label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "United States"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 15.0)
         
         return label
@@ -77,7 +77,7 @@ class SaveToFavoritesViewController: UIViewController
     {
         var label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "1.2 mi"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 15.0)
         
         return label
@@ -120,9 +120,29 @@ class SaveToFavoritesViewController: UIViewController
         view.addSubview(distanceLabel)
         view.addSubview(saveToFavoritesButton)
         view.addSubview(addressLabel)
-        view.addSubview(streetLabel)
         view.addSubview(cityLabel)
         view.addSubview(countryLabel)
+        
+        if streetLabel.text != ""
+        {
+            view.addSubview(streetLabel)
+            NSLayoutConstraint.activate([
+                streetLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 2.0),
+                streetLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 100.0),
+                streetLabel.leadingAnchor.constraint(equalTo: addressLabel.leadingAnchor, constant: 1.0),
+                cityLabel.topAnchor.constraint(equalTo: streetLabel.bottomAnchor, constant: 2.0),
+                cityLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 100.0),
+                cityLabel.leadingAnchor.constraint(equalTo: streetLabel.leadingAnchor, constant: 1.0),
+                ])
+        }
+        else
+        {
+            NSLayoutConstraint.activate([
+                            cityLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 2.0),
+                            cityLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 100.0),
+                            cityLabel.leadingAnchor.constraint(equalTo: streetLabel.leadingAnchor, constant: 1.0)
+                ])
+        }
         
         saveToFavoritesButton.addTarget(self, action: #selector(saveMap), for: .touchUpInside)
         
@@ -144,12 +164,12 @@ class SaveToFavoritesViewController: UIViewController
             addressLabel.topAnchor.constraint(equalTo: saveToFavoritesButton.bottomAnchor, constant: 20.0),
             addressLabel.leadingAnchor.constraint(equalTo: saveToFavoritesButton.leadingAnchor, constant: 1.0),
             addressLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 100.0),
-            streetLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 2.0),
-            streetLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 100.0),
-            streetLabel.leadingAnchor.constraint(equalTo: addressLabel.leadingAnchor, constant: 1.0),
-            cityLabel.topAnchor.constraint(equalTo: streetLabel.bottomAnchor, constant: 2.0),
-            cityLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 100.0),
-            cityLabel.leadingAnchor.constraint(equalTo: streetLabel.leadingAnchor, constant: 1.0),
+//            streetLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 2.0),
+//            streetLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 100.0),
+//            streetLabel.leadingAnchor.constraint(equalTo: addressLabel.leadingAnchor, constant: 1.0),
+//            cityLabel.topAnchor.constraint(equalTo: streetLabel.bottomAnchor, constant: 2.0),
+//            cityLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 100.0),
+//            cityLabel.leadingAnchor.constraint(equalTo: streetLabel.leadingAnchor, constant: 1.0),
             countryLabel.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 2.0),
             countryLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 100.0),
             countryLabel.leadingAnchor.constraint(equalTo: cityLabel.leadingAnchor, constant: 1.0)

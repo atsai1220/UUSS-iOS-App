@@ -23,7 +23,7 @@ enum Segment: Int
     case LOCATION = 1
 }
 
-class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MKMapViewDelegate, CloseSettingsDelegate, SelectorDelegate, CloseSaveToFavoritesDelegate, SaveDelegate, MoveToSelectionDelegate, FavoritesDelegate
+class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MKMapViewDelegate, CloseSettingsDelegate, SelectorDelegate, CloseSaveToFavoritesDelegate, SaveDelegate, MoveToSelectionDelegate, FavoritesDelegate, FavoriteSelectedDelegate
 {
     var locationManager: CLLocationManager?
     var searchBar: UISearchBar?
@@ -173,6 +173,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         favoritesTableViewController = MapFavoritesTableViewController(style: .plain)
         favoritesTableViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         favoritesTableViewController!.view.isUserInteractionEnabled = true
+        favoritesTableViewController!.selectedFavoriteDelegate = self
         view.addSubview(favoritesTableViewController!.view)
         
         self.addChildViewController(mapTableViewController!)
@@ -277,6 +278,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
    
     func moveToSelectedPlace(with name: String, and coordinates: CLLocationCoordinate2D)
     {
+        if tablePosition == "top"
+        {
+            animateSearchTableToStartPosition()
+        }
         mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
         searchAnnotation = MapAnnotation(coordinate: coordinates, title: name, subTitle: "", type: "search")
         mapView!.addAnnotation(self.searchAnnotation!)
@@ -527,6 +532,25 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         }
     }
     
+    func moveToFavoriteSelected(with name: String, and point: CLLocationCoordinate2D)
+    {
+        animateSearchTableToStartPosition()
+        searchBarAnchorToMapTable!.isActive = true
+        searchBarAnchorToFavoriteTable!.isActive = false
+        favoriteSearchBarView.removeFromSuperview()
+        let textfield: UITextField = searchBar!.value(forKey: "searchField") as! UITextField
+        textfield.text = ""
+        textfield.textColor = .black
+        textfield.tintColor = .black
+        searchBar!.setImage(searchImage, for: .search, state: .normal)
+        mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
+        searchAnnotation = MapAnnotation(coordinate: point, title: name, subTitle: "", type: "search")
+        mapView!.addAnnotation(self.searchAnnotation!)
+        let region = MKCoordinateRegionMakeWithDistance(point, self.regionRadius, self.regionRadius)
+        mapView!.setRegion(region, animated: true)
+        
+    }
+    
     func favoriteCellChosen(_: Bool)
     {
         searchBar!.becomeFirstResponder()
@@ -554,6 +578,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     
     func saveToFavoritesTable(_: Bool)
     {
+        saveToFavoritesViewController!.dismiss(animated: true, completion: nil)
+        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         managedContext = appDelegate.persistentContainer.viewContext
         entity = NSEntityDescription.entity(forEntityName: "Favorite", in: managedContext!)
@@ -595,10 +621,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
 //    }
         saveToFavoritesViewController = SaveToFavoritesViewController()
         saveToFavoritesViewController!.titleLabel.text = placemark!.name
-//        saveAnnotationViewController!.distanceLabel.text = String(format: "%.2f", placemark!.location!.distance(from: currentLocation!) / 1609.344) + " mi"
-//        saveAnnotationViewController!.streetLabel.text = placemark!.thoroughfare
-//        saveAnnotationViewController!.cityLabel.text = placemark!.locality! + ", " + placemark!.administrativeArea! + " " + placemark!.postalCode!
-//        saveAnnotationViewController!.countryLabel.text = placemark!.country
+        saveToFavoritesViewController!.distanceLabel.text = String(format: "%.2f", placemark!.location!.distance(from: currentLocation!) / 1609.344) + " mi"
+//        saveToFavoritesViewController!.streetLabel.text = placemark!.thoroughfare
+        saveToFavoritesViewController!.cityLabel.text = placemark!.locality! + ", " + placemark!.administrativeArea! /*+ " " + (placemark!.postalCode?)!*/
+        saveToFavoritesViewController!.countryLabel.text = placemark!.country
         saveToFavoritesViewController!.saveDelegate = self
         saveToFavoritesViewController!.closeSaveToFavoritesDelegate = self
         transitionDelegate.type = .save
@@ -606,6 +632,19 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         saveToFavoritesViewController!.modalPresentationStyle = .custom
         present(saveToFavoritesViewController!, animated: true, completion: nil)
     }
+    
+    
+//    func cityLabelString() -> String
+//    {
+//        var cityLabel: String?
+//
+//        if placemark?.locality == nil
+//        {
+//
+//        }
+//
+//        return cityLabel!
+//    }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
     {

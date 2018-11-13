@@ -10,11 +10,17 @@ import UIKit
 import CoreData
 import MapKit
 
+
+protocol FavoriteSelectedDelegate: class
+{
+    func moveToFavoriteSelected(with name:String, and point:CLLocationCoordinate2D)
+}
+
 class MapFavoritesTableViewController: UITableViewController
 {
     var tableData: [CellData] = []
     var managedContext: NSManagedObjectContext?
-    weak var moveToSelectedPlaceDelegate: MoveToSelectionDelegate?
+    weak var selectedFavoriteDelegate: FavoriteSelectedDelegate?
     
     override init(style: UITableViewStyle)
     {
@@ -44,7 +50,7 @@ class MapFavoritesTableViewController: UITableViewController
     @objc func loadTableData()
     {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
+
         managedContext = appDelegate.persistentContainer.viewContext
         
         let entity = NSEntityDescription.entity(forEntityName: "Favorite", in: managedContext!)
@@ -125,40 +131,41 @@ class MapFavoritesTableViewController: UITableViewController
         return false
     }
     
-    //    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
-    //    {
-    //        var managedObjectArray: [NSManagedObject] = []
-    //        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    //        let managedContext: NSManagedObjectContext = appDelegate.persistentContainer.viewContext
-    //
-    //        let fetchRequest: NSFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Map")
-    //
-    //        do
-    //        {
-    //            try managedObjectArray = managedContext.fetch(fetchRequest)
-    //        }
-    //        catch let error as NSError
-    //        {
-    //            print("\(error). Could not complete fetch request")
-    //        }
-    //
-    //        var managedObject: NSManagedObject?
-    //        for object in managedObjectArray
-    //        {
-    //            if object.value(forKey: "name") as? String == tableData[indexPath.row].value(forKey: "name") as? String
-    //            {
-    //                managedObject = object
-    //            }
-    //        }
-    //
-    //        if editingStyle == .delete
-    //        {
-    //            self.tableData.remove(at: indexPath.row)
-    //            managedContext.delete(managedObject!)
-    //            tableView.deleteRows(at: [indexPath], with: .fade)
-    //
-    //        }
-    //    }
+        override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
+        {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            var managedObjectArray: [NSManagedObject] = []
+            let managedContext: NSManagedObjectContext = appDelegate.persistentContainer.viewContext
+    
+            let fetchRequest: NSFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Favorite")
+    
+            do
+            {
+                try managedObjectArray = managedContext.fetch(fetchRequest)
+            }
+            catch let error as NSError
+            {
+                print("\(error). Could not complete fetch request")
+            }
+    
+            var managedObject: NSManagedObject?
+
+            for object in managedObjectArray
+            {
+                if object.value(forKey: "name") as! String == tableData[indexPath.row].cellName!
+                {
+                    managedObject = object
+                }
+            }
+    
+            if editingStyle == .delete
+            {
+                tableData.remove(at: indexPath.row)
+                managedContext.delete(managedObject!)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+    
+            }
+        }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
@@ -172,10 +179,35 @@ class MapFavoritesTableViewController: UITableViewController
         let cellData: CellData = tableData[indexPath.row]
         
         cell.nameLabel.text = cellData.cellName
-        cell.descriptionLabel.text = "\(String(describing: cellData.cellAddress!)), \(String(describing: cellData.cellCity!))"
+        cell.descriptionLabel.text = descriptionForPlacemark(address: cellData.cellAddress!, city: cellData.cellCity!)
+//        cell.descriptionLabel.text = "\(String(describing: cellData.cellAddress!)), \(String(describing: cellData.cellCity!))"
         cell.icon.image = UIImage(named: "pin")
         
         return cell
+    }
+    
+    func descriptionForPlacemark(address: String, city: String) -> String
+    {
+        var description: String?
+        
+        if address != "" && city != ""
+        {
+            description = "\(String(describing: address)), \(String(describing: city))"
+        }
+        else if address == "" && city != ""
+        {
+            description = "\(String(describing: city))"
+        }
+        else if address != "" && city == ""
+        {
+            description = "\(String(describing: address))"
+        }
+        else if address == "" && city == ""
+        {
+            description = ""
+        }
+        
+        return description!
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
@@ -183,6 +215,8 @@ class MapFavoritesTableViewController: UITableViewController
         let cell: CellData = tableData[indexPath.row]
         
         let point: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: cell.cellLatitude!, longitude: cell.cellLongitude!)
-        moveToSelectedPlaceDelegate?.moveToSelectedPlace(with: cell.cellName!, and: point)
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        selectedFavoriteDelegate?.moveToFavoriteSelected(with: cell.cellName!, and: point)
     }
 }

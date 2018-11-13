@@ -54,7 +54,7 @@ class MapTableViewController: UITableViewController
     
     func initFooterData()
     {
-        tableData.append(CellData(name: "Favorites", address: "0 places", city: "", latitude: 0, longitude: 0))
+        tableData.append(CellData(name: "Favorites", address: "", city: "", latitude: 0, longitude: 0))
     }
     
     @objc func loadTableData()
@@ -144,40 +144,40 @@ class MapTableViewController: UITableViewController
         return false
     }
     
-//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
-//    {
-//        var managedObjectArray: [NSManagedObject] = []
-//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-//        let managedContext: NSManagedObjectContext = appDelegate.persistentContainer.viewContext
-//
-//        let fetchRequest: NSFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Map")
-//
-//        do
-//        {
-//            try managedObjectArray = managedContext.fetch(fetchRequest)
-//        }
-//        catch let error as NSError
-//        {
-//            print("\(error). Could not complete fetch request")
-//        }
-//
-//        var managedObject: NSManagedObject?
-//        for object in managedObjectArray
-//        {
-//            if object.value(forKey: "name") as? String == tableData[indexPath.row].value(forKey: "name") as? String
-//            {
-//                managedObject = object
-//            }
-//        }
-//
-//        if editingStyle == .delete
-//        {
-//            self.tableData.remove(at: indexPath.row)
-//            managedContext.delete(managedObject!)
-//            tableView.deleteRows(at: [indexPath], with: .fade)
-//
-//        }
-//    }
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
+    {
+        var managedObjectArray: [NSManagedObject] = []
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext: NSManagedObjectContext = appDelegate.persistentContainer.viewContext
+
+        let fetchRequest: NSFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Placemark")
+
+        do
+        {
+            try managedObjectArray = managedContext.fetch(fetchRequest)
+        }
+        catch let error as NSError
+        {
+            print("\(error). Could not complete fetch request")
+        }
+
+        var managedObject: NSManagedObject?
+        for object in managedObjectArray
+        {
+            if object.value(forKey: "name") as! String == tableData[indexPath.row].cellName!
+            {
+                managedObject = object
+            }
+        }
+
+        if editingStyle == .delete
+        {
+            tableData.remove(at: indexPath.row)
+            managedContext.delete(managedObject!)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+
+        }
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
@@ -195,27 +195,56 @@ class MapTableViewController: UITableViewController
             cell.nameLabel.text = cellData.cellName
             cell.descriptionLabel.text = cellData.cellAddress
             cell.icon.image = UIImage(named: "heart")
+            cell.icon.backgroundColor = .red
         }
         else
         {
             cell.nameLabel.text = cellData.cellName
-            cell.descriptionLabel.text = "\(String(describing: cellData.cellAddress!)), \(String(describing: cellData.cellCity!))"
+            cell.descriptionLabel.text = descriptionForPlacemark(address: cellData.cellAddress!, city: cellData.cellCity!)
+//            cell.descriptionLabel.text = "\(String(describing: cellData.cellAddress!)), \(String(describing: cellData.cellCity!))"
             cell.icon.image = UIImage(named: "pin")
+            cell.icon.backgroundColor = .red
         }
         
         return cell
     }
     
+    
+    func descriptionForPlacemark(address: String, city: String) -> String
+    {
+        var description: String?
+        
+        if address != "" && city != ""
+        {
+            description = "\(String(describing: address)), \(String(describing: city))"
+        }
+        else if address == "" && city != ""
+        {
+            description = "\(String(describing: city))"
+        }
+        else if address != "" && city == ""
+        {
+            description = "\(String(describing: address))"
+        }
+        else if address == "" && city == ""
+        {
+            description = ""
+        }
+        
+        return description!
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        let cell: CellData = tableData[indexPath.row]
-        
-        if cell.cellName != "Favorites"
+        tableView.deselectRow(at: indexPath, animated: false)
+        let cellData: CellData = tableData[indexPath.row]
+
+        if cellData.cellName != "Favorites"
         {
-            let point: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: cell.cellLatitude!, longitude: cell.cellLongitude!)
-            moveToSelectedPlaceDelegate?.moveToSelectedPlace(with: cell.cellName!, and: point)
+            let point: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: cellData.cellLatitude!, longitude: cellData.cellLongitude!)
+            moveToSelectedPlaceDelegate?.moveToSelectedPlace(with: cellData.cellName!, and: point)
         }
-        else if cell.cellName == "Favorites"
+        else if cellData.cellName == "Favorites"
         {
             favoriteDelegate?.favoriteCellChosen(true)
         }
@@ -234,7 +263,7 @@ class TableCell: UITableViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
-    let icon: RoundedImageView =
+    var icon: RoundedImageView =
     {
         let image: RoundedImageView = RoundedImageView(image: UIImage(named: "video"))
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -262,6 +291,16 @@ class TableCell: UITableViewCell
         label.text = ""
         return label
     }()
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool)
+    {
+        super.setHighlighted(highlighted, animated: true)
+        
+        if highlighted
+        {
+            icon.backgroundColor = .red
+        }
+    }
     
     func setUpViews()
     {
