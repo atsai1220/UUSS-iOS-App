@@ -12,14 +12,15 @@ class CreateResourceOperation: NetworkOperation {
     
     let resourceType: Int
     let archivalState: Int
-    
+    let item: LocalEntry
     var networkManager: NetworkManager?
     
     var onDidUpload: ((_ uploadResult: Data) -> Void)!
     
-    init(resourceType: Int, archivalState: Int) {
+    init(item: LocalEntry, resourceType: Int, archivalState: Int) {
         self.resourceType = resourceType
         self.archivalState = archivalState
+        self.item = item
     }
     
     override func execute() {
@@ -27,7 +28,7 @@ class CreateResourceOperation: NetworkOperation {
     }
     
     private func createResource() {
-        networkManager?.createResource(resourceType: self.resourceType, archivalState: self.archivalState) {
+        networkManager?.createResource(item: self.item, resourceType: self.resourceType, archivalState: self.archivalState) {
             (httpResult) in
             self.onDidUpload(httpResult)
             self.finished(error: "create resource")

@@ -104,10 +104,11 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         }
         
         // add operatino for creating resource and adding alt files
-        let createResourceOperation = CreateResourceOperation(resourceType: 1, archivalState: 0)
+        let createResourceOperation = CreateResourceOperation(item: item, resourceType: 1, archivalState: 0)
         createResourceOperation.networkManager = self
         createResourceOperation.onDidUpload = { (httpData) in
-            print(String(data: httpData, encoding: .utf8)!)
+            let resourceId = String(data: httpData, encoding: .utf8)!
+            print(resourceId)
         }
         if let lastOp = self.queue.operations.last {
             createResourceOperation.addDependency(lastOp)
@@ -125,22 +126,68 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         queue.isSuspended = false
     }
     
-    
-    /*
-     https://geodata.geology.utah.gov/api/?user=atsai-uuss&function=create_resource&param1=1&param2=0&param3=/hosts/geodata/var/www/html/ResourceSpace/include/../filestore/tmp/andrew3.JPG&param4=&param5=&param6=&param7=&sign=547e916e87e7386bebc54cebd2d98f2de9756ab6311bc96fc9a5cce2cfd7a0db
-     */
     // TODO: add JSON metadata
-    func createResource(resourceType: Int = 1, archivalState: Int = 0, completionBlock: @escaping (_ httpResult: Data) -> Void) {
+    func createResource(item: LocalEntry, resourceType: Int = 1, archivalState: Int = 0, completionBlock: @escaping (_ httpResult: Data) -> Void) {
         let fileName = self.remoteFileLocations[0].0
         let remoteLocation = self.remoteFileLocations[0].1
+        item.collectionRef
+        // METADATA
+        var metaArray = [Codable]()
+        let metaName = MetaName(name: fileName)
+        let metaDescription = MetaDescription(description: item.description!)
+        let metaNotes = MetaNotes(notes: item.notes!)
         
+        let metaJSON = MetaThing(name: item.name!, description: item.description!, notes: item.notes!)
+        guard let jsonData = try? JSONEncoder().encode(metaJSON) else { return }
+        guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
+        print(jsonString)
+        
+        
+//        metaArray.append(metaName)
+//        metaArray.append(metaDescription)
+//        metaArray.append(metaNotes)
+//
+//
+//        if let jsonData = try? JSONEncoder().encode(metaArray),
+//            guard let jsonString = String(data: jsonData, encoding: .utf8) { return }
+//        print(jsonString)
+        
+//        guard let data = try? JSONSerialization.data(withJSONObject: metaData, options: []) else { return }
+       
+//        let jsonString = String(data: data, encoding: String.Encoding.utf8)!
+//        let jsonString = String(data: data, encoding: .utf8)?.replacingOccurrences(of: "\\/", with: "/")
+//        print(jsonString!)
+        
+        // Title
+        // Hazard Type
+        // Description
+        // Notes
+    
         let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
         let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
-        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=create_resource" + "&param1=" + String(resourceType) + "&param2=" + String(archivalState) + "&param3=" + self.remoteFileLocations[0].1 + "&param4=" + "&param5=" + "&param6=1" + "&param7="
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=create_resource" + "&param1=" + String(resourceType) + "&param2=" + String(archivalState) + "&param3=" + self.remoteFileLocations[0].1 + "&param4=" + "&param5=" + "&param6=1" + "&param7=" + jsonString
         let signature = "&sign=" + (privateKey + queryString).sha256()!
         let completeURL = urlString + queryString + signature
         guard let url = URL(string: completeURL) else { return }
         sendGetRequest(url: url, completionBlock: completionBlock)
+    }
+    
+    struct MetaThing: Codable {
+        let name: String
+        let description: String
+        let notes: String
+    }
+    
+    struct MetaName: Codable {
+        let name: String
+    }
+    
+    struct MetaDescription: Codable {
+        let description: String
+    }
+    
+    struct MetaNotes: Codable {
+        let notes: String
     }
     
     func addAlternativeFile(resourceId: Int, name: String, description: String, fileName: String, fileExtension: String, fileSize: Int, fileURL: String) {
