@@ -84,6 +84,11 @@
 		1CA8DA82218151EB008AC505 /* PdfCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA8DA81218151EB008AC505 /* PdfCollectionViewCell.swift */; };
 		1CA8DA84218156C2008AC505 /* Mp3CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA8DA83218156C2008AC505 /* Mp3CollectionViewCell.swift */; };
 		1CB03734217A8B980085191C /* HazardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB03733217A8B980085191C /* HazardManager.swift */; };
+		1CD43E1D2198DB0A00C749B7 /* LocalEntryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD43E1C2198DB0A00C749B7 /* LocalEntryPickerView.swift */; };
+		1CD43E1F2198DD1900C749B7 /* CreateResourceOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD43E1E2198DD1900C749B7 /* CreateResourceOperation.swift */; };
+		1CD43E212198DD2C00C749B7 /* AddAlternativeFileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD43E202198DD2C00C749B7 /* AddAlternativeFileOperation.swift */; };
+		1CD43E232198DD3B00C749B7 /* AddResourceToCollectionOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD43E222198DD3B00C749B7 /* AddResourceToCollectionOperation.swift */; };
+		1CD43E25219A845D00C749B7 /* SaveToFavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD43E24219A845C00C749B7 /* SaveToFavoritesViewController.swift */; };
 		F6028FED2143303700429805 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6028FEC2143303700429805 /* AnnotationView.swift */; };
 		F60773672135F38A009F6962 /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60773662135F38A009F6962 /* AudioViewController.swift */; };
 		F60C9F092175221000281DB9 /* ImportModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C9F052175220F00281DB9 /* ImportModalViewController.swift */; };
@@ -166,6 +171,11 @@
 		1CA8DA83218156C2008AC505 /* Mp3CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3CollectionViewCell.swift; sourceTree = "<group>"; };
 		1CB03733217A8B980085191C /* HazardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HazardManager.swift; sourceTree = "<group>"; };
 		1CB851A42173E04000863B87 /* DocumentPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickerViewController.swift; sourceTree = "<group>"; };
+		1CD43E1C2198DB0A00C749B7 /* LocalEntryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEntryPickerView.swift; sourceTree = "<group>"; };
+		1CD43E1E2198DD1900C749B7 /* CreateResourceOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateResourceOperation.swift; sourceTree = "<group>"; };
+		1CD43E202198DD2C00C749B7 /* AddAlternativeFileOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAlternativeFileOperation.swift; sourceTree = "<group>"; };
+		1CD43E222198DD3B00C749B7 /* AddResourceToCollectionOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddResourceToCollectionOperation.swift; sourceTree = "<group>"; };
+		1CD43E24219A845C00C749B7 /* SaveToFavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToFavoritesViewController.swift; sourceTree = "<group>"; };
 		F6028FEC2143303700429805 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		F60773662135F38A009F6962 /* AudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewController.swift; sourceTree = "<group>"; };
 		F60C9F052175220F00281DB9 /* ImportModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportModalViewController.swift; sourceTree = "<group>"; };
@@ -296,6 +306,7 @@
 				1C946C352181652F00B19EF3 /* LocalResourceTypeTableViewCell.swift */,
 				1C946C362181652F00B19EF3 /* SubcategoryTableViewCell.swift */,
 				1C946C372181652F00B19EF3 /* LocalEntryTableViewCell.swift */,
+				1CD43E1C2198DB0A00C749B7 /* LocalEntryPickerView.swift */,
 			);
 			path = "Resource Picker";
 			sourceTree = "<group>";
@@ -325,6 +336,9 @@
 				1C47BE4E21869F480004A76E /* NetworkOperation.swift */,
 				1C47BE7A2186BAD40004A76E /* UploadAltFileOperation.swift */,
 				1C47BE782186BAB60004A76E /* UploadMainFileOperation.swift */,
+				1CD43E1E2198DD1900C749B7 /* CreateResourceOperation.swift */,
+				1CD43E202198DD2C00C749B7 /* AddAlternativeFileOperation.swift */,
+				1CD43E222198DD3B00C749B7 /* AddResourceToCollectionOperation.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -406,6 +420,7 @@
 				1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */,
 				1C0DD397212768F900D656F7 /* MapViewController.swift */,
 				F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */,
+				1CD43E24219A845C00C749B7 /* SaveToFavoritesViewController.swift */,
 				F6340E7721658C8900A3168E /* RoundedImageView.swift */,
 				F692EBF22190D4BE0052AE1F /* SaveToFavoritesViewController.swift */,
 				F66E5E4D218A3F5B00F70AC4 /* MapFavoritesTableViewController.swift */,
@@ -567,6 +582,7 @@
 				1C497F47217FC7DB006E273F /* CommonFunctions.swift in Sources */,
 				1C497F46217FC7D7006E273F /* Reachability.swift in Sources */,
 				1C497F45217FC7D4006E273F /* PlistController.swift in Sources */,
+				1CD43E212198DD2C00C749B7 /* AddAlternativeFileOperation.swift in Sources */,
 				1C497F44217FC7D1006E273F /* LocalEntry.swift in Sources */,
 				1C497F43217FC7CF006E273F /* ApiResource.swift in Sources */,
 				1C497F42217FC7CB006E273F /* ResourceSpaceModel.swift in Sources */,
@@ -589,7 +605,9 @@
 				1C497F35217FC7A2006E273F /* MainTableViewCell.swift in Sources */,
 				1C497F34217FC79F006E273F /* MainTrashTableViewController.swift in Sources */,
 				1C946C3C2181653000B19EF3 /* LocalResourceTableViewCell.swift in Sources */,
+				1CD43E1D2198DB0A00C749B7 /* LocalEntryPickerView.swift in Sources */,
 				1CA8DA84218156C2008AC505 /* Mp3CollectionViewCell.swift in Sources */,
+				1CD43E1F2198DD1900C749B7 /* CreateResourceOperation.swift in Sources */,
 				1C47BE4F21869F480004A76E /* NetworkOperation.swift in Sources */,
 				1C497F33217FC79C006E273F /* MainTabBarController.swift in Sources */,
 				1C574C6D21814D3200983BA1 /* Mp3CollectionViewController.swift in Sources */,
@@ -603,6 +621,7 @@
 				1C497F2B217FC782006E273F /* (null) in Sources */,
 				1C497F2A217FC766006E273F /* PresentationManager.swift in Sources */,
 				1C946C3F2181653000B19EF3 /* SubcategoryTableViewCell.swift in Sources */,
+				1CD43E25219A845D00C749B7 /* SaveToFavoritesViewController.swift in Sources */,
 				1C497F29217FC763006E273F /* PresentationViewController.swift in Sources */,
 				1C497F28217FC760006E273F /* PresentationAnimator.swift in Sources */,
 				1C497F27217FC75B006E273F /* HazardsDetailTableViewController.swift in Sources */,
@@ -627,6 +646,7 @@
 				1C497F10217FC683006E273F /* HazardManager.swift in Sources */,
 				1C497F0F217FC680006E273F /* NetworkViewController.swift in Sources */,
 				1C497F0E217FC67C006E273F /* NetworkManager.swift in Sources */,
+				1CD43E232198DD3B00C749B7 /* AddResourceToCollectionOperation.swift in Sources */,
 				1C76A8A121127B8000EE51A8 /* USS-Mobile-Response-iOS.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

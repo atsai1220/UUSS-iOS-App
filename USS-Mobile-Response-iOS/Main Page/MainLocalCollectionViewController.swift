@@ -208,40 +208,14 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
-        let localMedia: LocalEntry = localEntries[indexPath.row]
+        let localEntry: LocalEntry = localEntries[indexPath.row]
         
-        let holdGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: collectionView, action: #selector(cellPressed))
-        holdGesture.minimumPressDuration = TimeInterval(exactly: 2.0)!
-        collectionView.addGestureRecognizer(holdGesture)
-        
-        switch localMedia.fileType
-        {
-            case FileType.PHOTO.rawValue:
-                let localEntryVC = LocalEntryTableViewController()
-                localEntryVC.localEntry = localMedia
-                self.navigationController?.pushViewController(localEntryVC, animated: true)
-                break
-            case FileType.VIDEO.rawValue:
-                
-                let videoPlaybackController: VideoPlaybackViewController = VideoPlaybackViewController()
-                videoPlaybackController.videoUrl = URL(fileURLWithPath: localMedia.videoURL!)
-                navigationController?.pushViewController(videoPlaybackController, animated: true)
-            
-            case FileType.AUDIO.rawValue:
-            
-                let url: URL = URL(fileURLWithPath: localMedia.audioURL!)
-                let localAudioViewController: LocalAudioViewController = LocalAudioViewController()
-                localAudioViewController.audioUrl = URL(fileURLWithPath: localMedia.audioURL!)
-                localAudioViewController.audioTitle = url.lastPathComponent
-                navigationController?.pushViewController(localAudioViewController, animated: true)
-            
-            case FileType.DOCUMENT.rawValue:
-                let pdfViewController: PDFViewController = PDFViewController()
-                pdfViewController.pdfDoc = PDFDocument(url: URL(fileURLWithPath: localMedia.pdfDocURL!))!
-                navigationController?.pushViewController(pdfViewController, animated: true)
-            default:
-                break
-        }
+//        let holdGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: collectionView, action: #selector(cellPressed))
+//        holdGesture.minimumPressDuration = TimeInterval(exactly: 2.0)!
+//        collectionView.addGestureRecognizer(holdGesture)
+        let localEntryVC = LocalEntryTableViewController()
+        localEntryVC.localEntry = localEntry
+        self.navigationController?.pushViewController(localEntryVC, animated: true)
     }
     
     // MARK: UICollectionViewDelegate
@@ -298,6 +272,7 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 
     @objc func cellPressedAndHeld(gesture: UILongPressGestureRecognizer)
     {
+        print("viewdidload gesture")
         if(gesture.state != .began)
         {
             return

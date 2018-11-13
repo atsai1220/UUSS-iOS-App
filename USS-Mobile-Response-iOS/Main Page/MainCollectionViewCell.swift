@@ -204,9 +204,6 @@ class MainCollectionViewCell: UICollectionViewCell {
     
     func toggleDeleteButtion() {
         if !deleteViewButton.isDescendant(of: self.superview!) {
-//            let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteThis))
-//            deleteViewIcon.addGestureRecognizer(tapGesture)
-            
             addSubview(deleteViewButton)
             UIView.animate(withDuration: 0.3) {
                 self.deleteViewButton.alpha = 1.0
@@ -228,7 +225,6 @@ class MainCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func deleteThis() {
-        print("delete this")
         delegate?.deleteThis(cellIndexPath: self.cellIndexPath!)
     }
 }

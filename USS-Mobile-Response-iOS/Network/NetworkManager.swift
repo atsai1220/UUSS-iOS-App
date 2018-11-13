@@ -20,7 +20,7 @@ protocol NetWorkManagerDelegate {
 class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
     
     var delegate: NetWorkManagerDelegate?
-    var result: [String] = []
+    var remoteFileLocations: [(String, String)] = []
     
     
     private lazy var queue: OperationQueue = {
@@ -29,7 +29,26 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         return queue
     }()
     
-    func uploadMainFile(item: LocalEntry, completionBlock: @escaping (_ httpResult: String?) -> Void) {
+    func parseHttpResponse(result: Data) {
+        do {
+            let jsonResponse = try JSONSerialization.jsonObject(with: result, options: [])
+            guard let jsonArray = jsonResponse as? [[String: Any]] else {
+                return
+            }
+            guard let status = jsonArray[0]["Status"] as? String else { return }
+            if status == "OK" {
+                guard let location = jsonArray[0]["Location"] as? String else { return }
+                guard var fileName = jsonArray[0]["Message"] as? String else { return }
+                fileName.removeFirst(9)
+                fileName.removeLast(19)
+                self.remoteFileLocations.append((fileName, location))
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func uploadMainFile(item: LocalEntry, completionBlock: @escaping (_ httpResult: Data) -> Void) {
         // handle main image
         let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(item.localFileName!).path
         let image = UIImage(contentsOfFile: imagePath)
@@ -43,7 +62,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         }
     }
     
-    func uploadAltFile(altFile: AltFile, completionBlock: @escaping (_ httpResult: String?) -> Void) {
+    func uploadAltFile(altFile: AltFile, completionBlock: @escaping (_ httpResult: Data) -> Void) {
         do {
             let path = URL(fileURLWithPath: altFile.url)
             let fileData = try Data(contentsOf: path)
@@ -64,10 +83,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         let mainOperation = UploadMainFileOperation(file: item)
         mainOperation.networkManager = self
         mainOperation.onDidUpload = { (uploadResult) in
-            if let result = uploadResult {
-                // TODO: parse http response
-                self.result.append(result)
-            }
+            self.parseHttpResponse(result: uploadResult)
         }
         if let lastOp = queue.operations.last {
             mainOperation.addDependency(lastOp)
@@ -78,10 +94,8 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             let altOperation = UploadAltFileOperation(altFile: altFile)
             altOperation.networkManager = self
             altOperation.onDidUpload = { (uploadResult) in
-                if let result = uploadResult {
-                    // TODO: parse http response
-                    self.result.append(result)
-                }
+                self.parseHttpResponse(result: uploadResult)
+
             }
             if let lastOp = queue.operations.last {
                 altOperation.addDependency(lastOp)
@@ -89,12 +103,20 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             queue.addOperation(altOperation)
         }
         
+        // add operatino for creating resource and adding alt files
+        let createResourceOperation = CreateResourceOperation(item: item, resourceType: 1, archivalState: 0)
+        createResourceOperation.networkManager = self
+        createResourceOperation.onDidUpload = { (httpData) in
+            let resourceId = String(data: httpData, encoding: .utf8)!
+            print(resourceId)
+        }
+        if let lastOp = self.queue.operations.last {
+            createResourceOperation.addDependency(lastOp)
+        }
+        queue.addOperation(createResourceOperation)
+        
         let finishOperation = BlockOperation { [unowned self] in
-            self.dismissProgressController()
-            for result in self.result {
-                print(result)
-            }
-//            self.delegate?.popToRootController()
+            self.delegate?.popToRootController()
         }
         if let lastOp = queue.operations.last {
             finishOperation.addDependency(lastOp)
@@ -104,13 +126,68 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         queue.isSuspended = false
     }
     
-    func uploadAlternativeFiles(altFiles: [AltFile]) {
+    // TODO: add JSON metadata
+    func createResource(item: LocalEntry, resourceType: Int = 1, archivalState: Int = 0, completionBlock: @escaping (_ httpResult: Data) -> Void) {
+//        let fileName = self.remoteFileLocations[0].0
+//        let remoteLocation = self.remoteFileLocations[0].1
+//        item.collectionRef
+//        // METADATA
+//        var metaArray = [Codable]()
+//        let metaName = MetaName(name: fileName)
+//        let metaDescription = MetaDescription(description: item.description!)
+//        let metaNotes = MetaNotes(notes: item.notes!)
+//        
+//        let metaJSON = MetaThing(name: item.name!, description: item.description!, notes: item.notes!)
+//        guard let jsonData = try? JSONEncoder().encode(metaJSON) else { return }
+//        guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
+//        print(jsonString)
         
+        
+//        metaArray.append(metaName)
+//        metaArray.append(metaDescription)
+//        metaArray.append(metaNotes)
+//
+//
+//        if let jsonData = try? JSONEncoder().encode(metaArray),
+//            guard let jsonString = String(data: jsonData, encoding: .utf8) { return }
+//        print(jsonString)
+        
+//        guard let data = try? JSONSerialization.data(withJSONObject: metaData, options: []) else { return }
+       
+//        let jsonString = String(data: data, encoding: String.Encoding.utf8)!
+//        let jsonString = String(data: data, encoding: .utf8)?.replacingOccurrences(of: "\\/", with: "/")
+//        print(jsonString!)
+        
+        // Title
+        // Hazard Type
+        // Description
+        // Notes
+    
+        let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
+        let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=create_resource" + "&param1=" + String(resourceType) + "&param2=" + String(archivalState) + "&param3=" + self.remoteFileLocations[0].1 + "&param4=" + "&param5=" + "&param6=1" + "&param7="
+        let signature = "&sign=" + (privateKey + queryString).sha256()!
+        let completeURL = urlString + queryString + signature
+        guard let url = URL(string: completeURL) else { return }
+        sendGetRequest(url: url, completionBlock: completionBlock)
     }
     
-    // TODO: add JSON metadata
-    func createResource(resourceType: Int = 1, archivalState: Int = 0, serverFileURL: String) {
-        
+    struct MetaThing: Codable {
+        let name: String
+        let description: String
+        let notes: String
+    }
+    
+    struct MetaName: Codable {
+        let name: String
+    }
+    
+    struct MetaDescription: Codable {
+        let description: String
+    }
+    
+    struct MetaNotes: Codable {
+        let notes: String
     }
     
     func addAlternativeFile(resourceId: Int, name: String, description: String, fileName: String, fileExtension: String, fileSize: Int, fileURL: String) {
@@ -121,7 +198,15 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         
     }
     
-    func sendPostRequestWith(body fullFormData: Data, boundary: String, completionBlock: @escaping (_ httpResult: String?) -> Void) {
+    func sendGetRequest(url: URL, completionBlock: @escaping(_ httpResult: Data) -> Void) {
+        let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+            guard let data = data else { return }
+            completionBlock(data)
+        }
+        task.resume()
+    }
+    
+    func sendPostRequestWith(body fullFormData: Data, boundary: String, completionBlock: @escaping (_ httpResult: Data) -> Void) {
         let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
         let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
         let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=http_upload"
@@ -139,7 +224,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         request.httpShouldHandleCookies = false
         
         let configuration = URLSessionConfiguration.default
-        
+        configuration.timeoutIntervalForRequest = 10.0
    
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         
@@ -149,9 +234,16 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                 self.displayErrorMessage(title: "Alert", message: "There was an error.")
                 return
             }
-            let dataString = String(data: data, encoding: .utf8)
+            if error != nil {
+                if error!._code == NSURLErrorTimedOut {
+                    DispatchQueue.main.async {
+                        self.displayErrorMessage(title: "Connection error", message: "Connection to server timed out.")
+                        return
+                    }
+                }
+            }
             DispatchQueue.main.async {
-                completionBlock(dataString!)
+                completionBlock(data)
             }
             
         }

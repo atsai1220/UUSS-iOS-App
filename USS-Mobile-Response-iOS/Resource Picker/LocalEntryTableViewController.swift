@@ -12,7 +12,7 @@ import CoreLocation
 import MobileCoreServices
 import PDFKit
 
-class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PDFDelegate, Mp3Delegate
+class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PDFDelegate, Mp3Delegate, NetworkViewControllerDelegate
 {
     let infoCellId = "infoCellId"
     let resourceCellId = "resourceCellId"
@@ -479,6 +479,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         return img
     }
     
+    // MARK: - NetworkViewController delegate functions
+    
+    func popToRootController() {
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+    
     // MARK: - Photo/Video functions
     
     func videoFormatIsAvailable(for sourceType: UIImagePickerControllerSourceType ) -> Bool
@@ -611,38 +617,41 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
     }
     // MARK: - API and local Saving/Uploading functions
-    
-    @objc func saveCheckAndUpload() {
+    @objc func saveCheck() -> Bool {
         let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
         let descriptionCell = tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
         let notesCell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
         if titleCell.textView.text.isEmpty || descriptionCell.textView.text.isEmpty || notesCell.textView.text.isEmpty {
-            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+            return false
         } else if !resourceSelected {
-            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+            return false
         } else if !collectionSelected {
-            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+            return false
         } else {
-            let savedName = createLocalEntry()
-            let networkVC = NetworkViewController()
-            networkVC.modalPresentationStyle = .overFullScreen
-            networkVC.modalTransitionStyle = .crossDissolve
-            let oldEntries = getLocalEntriesFromDisk()
-            let currentEntry = oldEntries.first { (entry) -> Bool in
-                if entry.localFileName == savedName {
-                    return true
-                } else {
-                    return false
-                }
-            }
-            networkVC.localEntry = currentEntry
-            self.navigationController?.present(networkVC, animated: true, completion: nil)
-            //            httpUpload()
-            //            createResourceSpaceEntry(fileName: savedName)
-            //            addResourceToCollection()
-//            self.navigationController?.popToRootViewController(animated: true)
+            return true
         }
-        
+    }
+    
+    @objc func localSaveCheck() {
+        if saveCheck() {
+            let savedName = createLocalEntry()
+            self.navigationController?.popToRootViewController(animated: true)
+        } else {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        }
+    }
+    
+    @objc func saveCheckAndUpload() {
+        if saveCheck() {
+            // Create local entry
+            let savedName = createLocalEntry()
+            
+            // Upload via to remote server and create entries
+            httpUpload(localEntryName: savedName)
+    
+        } else {
+            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+        }
     }
     
     func createLocalEntryDirectory() {
@@ -712,16 +721,21 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         return newEntry.localFileName!
     }
 
-    func httpUpload() {
-        
-    }
-    
-    func createResourceSpaceEntry(fileName: String) {
-        
-    }
-    
-    func addResourceToCollection() {
-        
+    func httpUpload(localEntryName: String) {
+        let networkVC = NetworkViewController()
+        networkVC.modalPresentationStyle = .overFullScreen
+        networkVC.modalTransitionStyle = .crossDissolve
+        let oldEntries = getLocalEntriesFromDisk()
+        let currentEntry = oldEntries.first { (entry) -> Bool in
+            if entry.localFileName == localEntryName {
+                return true
+            } else {
+                return false
+            }
+        }
+        networkVC.delegate = self
+        networkVC.localEntry = currentEntry
+        self.navigationController?.present(networkVC, animated: true, completion: nil)
     }
     
     // MARK: - API Functions
@@ -894,9 +908,23 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         let signature = "&sign=" + (privateKey + queryString).sha256()!
         let completeURL = urlString + queryString + signature
         guard let url = URL(string: completeURL) else { return }
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 10.0
+        let session = URLSession(configuration: configuration)
+        
+        session.dataTask(with: url) { (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
+                if error!._code == NSURLErrorTimedOut {
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        self.activityIndicator.isHidden = true
+                        if let viewWithTag = self.view.viewWithTag(99) {
+                            viewWithTag.removeFromSuperview()
+                        }
+                        self.displayErrorMessage(title: "Connection error", message: "Connection to server timed out.")
+                    }
+                }
             }
             guard let data = data else { return }
             // JSON decodign and parsing
@@ -923,7 +951,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             } catch let jsonError {
                 print(jsonError)
             }
-        }.resume()
+            }.resume()
     }
     
     
@@ -968,11 +996,53 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     // MARK: - Table view
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    func loadOldLocalEntry() {
         if let localEntry = self.localEntry {
-            print(localEntry.name!)
+            self.previewImage = getImageFromLocalEntriesDirectory(imageName: localEntry.localFileName!)
+            self.resourceSelected = true
+            navigationItem.title = localEntry.name!
+            
+            let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
+            let descriptionCell = tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
+            let notesCell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
+            
+            titleCell.textView.insertText(localEntry.name!)
+            descriptionCell.textView.insertText(localEntry.description!)
+            notesCell.textView.insertText(localEntry.notes!)
+            self.altFiles = localEntry.altFiles!
+            
+            self.tableView.layoutSubviews()
+            self.tableView.reloadData()
         }
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0{
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y != 0{
+                self.view.frame.origin.y += keyboardSize.height
+            }
+        }
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
+        
+        loadOldLocalEntry()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
     
     override func viewDidLoad() {
@@ -1003,13 +1073,14 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.tableView.register(AlternativeTableViewCell.self, forCellReuseIdentifier: alternativeFileCellId)
         self.tableView.tableFooterView = UIView(frame: .zero)
         
-        let saveBarButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveCheckAndUpload))
+        let saveBarButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(localSaveCheck))
         let uploadBarButton = UIBarButtonItem(title: "Upload", style: .done, target: self, action: #selector(saveCheckAndUpload))
         
         
         navigationItem.setRightBarButtonItems([uploadBarButton, saveBarButton], animated: true)
-//        navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAndUpload)), animated: true)
     }
+    
+
     
     func textViewDidChange(_ textView: UITextView) {
         let size = textView.bounds.size

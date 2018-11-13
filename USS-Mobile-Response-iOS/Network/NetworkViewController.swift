@@ -8,27 +8,27 @@
 
 import UIKit
 
+protocol NetworkViewControllerDelegate {
+    func popToRootController()
+}
+
 class NetworkViewController: UIViewController, NetWorkManagerDelegate {
 
     var localEntry: LocalEntry?
+    
+    var delegate: NetworkViewControllerDelegate?
     
     var progressBackground = UIView()
     
     var progressBar = UIProgressView()
     
     func uploadProgressWith(progress: Float) {
-        print("uploadProgressWith: updating progress bar")
         progressBar.progress = progress
-        
         view.layoutSubviews()
-//        if progressBar.progress == 1 {
-//            self.dismiss(animated: true, completion: nil)
-//        }
     }
     
     func dismissProgressBar() {
         progressBar.removeFromSuperview()
-//        self.dismiss(animated: true, completion: nil)
     }
     
     func showProgressBar() {
@@ -36,15 +36,15 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     }
     
     func dismissProgressController() {
-        self.dismiss(animated: true, completion: nil)
+//        self.dismiss(animated: true, completion: nil)
     }
     
     func popToRootController() {
-        print("popping")
-//        DispatchQueue.main.async {
-//            self.navigationController?.popToRootViewController(animated: true)
-//        }
-        
+        DispatchQueue.main.async {
+            self.dismiss(animated: false, completion: {
+                self.delegate?.popToRootController()
+            })
+        }
     }
     
     deinit {

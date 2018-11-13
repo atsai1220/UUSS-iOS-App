@@ -12,7 +12,7 @@ class UploadAltFileOperation: NetworkOperation {
     let altFile: AltFile
     var networkManager: NetworkManager?
     
-    var onDidUpload: ((_ uploadResult: String?) -> Void)!
+    var onDidUpload: ((_ uploadResult: Data) -> Void)!
     
     init(altFile: AltFile) {
         self.altFile = altFile
