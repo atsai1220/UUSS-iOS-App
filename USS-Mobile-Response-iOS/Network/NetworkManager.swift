@@ -128,19 +128,19 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
     // TODO: add JSON metadata
     func createResource(item: LocalEntry, resourceType: Int = 1, archivalState: Int = 0, completionBlock: @escaping (_ httpResult: Data) -> Void) {
-        let fileName = self.remoteFileLocations[0].0
-        let remoteLocation = self.remoteFileLocations[0].1
-        item.collectionRef
-        // METADATA
-        var metaArray = [Codable]()
-        let metaName = MetaName(name: fileName)
-        let metaDescription = MetaDescription(description: item.description!)
-        let metaNotes = MetaNotes(notes: item.notes!)
-        
-        let metaJSON = MetaThing(name: item.name!, description: item.description!, notes: item.notes!)
-        guard let jsonData = try? JSONEncoder().encode(metaJSON) else { return }
-        guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
-        print(jsonString)
+//        let fileName = self.remoteFileLocations[0].0
+//        let remoteLocation = self.remoteFileLocations[0].1
+//        item.collectionRef
+//        // METADATA
+//        var metaArray = [Codable]()
+//        let metaName = MetaName(name: fileName)
+//        let metaDescription = MetaDescription(description: item.description!)
+//        let metaNotes = MetaNotes(notes: item.notes!)
+//        
+//        let metaJSON = MetaThing(name: item.name!, description: item.description!, notes: item.notes!)
+//        guard let jsonData = try? JSONEncoder().encode(metaJSON) else { return }
+//        guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
+//        print(jsonString)
         
         
 //        metaArray.append(metaName)
@@ -165,7 +165,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
         let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
         let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
-        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=create_resource" + "&param1=" + String(resourceType) + "&param2=" + String(archivalState) + "&param3=" + self.remoteFileLocations[0].1 + "&param4=" + "&param5=" + "&param6=1" + "&param7=" + jsonString
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=create_resource" + "&param1=" + String(resourceType) + "&param2=" + String(archivalState) + "&param3=" + self.remoteFileLocations[0].1 + "&param4=" + "&param5=" + "&param6=1" + "&param7="
         let signature = "&sign=" + (privateKey + queryString).sha256()!
         let completeURL = urlString + queryString + signature
         guard let url = URL(string: completeURL) else { return }
