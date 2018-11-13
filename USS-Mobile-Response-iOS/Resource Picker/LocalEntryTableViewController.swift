@@ -681,6 +681,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         newEntry.description = descriptionCell.textView.text
         newEntry.notes = notesCell.textView.text
         newEntry.collectionRef = self.entryReference
+        newEntry.dataLat = locationManager.location!.coordinate.latitude
+        newEntry.dataLong = locationManager.location!.coordinate.longitude
         
         // Create/check for local resource entry folder
         createLocalEntryDirectory()

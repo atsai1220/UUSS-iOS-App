@@ -11,12 +11,13 @@ import UIKit
 class PresentationAnimator: NSObject
 {
     // MARK: - Properties
-    let direction: PresentationDirection
+    let type: PresentationType
     let isPresentation: Bool
     
     // MARK: - Initializers
-    init(direction: PresentationDirection, isPresentation: Bool) {
-        self.direction = direction
+    init(type: PresentationType, isPresentation: Bool)
+    {
+        self.type = type
         self.isPresentation = isPresentation
         super.init()
     }
@@ -41,9 +42,9 @@ extension PresentationAnimator: UIViewControllerAnimatedTransitioning
         
         let presentedFrame = transitionContext.finalFrame(for: controller)
         var dismissedFrame = presentedFrame
-        switch direction
+        switch type
         {
-            case .bottom:
+            case .save, .settings:
                 dismissedFrame.origin.y = transitionContext.containerView.frame.size.height
         }
         
@@ -52,9 +53,11 @@ extension PresentationAnimator: UIViewControllerAnimatedTransitioning
         
         let animationDuration = transitionDuration(using: transitionContext)
         controller.view.frame = initialFrame
-        UIView.animate(withDuration: animationDuration, animations: {
+        UIView.animate(withDuration: animationDuration, animations:
+        {
             controller.view.frame = finalFrame
-        }) { finished in
+        })
+        { finished in
             transitionContext.completeTransition(finished)
         }
     }

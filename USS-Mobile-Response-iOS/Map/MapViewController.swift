@@ -23,7 +23,7 @@ enum Segment: Int
     case LOCATION = 1
 }
 
-class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MKMapViewDelegate, CloseSettingsDelegate, SelectorDelegate, CloseSaveAnnotationDelegate, SaveDelegate
+class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MKMapViewDelegate, CloseSettingsDelegate, SelectorDelegate, CloseSaveToFavoritesDelegate, SaveDelegate, MoveToSelectionDelegate, FavoritesDelegate
 {
     var locationManager: CLLocationManager?
     var searchBar: UISearchBar?
@@ -40,20 +40,84 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     var locLatandLong: CLLocationCoordinate2D?
     weak var addMapDelegate: AddMapDelegate?
     var searchId: String = "search"
+    var photoAnnotationId: String = "photo"
+    var videoAnnotationId: String = "video"
+    var audioAnnotationId: String = "audio"
+    var documentationAnnotationId: String = "document"
     var searchAnnotation: MapAnnotation?
     var segmentedControl: UISegmentedControl?
     var currentLocation: CLLocation?
     var compass: MKCompassButton?
     var transitionDelegate: PresentationManager = PresentationManager()
     var mapSettingsViewController: MapSettingsViewController?
-    var saveAnnotationViewController: SaveAnnotationViewController?
+    var saveToFavoritesViewController: SaveToFavoritesViewController?
     var placemark: CLPlacemark?
+    var mapTableViewController: MapTableViewController?
+    var mapTableStartPointConstraint: NSLayoutConstraint?
+    var mapTableTopConstraint: NSLayoutConstraint?
+    var mapTableBottomConstraint: NSLayoutConstraint?
+    var tableStartingPoint: CGFloat?
+//    var startingPointofTable: CGFloat?
+//    var posOfTableAtTop: CGFloat?
+//    var posOfTableAtBottom: CGFloat?
+    var tablePosition: String = "start"
+    var swipeUpGestureRecognizer: UISwipeGestureRecognizer? = nil
+    var swipeDownGestureRecognizer: UISwipeGestureRecognizer? = nil
+    var searchBarSwipeUp: UISwipeGestureRecognizer?
+    var searchBarSwipeDown: UISwipeGestureRecognizer?
+    var searchBarAnchorToMapTable: NSLayoutConstraint?
+    var searchBarAnchorToFavoriteTable: NSLayoutConstraint?
+    var favoritesTableViewController: MapFavoritesTableViewController?
+    var searchImage: UIImage?
+    var entity: NSEntityDescription?
+    var managedContext: NSManagedObjectContext?
+    var placemarkObject: NSManagedObject?
+    
+    var favoriteSearchBarView: UIView =
+    {
+        let favView: UIView = UIView()
+        favView.translatesAutoresizingMaskIntoConstraints = false
+        favView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.75)
+        favView.layer.cornerRadius = 5
+        let favLabel: UILabel = UILabel()
+        favLabel.translatesAutoresizingMaskIntoConstraints = false
+        favLabel.font = .systemFont(ofSize: 15.0)
+        favLabel.text = "Favorites"
+        favLabel.textColor = .white
+        let favImage: UIImageView = UIImageView(image: UIImage(named: "heart"))
+        favImage.translatesAutoresizingMaskIntoConstraints = false
+        favView.addSubview(favImage)
+        favView.addSubview(favLabel)
+        
+        NSLayoutConstraint.activate([
+            favLabel.heightAnchor.constraint(equalToConstant: 25.0),
+            favLabel.widthAnchor.constraint(equalToConstant: 75.0),
+            favLabel.leadingAnchor.constraint(equalTo: favImage.trailingAnchor, constant: 5.0),
+            favImage.heightAnchor.constraint(equalToConstant: 10.0),
+            favImage.widthAnchor.constraint(equalToConstant: 10.0),
+            favImage.centerYAnchor.constraint(equalTo: favLabel.centerYAnchor),
+            favImage.leadingAnchor.constraint(equalTo: favView.leadingAnchor, constant: 5.0)
+            ])
+        
+        return favView
+    }()
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.lightGray
+        
+
+        swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
+        swipeUpGestureRecognizer!.direction = .up
+        swipeDownGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
+        swipeDownGestureRecognizer!.direction = .down
+        
+        searchBarSwipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
+        searchBarSwipeUp!.direction = .up
+        searchBarSwipeDown = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
+        searchBarSwipeDown!.direction = .down
         
         mapView = MKMapView()
         mapView!.delegate = self
@@ -62,20 +126,22 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         mapView!.showsCompass = false
         mapView!.showsScale = true
         view.addSubview(mapView!)
+        loadAnnotations()
+        
         
         searchBar = UISearchBar()
         searchBar!.translatesAutoresizingMaskIntoConstraints = false
         searchBar!.placeholder = "Search for a place or address"
         searchBar!.barTintColor = .white
-//        searchBar!.layer.shadowOpacity = 0.5
-//        searchBar!.layer.shadowColor = UIColor.black.cgColor
-//        searchBar!.layer.shadowOffset = CGSize(width: 0.0, height: -10.0)
-//        searchBar!.layer.shadowRadius = 3.0
+////        searchBar!.layer.shadowOpacity = 0.5
+////        searchBar!.layer.shadowColor = UIColor.black.cgColor
+////        searchBar!.layer.shadowOffset = CGSize(width: 0.0, height: -10.0)
+////        searchBar!.layer.shadowRadius = 3.0
         let searchField: UITextField = searchBar!.value(forKey: "searchField") as! UITextField
         searchField.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
         searchBar!.delegate = self
-        
-        view.addSubview(searchBar!)
+        searchBar!.addGestureRecognizer(searchBarSwipeUp!)
+        searchBar!.addGestureRecognizer(searchBarSwipeDown!)
         
         compass = MKCompassButton(mapView: mapView!)
         compass!.translatesAutoresizingMaskIntoConstraints = false
@@ -95,13 +161,27 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         view.addSubview(segmentedControl!)
         
         
-        let mapTableViewController: MapTableViewController = MapTableViewController()
-        mapTableViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        self.addChildViewController(mapTableViewController)
-        view.addSubview(mapTableViewController.view)
+        mapTableViewController = MapTableViewController(style: .plain)
+        mapTableViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+        mapTableViewController!.moveToSelectedPlaceDelegate = self
+        mapTableViewController!.favoriteDelegate = self
+        mapTableViewController!.view.isUserInteractionEnabled = true
+        mapTableViewController!.view.addGestureRecognizer(swipeUpGestureRecognizer!)
+        mapTableViewController!.view.addGestureRecognizer(swipeDownGestureRecognizer!)
+        mapTableViewController!.tableView.isScrollEnabled = false
+        
+        favoritesTableViewController = MapFavoritesTableViewController(style: .plain)
+        favoritesTableViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+        favoritesTableViewController!.view.isUserInteractionEnabled = true
+        view.addSubview(favoritesTableViewController!.view)
+        
+        self.addChildViewController(mapTableViewController!)
+        view.addSubview(searchBar!)
+        view.addSubview(mapTableViewController!.view)
         
         NSLayoutConstraint.activate([
-            mapView!.heightAnchor.constraint(equalTo: view.heightAnchor),
+            mapView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mapView!.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 1.0),
             mapView!.widthAnchor.constraint(equalTo: view.widthAnchor),
             segmentedControl!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15.0),
             segmentedControl!.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0),
@@ -109,38 +189,27 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
             segmentedControl!.widthAnchor.constraint(equalToConstant: 100.0),
             compass!.topAnchor.constraint(equalTo: segmentedControl!.bottomAnchor, constant: 10.0),
             compass!.trailingAnchor.constraint(equalTo: segmentedControl!.trailingAnchor),
-            mapTableViewController.view.bottomAnchor.constraint(equalTo: view!.bottomAnchor, constant: 1.0),
-//            mapTableViewController.view.heightAnchor.constraint(equalToConstant: 100.0),
-//            mapTableViewController.view.heightAnchor.constraint(equalTo: view!.heightAnchor, multiplier: 0.32),
-            mapTableViewController.view.heightAnchor.constraint(equalTo: view!.heightAnchor, multiplier: 1.0),
-            mapTableViewController.view.widthAnchor.constraint(equalTo: mapView!.widthAnchor, constant: 1.0),
+            mapTableViewController!.view.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0),
+            mapTableViewController!.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             searchBar!.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0),
-            searchBar!.bottomAnchor.constraint(equalTo: mapTableViewController.view.topAnchor)
-//            searchBar!.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-//            searchBar!.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            favoritesTableViewController!.view.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0),
+            favoritesTableViewController!.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+//            searchBar!.bottomAnchor.constraint(equalTo: mapTableViewController!.view.topAnchor)
             ])
         
+        searchBarAnchorToMapTable = NSLayoutConstraint(item: self.searchBar!, attribute: .bottom, relatedBy: .equal, toItem: self.mapTableViewController!.view, attribute: .top, multiplier: 1.0, constant: 0.0)
+        searchBarAnchorToMapTable!.isActive = true
+        searchBarAnchorToFavoriteTable = NSLayoutConstraint(item: self.searchBar!, attribute: .bottom, relatedBy: .equal, toItem: self.favoritesTableViewController!.view, attribute: .top, multiplier: 1.0, constant: 0.0)
+        searchBarAnchorToFavoriteTable!.isActive = false
         
-//        captureMap = UIButton(type: .system)
-//        captureMap!.layer.cornerRadius = 15
-//        captureMap!.layer.borderWidth = 2
-//        captureMap!.backgroundColor = UIColor.white
-//        captureMap!.layer.shadowOpacity = 0.5
-//        captureMap!.layer.shadowColor = UIColor.black.cgColor
-//        captureMap!.layer.shadowOffset = CGSize(width: 0.0, height:5.0)
-//        captureMap!.layer.shadowRadius = 3.0
-//        captureMap!.setTitle("Add Map", for: .normal)
-//        captureMap!.translatesAutoresizingMaskIntoConstraints = false
-//        captureMap!.addTarget(self, action: #selector(saveMap), for: .touchUpInside)
-//        self.view.addSubview(captureMap!)
-//
-//        let capViewAndSbar: [String: UIView] = ["cMap":captureMap!, "sBar":searchBar!]
-//        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "[cMap(>=100,<=150)]", options: [], metrics: nil, views: capViewAndSbar))
-//        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[sBar]-20-[cMap]", options: [], metrics: nil, views: capViewAndSbar))
-//
-//        NSLayoutConstraint.activate([
-//            captureMap!.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-//            captureMap!.topAnchor.constraintGreaterThanOrEqualToSystemSpacingBelow(searchBar!.bottomAnchor, multiplier: 1.0)])
+        
+        mapTableTopConstraint = NSLayoutConstraint(item: self.searchBar!, attribute: .top, relatedBy: .equal, toItem: self.mapView!, attribute: .top, multiplier: 1.0, constant: 0.0)
+        mapTableTopConstraint!.isActive = false
+        mapTableStartPointConstraint = NSLayoutConstraint(item: self.searchBar!, attribute: .top, relatedBy: .equal, toItem: self.mapView!, attribute: .bottom, multiplier: 0.75, constant: 0.0)
+        mapTableStartPointConstraint!.isActive = true
+        mapTableBottomConstraint = NSLayoutConstraint(item: self.searchBar!, attribute: .top, relatedBy: .equal, toItem: self.mapView!, attribute: .bottom, multiplier: 0.94, constant: 0.0)
+        mapTableBottomConstraint!.isActive = false
+        
         
         locationManager = CLLocationManager()
         locationManager!.delegate = self
@@ -151,12 +220,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     override func viewDidLayoutSubviews()
     {
         searchBar!.roundedSearchBar()
-
     }
     
     func closeView(_: Bool)
     {
-        saveAnnotationViewController?.dismiss(animated: true, completion: nil)
+        saveToFavoritesViewController?.dismiss(animated: true, completion: nil)
         //TODO: need to do some saving of the annotaion and add the stuff to the tableview
     }
     
@@ -173,13 +241,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
                 mapSettingsViewController = MapSettingsViewController()
                 mapSettingsViewController!.closeSettingsDelegate = self
                 mapSettingsViewController!.selectorDelegate = self
-                transitionDelegate.direction = .bottom
-                transitionDelegate.type = ""
+                transitionDelegate.type = .settings
                 mapSettingsViewController!.transitioningDelegate = transitionDelegate
                 mapSettingsViewController!.modalPresentationStyle = .custom
                 present(mapSettingsViewController!, animated: true, completion: nil)
             
             case Segment.LOCATION.rawValue:
+                if(self.searchAnnotation != nil)
+                {
+                    mapView!.removeAnnotation(self.searchAnnotation!)
+                }
                 var region: MKCoordinateRegion = mapView!.region
                 region.center = CLLocationCoordinate2D(latitude: currentLocation!.coordinate.latitude, longitude: currentLocation!.coordinate.longitude)
                 region.span = MKCoordinateSpan(latitudeDelta: delta, longitudeDelta: delta)
@@ -191,38 +262,52 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         }
     }
     
-    
     func itemSelected(with index: Int)
     {
-        if(index == 0)
+        if index == 0
         {
             mapView!.mapType = .standard
         }
-        else if(index == 1)
+        else if index == 1
         {
             mapView!.mapType = .satellite
         }
     }
     
-    func saveAnnotations()
+   
+    func moveToSelectedPlace(with name: String, and coordinates: CLLocationCoordinate2D)
     {
-        let annotationArray: [MKAnnotation] = self.mapView!.annotations
+        mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
+        searchAnnotation = MapAnnotation(coordinate: coordinates, title: name, subTitle: "", type: "search")
+        mapView!.addAnnotation(self.searchAnnotation!)
+        let region = MKCoordinateRegionMakeWithDistance(coordinates, self.regionRadius, self.regionRadius)
+        mapView!.setRegion(region, animated: true)
+    }
+   
+    
+    func savePlacemarkToTableView()
+    {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext: NSManagedObjectContext = appDelegate.persistentContainer.viewContext
-        let entity: NSEntityDescription = NSEntityDescription.entity(forEntityName: "Annotation", in: managedContext)!
-        let mapObject: NSManagedObject = NSManagedObject(entity: entity, insertInto: managedContext)
-
-        for annotation in annotationArray
+        managedContext = appDelegate.persistentContainer.viewContext
+        entity = NSEntityDescription.entity(forEntityName: "Placemark", in: managedContext!)
+        placemarkObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        placemarkObject!.setValue(self.placemark!.name, forKey: "name")
+        if placemark?.thoroughfare != nil
         {
-            mapObject.setValue(annotation.coordinate.latitude, forKey: "annotationLatitude")
-            mapObject.setValue(annotation.coordinate.longitude, forKey: "annotationLongitude")
-            mapObject.setValue(annotation.title!, forKey: "annotationTitle")
-            mapObject.setValue(searchId, forKey: "annotationId")
+            placemarkObject!.setValue(self.placemark!.thoroughfare!, forKey: "thoroughfare")
         }
-
+        if placemark?.locality != nil
+        {
+            placemarkObject!.setValue(self.placemark!.locality!, forKey: "city")
+        }
+        placemarkObject!.setValue(self.placemark!.location!.coordinate.latitude, forKey: "latitude")
+        placemarkObject!.setValue(self.placemark!.location!.coordinate.longitude, forKey: "longitude")
+    
         do
         {
-            try managedContext.save()
+            try managedContext!.save()
+            NotificationCenter.default.post(name: Notification.Name("New Search"), object: nil)
         }
         catch let error as NSError
         {
@@ -230,61 +315,307 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         }
     }
     
-    @objc func saveMap()
+    override func viewWillAppear(_ animated: Bool)
     {
-        self.mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
-        self.mapView!.addAnnotation(self.searchAnnotation!)
-        self.mapView!.delegate = self
-        saveAnnotations()
-        let mapNameAlert: UIAlertController = UIAlertController(title: "Map Name", message: "", preferredStyle: .alert)
-        mapNameAlert.addTextField(configurationHandler: {( textfeild: UITextField )-> Void in
-            textfeild.placeholder = "Please enter a name for the map"
-            
-            mapNameAlert.addAction(UIAlertAction(title: "Save", style: .default, handler: { _ in
-                let mapName: String = textfeild.text!
-                self.addMapDelegate?.addMapToTable(map: self.mapView!, withName: mapName)
-            }))
-        })
-        
-        self.present(mapNameAlert, animated: true, completion: nil)
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(deleteAnnotation), name: Notification.Name("Local Entry Deleted"), object: nil)
+        loadAnnotations()
     }
+    
+    
+    @objc func deleteAnnotation(notification: Notification)
+    {
+        let userInfo: [AnyHashable: Any] = notification.userInfo!
+        let annotations: [MKAnnotation] = mapView!.annotations
+        let key = userInfo.keys.first as! String
+
+        for annotation in annotations
+        {
+            if(!(annotation is MKUserLocation))
+            {
+                if(key == annotation.title)
+                {
+                    mapView!.removeAnnotation(annotation)
+                }
+            }
+
+        }
+    }
+//    self.searchAnnotation = MapAnnotation(coordinate: coord, title: self.placemark!.name!, subTitle: "")
+//    self.mapView!.addAnnotation(self.searchAnnotation!)
+    
+    func loadAnnotations()
+    {
+        let localEntries: [LocalEntry] = getLocalEntriesFromDisk()
+        
+        for entry in localEntries
+        {
+            switch entry.fileType
+            {
+                case FileType.PHOTO.rawValue:
+                    mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: photoAnnotationId)
+                    let photoAnnotation: MapAnnotation = MapAnnotation(
+                        coordinate: CLLocationCoordinate2D(latitude: entry.dataLat!, longitude: entry.dataLong!),
+                        title: entry.name!,
+                        subTitle: "", type: entry.fileType)
+                    mapView!.addAnnotation(photoAnnotation)
+                
+                case FileType.VIDEO.rawValue:
+                    mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: videoAnnotationId)
+                    let videoAnnotation: MapAnnotation = MapAnnotation(
+                        coordinate: CLLocationCoordinate2D(latitude: entry.dataLat!, longitude: entry.dataLong!),
+                        title: entry.name!,
+                        subTitle: "", type: entry.fileType)
+                    mapView!.addAnnotation(videoAnnotation)
+                case FileType.AUDIO.rawValue:
+                    mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: audioAnnotationId)
+                    let audioAnnotation: MapAnnotation = MapAnnotation(
+                        coordinate: CLLocationCoordinate2D(latitude: entry.dataLat!, longitude: entry.dataLong!),
+                        title: entry.name!,
+                        subTitle: "", type: entry.fileType)
+                    mapView!.addAnnotation(audioAnnotation)
+                case FileType.DOCUMENT.rawValue:
+                    mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: documentationAnnotationId)
+                    let documentAnnotation: MapAnnotation = MapAnnotation(
+                        coordinate: CLLocationCoordinate2D(latitude: entry.dataLat!, longitude: entry.dataLong!),
+                        title: entry.name!,
+                        subTitle: "", type: entry.fileType)
+                    mapView!.addAnnotation(documentAnnotation)
+                default:
+                    break
+            }
+        }
+    }
+    
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar)
     {
+        mapTableViewController!.tableView.isScrollEnabled = true
+        if(self.searchAnnotation != nil)
+        {
+            mapView!.removeAnnotation(searchAnnotation!)
+        }
+        
+        animateSearchTableToTop()
         searchBar.showsCancelButton = true
     }
-   
+    
+    func animateSearchTableToTop()
+    {
+        tablePosition = "top"
+        mapTableStartPointConstraint!.isActive = false
+        mapTableBottomConstraint!.isActive = false
+        mapTableTopConstraint!.isActive = true
+        
+        UIView.animate(withDuration: 0.2, animations:
+        {
+                self.view.layoutIfNeeded()
+        }, completion: nil)
+        
+        mapTableViewController!.tableView.isScrollEnabled = true
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
+    {
+        if searchBarAnchorToFavoriteTable!.isActive
+        {
+            favoriteSearchBarView.removeFromSuperview()
+            searchBarAnchorToFavoriteTable!.isActive = false
+            searchBarAnchorToMapTable!.isActive = true
+            let textfield: UITextField = searchBar.value(forKey: "searchField") as! UITextField
+            textfield.textColor = .black
+            textfield.tintColor = .black
+            
+        }
+    }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar)
     {
-        searchBar.endEditing(true)
+        if(self.searchAnnotation != nil)
+        {
+            mapView!.removeAnnotation(self.searchAnnotation!)
+        }
+        
+        if searchBarAnchorToFavoriteTable!.isActive
+        {
+            searchBar.setImage(searchImage, for: .search, state: .normal)
+            let textfield: UITextField = searchBar.value(forKey: "searchField") as! UITextField
+            textfield.textColor = .black
+            textfield.tintColor = .black
+            searchBarAnchorToFavoriteTable!.isActive = false
+            searchBarAnchorToMapTable!.isActive = true
+            searchBar.text = ""
+            animateSearchTableToStartPosition()
+            searchBar.endEditing(true)
+            favoriteSearchBarView.removeFromSuperview()
+        }
+        else
+        {
+            searchBar.text = ""
+            animateSearchTableToStartPosition()
+            searchBar.endEditing(true)
+        }
     }
     
-    func saveAnnotationToFavorites(_: Bool)
+    
+    func animateSearchTableToStartPosition()
     {
-        //TODO: Save to favorites in the table
+        searchBar!.endEditing(true)
+        tablePosition = "start"
+        mapTableTopConstraint!.isActive = false
+        mapTableBottomConstraint!.isActive = false
+        mapTableStartPointConstraint!.isActive = true
+        
+        UIView.animate(withDuration: 0.2, animations:
+            {
+                self.view.layoutIfNeeded()
+        }, completion: nil)
+        
+        mapTableViewController!.tableView.isScrollEnabled = false
     }
     
-//    func showSaveAnnotationView()
-//    {
-//        saveAnnotationViewController = SaveAnnotationViewController()
-//        saveAnnotationViewController!.titleLabel.text = placemark!.name
+    func animateSearchTableToBottomPosition()
+    {
+        tablePosition = "bottom"
+        mapTableStartPointConstraint!.isActive = false
+        mapTableTopConstraint!.isActive = false
+        mapTableBottomConstraint!.isActive = true
+        
+        UIView.animate(withDuration: 0.2, animations:
+            {
+                self.view.layoutIfNeeded()
+        }, completion: nil)
+        
+        mapTableViewController!.tableView.isScrollEnabled = false
+    }
+    
+    @objc func handleSwipe(gestureRecognizer: UISwipeGestureRecognizer)
+    {
+        if gestureRecognizer.state == .ended
+        {
+            
+            switch tablePosition
+            {
+            case "start":
+                
+                if gestureRecognizer.direction == .up
+                {
+                    animateSearchTableToTop()
+                }
+                else if gestureRecognizer.direction == .down
+                {
+                    animateSearchTableToBottomPosition()
+                }
+                
+            case "top":
+                
+                if gestureRecognizer.direction == .down
+                {
+                    animateSearchTableToStartPosition()
+                }
+                
+            case "bottom":
+                
+                if gestureRecognizer.direction == .up
+                {
+                    animateSearchTableToStartPosition()
+                }
+            default:
+                break
+                
+            }
+        }
+    }
+    
+    func favoriteCellChosen(_: Bool)
+    {
+        searchBar!.becomeFirstResponder()
+        searchBarAnchorToMapTable!.isActive = false
+        searchBarAnchorToFavoriteTable!.isActive = true
+        let textfield: UITextField = searchBar!.value(forKey: "searchField") as! UITextField
+        textfield.text = "t"
+        textfield.textColor = .clear
+        textfield.tintColor = .clear
+        searchImage = searchBar!.image(for: .search, state: .normal)
+        searchBar!.setImage(UIImage(), for: .search, state: .normal)
+        searchBar!.showsCancelButton = true
+        searchBar!.addSubview(favoriteSearchBarView)
+        NSLayoutConstraint.activate([
+            favoriteSearchBarView.widthAnchor.constraint(equalToConstant: 90.0),
+            favoriteSearchBarView.heightAnchor.constraint(equalToConstant: 25.0),
+            favoriteSearchBarView.leadingAnchor.constraint(equalTo: searchBar!.leadingAnchor, constant: 15.0),
+            favoriteSearchBarView.centerYAnchor.constraint(equalTo: searchBar!.centerYAnchor, constant: 1.0)
+            ])
+        
+        
+        transitionDelegate.type = .save
+        animateSearchTableToTop()
+    }
+    
+    func saveToFavoritesTable(_: Bool)
+    {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        managedContext = appDelegate.persistentContainer.viewContext
+        entity = NSEntityDescription.entity(forEntityName: "Favorite", in: managedContext!)
+        placemarkObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        placemarkObject!.setValue(self.placemark!.name, forKey: "name")
+        if placemark?.thoroughfare != nil
+        {
+            placemarkObject!.setValue(self.placemark!.thoroughfare!, forKey: "thoroughfare")
+        }
+        if placemark?.locality != nil
+        {
+            placemarkObject!.setValue(self.placemark!.locality!, forKey: "city")
+        }
+        placemarkObject!.setValue(self.placemark!.location!.coordinate.latitude, forKey: "latitude")
+        placemarkObject!.setValue(self.placemark!.location!.coordinate.longitude, forKey: "longitude")
+        
+        do
+        {
+            try managedContext!.save()
+        }
+        catch let error as NSError
+        {
+            print("There was an error saving. \(error)")
+        }
+        
+        let cellData: CellData = CellData(name: placemark!.name, address: "", city: "", latitude: placemark!.location!.coordinate.latitude, longitude: placemark!.location!.coordinate.longitude)
+        
+        favoritesTableViewController!.tableData.append(cellData)
+        NotificationCenter.default.post(name: Notification.Name("Favorite Saved"), object: nil)
+    }
+    
+    func showSaveToFavoritesView()
+    {
+//    if let newMark = placemark {
+//        if let post = newMark.postalCode {
+//                print(post)
+//        }
+//    }
+        saveToFavoritesViewController = SaveToFavoritesViewController()
+        saveToFavoritesViewController!.titleLabel.text = placemark!.name
 //        saveAnnotationViewController!.distanceLabel.text = String(format: "%.2f", placemark!.location!.distance(from: currentLocation!) / 1609.344) + " mi"
 //        saveAnnotationViewController!.streetLabel.text = placemark!.thoroughfare
 //        saveAnnotationViewController!.cityLabel.text = placemark!.locality! + ", " + placemark!.administrativeArea! + " " + placemark!.postalCode!
 //        saveAnnotationViewController!.countryLabel.text = placemark!.country
-//        saveAnnotationViewController!.saveDelegate = self
-//        saveAnnotationViewController!.closeSaveAnnotationDelegate = self
-//        transitionDelegate.direction = .bottom
-//        transitionDelegate.type = "save"
-//        saveAnnotationViewController!.transitioningDelegate = transitionDelegate
-//        saveAnnotationViewController!.modalPresentationStyle = .custom
-//        present(saveAnnotationViewController!, animated: true, completion: nil)
-//    }
+        saveToFavoritesViewController!.saveDelegate = self
+        saveToFavoritesViewController!.closeSaveToFavoritesDelegate = self
+        transitionDelegate.type = .save
+        saveToFavoritesViewController!.transitioningDelegate = transitionDelegate
+        saveToFavoritesViewController!.modalPresentationStyle = .custom
+        present(saveToFavoritesViewController!, animated: true, completion: nil)
+    }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
     {
+        if(self.searchAnnotation != nil)
+        {
+            mapView!.removeAnnotation(self.searchAnnotation!)
+        }
         
         searchBar.endEditing(true)
+        animateSearchTableToStartPosition()
         
         let searchBarString: String = searchBar.text!
         geoCoder = CLGeocoder()
@@ -295,6 +626,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         
         let locationArea: CLCircularRegion = CLCircularRegion(center: locLatandLong!, radius: regionRadius, identifier: "circle")
     
+        
         geoCoder!.geocodeAddressString(searchBarString, in: locationArea, completionHandler: {(placeMarks, error) in
             
                 if(error != nil)
@@ -306,7 +638,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
                 else
                 {
                     self.placemark = placeMarks![0]
-                    
+
+                    if(!self.isNameInTable())
+                    {
+                        self.savePlacemarkToTableView()
+                    }
+    
                     let coord: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: self.placemark!.location!.coordinate.latitude, longitude: self.placemark!.location!.coordinate.longitude)
                     let region = MKCoordinateRegionMakeWithDistance(coord, self.regionRadius, self.regionRadius)
                     self.mapView!.setRegion(region, animated: true)
@@ -314,39 +651,62 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
                     if (self.searchAnnotation == nil)
                     {
                         self.mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
-                        self.searchAnnotation = MapAnnotation(coordinate: coord, title: self.placemark!.name!, subTitle: "")
+                        self.searchAnnotation = MapAnnotation(coordinate: coord, title: self.placemark!.name!, subTitle: "", type: "search")
                         self.mapView!.addAnnotation(self.searchAnnotation!)
                     }
                     else
                     {
                         self.mapView!.removeAnnotation(self.searchAnnotation!)
                         self.mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
-                        self.searchAnnotation = MapAnnotation(coordinate: coord, title: self.placemark!.name!, subTitle: "")
+                        self.searchAnnotation = MapAnnotation(coordinate: coord, title: self.placemark!.name!, subTitle: "", type: "search")
                         self.mapView!.addAnnotation(self.searchAnnotation!)
                     }
                     
-//                    self.showSaveAnnotationView()
+                    self.showSaveToFavoritesView()
                 }
         })
-        
-//          let annotation: MapAnnotation = MapAnnotation(coordinate: coord, title: place.name!, subTitle: "")
-//        geoCoder!.geocodeAddressString(searchBarString) { (placeMarks, error) in
-//            let place = placeMarks![0]
-//            print(place.location!.coordinate.latitude)
-//            print(place.location!.coordinate.longitude)
-//
-//            var region: MKCoordinateRegion = self.mapView!.region
-//            region.center = CLLocationCoordinate2D(latitude: place.location!.coordinate.latitude, longitude: place.location!.coordinate.longitude)
-//            self.mapView!.setRegion(region, animated: true)
-//            self.mapView!.showsUserLocation = true
-//        }
     }
     
     
+    func isNameInTable() -> Bool
+    {
+        for cell in mapTableViewController!.tableData
+        {
+            if(placemark?.name == cell.cellName)
+            {
+                return true
+            }
+        }
+        return false
+    }
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
     {
-        let annotationView: MKAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: searchId)
-        return annotationView
+        if(annotation is MKUserLocation)
+        {
+            return nil
+        }
+        else
+        {
+            var annotationView: AnnotationView? = AnnotationView()
+            print((annotation as! MapAnnotation).fileType!)
+            switch (annotation as! MapAnnotation).fileType!
+            {
+
+                case "PHOTO":
+                    annotationView = (mapView.dequeueReusableAnnotationView(withIdentifier: photoAnnotationId) as! AnnotationView)
+                case "VIDEO":
+                    annotationView = (mapView.dequeueReusableAnnotationView(withIdentifier: videoAnnotationId) as! AnnotationView)
+                case "AUDIO":
+                    annotationView = (mapView.dequeueReusableAnnotationView(withIdentifier: audioAnnotationId) as! AnnotationView)
+                case "DOCUMENT":
+                    annotationView = (mapView.dequeueReusableAnnotationView(withIdentifier: documentationAnnotationId) as! AnnotationView)
+                default:
+                    print("Should not happen")
+            }
+            
+            return annotationView
+        }
     }
     
     func requestLocationPermision()
@@ -376,11 +736,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     
     func checkForLocationServices()
     {
-        if CLLocationManager.locationServicesEnabled()
-        {
-            startReceivingLocationChanges()
-        }
-        else
+        if !CLLocationManager.locationServicesEnabled()
         {
             let alert = UIAlertController(title: "Error", message: "Location services are unavailable at this time. Please check your settings", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "default"), style: .default, handler: {_ in NSLog("The \"Ok\" alert occured")}))
@@ -394,7 +750,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         
         if authroizationStatus != .authorizedWhenInUse
         {
-            let alert = UIAlertController(title: "Error", message: "Location services must be anabled to use maps. Please check your settings", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Error", message: "Location services must be enabled to use maps. Please check your settings", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "default"), style: .default, handler: {_ in NSLog("The \"Ok\" alert occured")}))
             self.present(alert, animated: true, completion: nil)
             return
@@ -406,11 +762,21 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
             self.present(alert, animated: true, completion: nil)
             return
         }
-        
-        //Configure and start the device
-        locationManager?.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager?.distanceFilter = 100.0 //Meters
-        locationManager?.startUpdatingLocation()
+        else if authroizationStatus == .authorizedWhenInUse && CLLocationManager.locationServicesEnabled()
+        {
+            //Configure and start the device
+            locationManager?.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+            locationManager?.distanceFilter = 10000.0 //Meters
+            locationManager?.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
+    {
+        if(status != .notDetermined)
+        {
+            startReceivingLocationChanges()
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])

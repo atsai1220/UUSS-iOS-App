@@ -8,32 +8,32 @@
 
 import UIKit
 
-enum PresentationDirection
+enum PresentationType
 {
-    case bottom
+    case save
+    case settings
 }
 
 class PresentationManager: NSObject
 {
     // MARK: - Properties
-    var direction = PresentationDirection.bottom
-    var type: String = ""
+    var type = PresentationType.settings
 }
 
 extension PresentationManager: UIViewControllerTransitioningDelegate
 {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController?
     {
-        return PresentationViewController(presentedViewController: presented, presenting: presenting, typeOfView: type)
+        return PresentationViewController(presentedViewController: presented, presenting: presenting, typeOfPresentation: type)
     }
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-        return PresentationAnimator(direction: direction, isPresentation: true)
+        return PresentationAnimator(type: type, isPresentation: true)
     }
 
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-        return PresentationAnimator(direction: direction, isPresentation: false)
+        return PresentationAnimator(type: type, isPresentation: false)
     }
 }

@@ -13,8 +13,10 @@ private let reuseIdentifier = "Cell"
 
 class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, ImportModalDoneDelegate, MainCellDelegate
 {
-    func deleteThis(cellIndexPath: IndexPath) {
-        if cellIndexPath.row == 1 && self.localEntries.count == 1 {
+    func deleteThis(cellIndexPath: IndexPath)
+    {
+        if cellIndexPath.row == 1 && self.localEntries.count == 1
+        {
             var trashEntries = getTrashEntriesFromDisk()
             trashEntries.append(self.localEntries[0])
             saveTrashEntriesToDisk(entries: trashEntries)
@@ -23,7 +25,8 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
             saveLocalEntriesToDisk(entries: self.localEntries)
             self.collectionView?.reloadData()
         }
-        else if self.localEntries.count > 0 {
+        else if self.localEntries.count > 0
+        {
             var trashEntries = getTrashEntriesFromDisk()
             trashEntries.append(self.localEntries[cellIndexPath.row])
             saveTrashEntriesToDisk(entries: trashEntries)
@@ -32,7 +35,8 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
             saveLocalEntriesToDisk(entries: self.localEntries)
             self.collectionView?.reloadData()
         }
-        if self.localEntries.count == 0 {
+        if self.localEntries.count == 0
+        {
             self.editMode = false
         }
     }
