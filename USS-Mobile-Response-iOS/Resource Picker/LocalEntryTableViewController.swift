@@ -23,6 +23,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     let alternativeFileCellId = "alternativeFileCellId"
     let locationManager = CLLocationManager()
     let imagePickerController = UIImagePickerController()
+    var loaded = false
     
     // Resource Info section related
     var previewImage: UIImage?
@@ -502,6 +503,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             if !self.pickingForAltFiles {
                 if resourceType == .PHOTO {
                     if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+                        previewImage = nil
                         previewImage = pickedImage
                         tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
                         self.resourceSelected = true
@@ -1013,8 +1015,10 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             notesCell.textView.insertText(localEntry.notes!)
             self.altFiles = localEntry.altFiles!
             
+            self.loaded = true
             self.tableView.layoutSubviews()
             self.tableView.reloadData()
+            
         }
     }
     
@@ -1038,8 +1042,10 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
+        if self.loaded == false {
+            loadOldLocalEntry()
+        }
         
-        loadOldLocalEntry()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -1162,6 +1168,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     cell.resourceSet = true
                     cell.insertButton.imageView?.contentMode = .scaleAspectFill
                     cell.insertButton.setImage(previewImage, for: .normal)
+                    cell.insertButton.layoutSubviews()
                     cell.layoutSubviews()
                 }
                 return cell
