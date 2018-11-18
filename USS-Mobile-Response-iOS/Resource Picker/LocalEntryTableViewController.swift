@@ -320,6 +320,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     func showResourceTypeActionSheet() {
         self.pickingForAltFiles = true
+        self.imagePickerController.delegate = self
         let actionSheet = UIAlertController(title: "Resource type", message: "Please choose a resource type.", preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Photo (.JPEG and .TIF)", style: .default, handler: { (action: UIAlertAction) in
             self.resourceType = FileType.PHOTO
@@ -348,9 +349,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             let pdfCollectionVC = PdfCollectionViewController(collectionViewLayout: layout)
             pdfCollectionVC.pdfDelegate = self
             self.navigationController?.pushViewController(pdfCollectionVC, animated: true)
-//            self.pdfCollectionViewController = PdfCollectionViewController(collectionViewLayout: layout)
-//            self.pdfCollectionViewController?.pdfDelegate = self
-//            self.navigationController?.pushViewController(self.pdfCollectionViewController!, animated: true)
             
         }))
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(alert: UIAlertAction)-> Void in
@@ -1005,6 +1003,10 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
             let descriptionCell = tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
             let notesCell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
+            
+            titleCell.textView.text = ""
+            descriptionCell.textView.text = ""
+            notesCell.textView.text = ""
             
             titleCell.textView.insertText(localEntry.name!)
             descriptionCell.textView.insertText(localEntry.description!)
