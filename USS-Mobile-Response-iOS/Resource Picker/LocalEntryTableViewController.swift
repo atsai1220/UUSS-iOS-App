@@ -1055,6 +1055,28 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+        
+    }
+    
+    deinit {
+        if !loaded {
+            let fileManager = FileManager.default
+
+            do {
+                let folderPath = getDocumentsURL()
+                let paths = try fileManager.contentsOfDirectory(atPath: folderPath.path)
+                for file in paths {
+                    let fileExtension = getDocumentsURL().appendingPathComponent(file).pathExtension
+                    if fileExtension == "jpeg" {
+                        print(file)
+                        try fileManager.removeItem(atPath: getDocumentsURL().appendingPathComponent(file).path)
+                    }
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
     }
     
     override func viewDidLoad() {
@@ -1277,12 +1299,23 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             cell.fileLabel.text = altFile.type
 
             if altFile.type == FileType.PHOTO.rawValue || altFile.type == FileType.VIDEO.rawValue {
-                cell.altImageView.image = getImageFromLocalEntriesDirectory(imageName: altFile.name + ".jpeg")
+                if self.loaded {
+                    cell.altImageView.image = getImageFromLocalEntriesDirectory(imageName: altFile.name + ".jpeg")
+                } else {
+                    cell.altImageView.image = getImageFromDocumentDirectory(imageName: altFile.name + ".jpeg")
+                }
+                
             } else if altFile.type == FileType.AUDIO.rawValue {
                 cell.altImageView.image = UIImage(named: "audio")
             } else {
-                let pdfImage = getImageFromLocalEntriesDirectory(imageName: altFile.name + ".jpeg")
-                cell.altImageView.image = pdfImage
+                if self.loaded {
+                    let pdfImage = getImageFromLocalEntriesDirectory(imageName: altFile.name + ".jpeg")
+                    cell.altImageView.image = pdfImage
+                } else {
+                    let pdfImage = getImageFromDocumentDirectory(imageName: altFile.name + ".jpeg")
+                    cell.altImageView.image = pdfImage
+                }
+                
             }
             
             return cell

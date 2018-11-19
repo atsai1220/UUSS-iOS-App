@@ -310,8 +310,8 @@ func deleteAltFile(with altFile: AltFile) {
     let name = altFile.name
     let url = altFile.url
     let type = altFile.type
-    if type == FileType.PHOTO.rawValue || type == FileType.VIDEO.rawValue {
-        let filePath = getDocumentsURL().appendingPathComponent(name + "jpeg")
+    if type == FileType.PHOTO.rawValue || type == FileType.VIDEO.rawValue || type == FileType.DOCUMENT.rawValue {
+        let filePath = getDocumentsURL().appendingPathComponent(name + ".jpeg")
         do {
             if fileManager.fileExists(atPath: filePath.path) {
                 print("deleted photo/video thumbnail only")
