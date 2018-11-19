@@ -15,6 +15,7 @@ protocol NetWorkManagerDelegate {
     func showProgressBar()
     func dismissProgressController()
     func popToRootController()
+    func updateProgress(with text: String)
 }
 
 class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
@@ -55,6 +56,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         let imageData = UIImageJPEGRepresentation(image!, 0.9)
         if (imageData == nil) { return }
         let boundary = generateBoundaryString()
+        delegate?.updateProgress(with: "Uploading main file...")
         let fullFormData = resourceDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
         sendPostRequestWith(body: fullFormData, boundary: boundary) {
             (httpResult) in
@@ -68,6 +70,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             let fileData = try Data(contentsOf: path)
             let boundary = generateBoundaryString()
             let fileExtension = URL(fileURLWithPath: altFile.url).pathExtension
+            delegate?.updateProgress(with: "Uploading alternative files...")
             let fullFormData = resourceDataToFormData(data: fileData as NSData, boundary: boundary, fileName: altFile.name + "." + fileExtension, type: altFile.type)
             sendPostRequestWith(body: fullFormData, boundary: boundary) {
                 (httpResult) in
@@ -162,7 +165,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         // Hazard Type
         // Description
         // Notes
-    
+        delegate?.updateProgress(with: "Creating remote resource...")
         let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
         let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
         let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=create_resource" + "&param1=" + String(resourceType) + "&param2=" + String(archivalState) + "&param3=" + self.remoteFileLocations[0].1 + "&param4=" + "&param5=" + "&param6=1" + "&param7="

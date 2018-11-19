@@ -20,6 +20,8 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     
     var progressBackground = UIView()
     
+    var progressText: UITextView = UITextView()
+    
     var progressBar = UIProgressView()
     
     func uploadProgressWith(progress: Float) {
@@ -44,6 +46,13 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
             self.dismiss(animated: false, completion: {
                 self.delegate?.popToRootController()
             })
+        }
+    }
+    
+    func updateProgress(with text: String) {
+        DispatchQueue.main.async {
+            self.progressText.text = text
+            self.view.layoutSubviews()
         }
     }
     
@@ -73,14 +82,19 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
         progressBar.progress = 0
         progressBar.translatesAutoresizingMaskIntoConstraints = false
         
+        progressText.text = ""
+        progressText.textColor = UIColor.black
+        progressText.translatesAutoresizingMaskIntoConstraints = false
+        
         view.addSubview(progressBackground)
         progressBackground.addSubview(progressBar)
+        progressBackground.addSubview(progressText)
         
         NSLayoutConstraint.activate([
             progressBackground.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.15),
             progressBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.85),
             progressBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            progressBackground.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            progressBackground.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             ])
         
         NSLayoutConstraint.activate([
@@ -88,6 +102,13 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
             progressBar.widthAnchor.constraint(equalTo: progressBackground.widthAnchor, multiplier: 0.85),
             progressBar.centerYAnchor.constraint(equalTo: progressBackground.centerYAnchor),
             progressBar.centerXAnchor.constraint(equalTo: progressBackground.centerXAnchor)
+            ])
+        
+        NSLayoutConstraint.activate([
+            progressText.heightAnchor.constraint(equalTo: progressBackground.heightAnchor, multiplier: 0.2),
+            progressText.widthAnchor.constraint(equalTo: progressBackground.widthAnchor, multiplier: 0.85),
+            progressText.topAnchor.constraint(equalTo: progressBar.bottomAnchor, constant: 5),
+            progressText.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             ])
     }
     

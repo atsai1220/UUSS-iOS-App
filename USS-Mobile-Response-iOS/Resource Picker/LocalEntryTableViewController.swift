@@ -1334,12 +1334,16 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
         else if indexPath.section == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: additionalButtonCellId, for: indexPath)
-            if loaded {
-               cell.isUserInteractionEnabled = false
+            if !loaded {
+                cell.textLabel?.textColor = view.tintColor
+                cell.textLabel?.text = "Add alternative file..."
+                return cell
+               
+            } else {
+                cell.isUserInteractionEnabled = false
+                cell.textLabel?.textColor = UIColor.lightGray
+                return cell
             }
-            cell.textLabel?.textColor = view.tintColor
-            cell.textLabel?.text = "Add alternative file..."
-            return cell
         }
         else {
             let cell = tableView.dequeueReusableCell(withIdentifier: alternativeFileCellId, for: indexPath) as! AlternativeTableViewCell
