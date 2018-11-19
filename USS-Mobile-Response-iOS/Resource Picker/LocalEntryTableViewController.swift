@@ -364,7 +364,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     @objc func selectingMainImage() {
         self.resourceType = .PHOTO
         self.pickingForAltFiles = false
-        showFileSourceActionSheet()
+        if !loaded {
+            showFileSourceActionSheet()
+        }
     }
     
     @objc private func showFileSourceActionSheet() {
@@ -634,7 +636,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     @objc func localSaveCheck() {
         if saveCheck() {
-            let savedName = createLocalEntry()
+            var savedName = ""
+            if !loaded {
+                savedName = createLocalEntry()
+            } else {
+                savedName = updateExistingEntry()
+            }
+            
             self.navigationController?.popToRootViewController(animated: true)
         } else {
             displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
@@ -643,8 +651,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     @objc func saveCheckAndUpload() {
         if saveCheck() {
-            // Create local entry
-            let savedName = createLocalEntry()
+            var savedName = ""
+            if !loaded {
+                savedName = createLocalEntry()
+            } else {
+                savedName = updateExistingEntry()
+            }
             
             // Upload via to remote server and create entries
             httpUpload(localEntryName: savedName)
@@ -670,6 +682,69 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    func updateExistingEntry() -> String {
+        let titleCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! LocalEntryTableViewCell
+        let descriptionCell = self.tableView.cellForRow(at: IndexPath(row: 1, section: 1)) as! LocalEntryTableViewCell
+        let notesCell = self.tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as! LocalEntryTableViewCell
+        var newEntry = LocalEntry()
+        newEntry.name = titleCell.textView.text
+        newEntry.description = descriptionCell.textView.text
+        newEntry.notes = notesCell.textView.text
+        newEntry.collectionRef = self.entryReference
+        newEntry.dataLat = locationManager.location!.coordinate.latitude
+        newEntry.dataLong = locationManager.location!.coordinate.longitude
+        
+        // Create/check for local resource entry folder
+        createLocalEntryDirectory()
+        
+        // Copy image to local entries directory
+        var savedImageName = ""
+        if let possibleImageURL = self.imageURL {
+            savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
+        } else {
+            savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
+        }
+        let savedImageURL = getDocumentsURL().appendingPathComponent(savedImageName)
+        let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(savedImageName)
+        do {
+            try FileManager.default.moveItem(at: savedImageURL, to: localEntryURL)
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        // Copy each alt file to local entry directory
+        var newAltFiles: [AltFile] = self.altFiles
+        for (index, altFile) in self.altFiles.enumerated() {
+            let name = URL(fileURLWithPath: altFile.url).lastPathComponent
+            let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(name)
+            
+            do {
+                let url = URL(fileURLWithPath: altFile.url)
+                try FileManager.default.moveItem(at: url, to: localEntryURL)
+                newAltFiles[index].url = localEntryURL.path
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+        }
+        newEntry.localFileName = savedImageName
+        newEntry.fileType = FileType.PHOTO.rawValue
+        newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
+        newEntry.altFiles = newAltFiles
+        var localEntries = getLocalEntriesFromDisk()
+        localEntries.removeAll { (entry) -> Bool in
+            if entry.localFileName == savedImageName {
+                return true
+            } else {
+                return false
+            }
+        }
+        saveLocalEntriesToDisk(entries: localEntries)
+        updateLocalEntries(with: newEntry)
+        
+        return newEntry.localFileName!
     }
     
     func createLocalEntry() -> String {
@@ -851,7 +926,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     
     @objc func collectAndShowHazards() {
-        collectHazards()
+        if !loaded {
+            collectHazards()
+        }
     }
     
     
@@ -1184,7 +1261,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         if indexPath.section == 0 {
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: resourceCellId, for: indexPath) as! LocalResourceTableViewCell
-                cell.insertButton.addTarget(self, action: #selector(selectingMainImage), for: .touchUpInside)
+                if !loaded {
+                    cell.insertButton.addTarget(self, action: #selector(selectingMainImage), for: .touchUpInside)
+                }
                 self.resourceType = .PHOTO
                 cell.cellLabel.becomeFirstResponder()
                 cell.selectionStyle = .none
@@ -1201,7 +1280,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             }
             if indexPath.row == 1 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: hazardCellId, for: indexPath) as! HazardTableViewCell
-                cell.button.addTarget(self, action: #selector(collectAndShowHazards), for: .touchUpInside)
+                if !loaded {
+                    cell.button.addTarget(self, action: #selector(collectAndShowHazards), for: .touchUpInside)
+                }
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Hazard"
                 
@@ -1217,7 +1298,10 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             if indexPath.row == 2 {
                 if collectionOnly {
                     let cell = tableView.dequeueReusableCell(withIdentifier: collectionCellId, for: indexPath) as! CollectionTableViewCell
-                    cell.button.addTarget(self, action: #selector(collectAndShowCollections), for: .touchUpInside)
+                    if !loaded {
+                       cell.button.addTarget(self, action: #selector(collectAndShowCollections), for: .touchUpInside)
+                    }
+                    
                     cell.selectionStyle = .none
                     cell.cellLabel.text = "Collection"
                     
@@ -1231,7 +1315,10 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     return cell
                 } else {
                     let cell = tableView.dequeueReusableCell(withIdentifier: subcategoryCellId, for: indexPath) as! SubcategoryTableViewCell
-                    cell.button.addTarget(self, action: #selector(collectAndShowCategories), for: .touchUpInside)
+                    if !loaded {
+                        cell.button.addTarget(self, action: #selector(collectAndShowCategories), for: .touchUpInside)
+                    }
+                    
                     cell.selectionStyle = .none
                     cell.cellLabel.text = "Subcategory"
                     
@@ -1247,7 +1334,10 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             }
             else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: collectionCellId, for: indexPath) as! CollectionTableViewCell
-                cell.button.addTarget(self, action: #selector(collectAndShowCollections), for: .touchUpInside)
+                if !loaded {
+                    cell.button.addTarget(self, action: #selector(collectAndShowCollections), for: .touchUpInside)
+                }
+                
                 cell.selectionStyle = .none
                 cell.cellLabel.text = "Collection"
                 
@@ -1263,7 +1353,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
         else if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as! LocalEntryTableViewCell
-            
+            if loaded {
+                cell.isUserInteractionEnabled = false
+            }
             
             if indexPath.row == 0 {
                 cell.cellLabel.text = "Title"
@@ -1286,14 +1378,23 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
         else if indexPath.section == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: additionalButtonCellId, for: indexPath)
+            if loaded {
+               cell.isUserInteractionEnabled = false
+            }
             cell.textLabel?.textColor = view.tintColor
             cell.textLabel?.text = "Add alternative file..."
             return cell
         }
         else {
             let cell = tableView.dequeueReusableCell(withIdentifier: alternativeFileCellId, for: indexPath) as! AlternativeTableViewCell
+            if loaded {
+                cell.isUserInteractionEnabled = false
+            }
             var altFile = self.altFiles[indexPath.row]
             cell.separatorInset = .zero
+            if !loaded {
+                cell.isUserInteractionEnabled = false
+            }
             
             cell.cellLabel.text = altFile.name
             cell.fileLabel.text = altFile.type
@@ -1322,19 +1423,26 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 2 {
-            tableView.deselectRow(at: indexPath, animated: true)
-            showResourceTypeActionSheet()
+        if loaded {
+            tableView.isUserInteractionEnabled = false
+        }
+        if !loaded {
+            if indexPath.section == 2 {
+                tableView.deselectRow(at: indexPath, animated: true)
+                showResourceTypeActionSheet()
+            }
         }
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 3 {
-            if editingStyle == .delete {
-                let altFile = self.altFiles[indexPath.row]
-                deleteAltFile(with: altFile)
-                self.altFiles.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .left)
+        if !loaded {
+            if indexPath.section == 3 {
+                if editingStyle == .delete {
+                    let altFile = self.altFiles[indexPath.row]
+                    deleteAltFile(with: altFile)
+                    self.altFiles.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .left)
+                }
             }
         }
     }
