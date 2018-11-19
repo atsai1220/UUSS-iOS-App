@@ -22,6 +22,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
     var delegate: NetWorkManagerDelegate?
     var remoteFileLocations: [(String, String)] = []
+    var resourceId: Int?
     
     
     private lazy var queue: OperationQueue = {
@@ -66,7 +67,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
     func uploadAltFile(altFile: AltFile, completionBlock: @escaping (_ httpResult: Data) -> Void) {
         do {
-            let path = URL(fileURLWithPath: altFile.url)
+            let path = URL(fileURLWithPath: altFile.url, isDirectory: false)
             let fileData = try Data(contentsOf: path)
             let boundary = generateBoundaryString()
             let fileExtension = URL(fileURLWithPath: altFile.url).pathExtension
@@ -106,26 +107,39 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             queue.addOperation(altOperation)
         }
         
-        // add operatino for creating resource and adding alt files
+        // add operation for creating resource and adding alt files
         let createResourceOperation = CreateResourceOperation(item: item, resourceType: 1, archivalState: 0)
         createResourceOperation.networkManager = self
         createResourceOperation.onDidUpload = { (httpData) in
             let resourceId = String(data: httpData, encoding: .utf8)!
-            print(resourceId)
+            self.resourceId = Int(resourceId)!
+            
+            for altFile in item.altFiles ?? [] {
+                let addAlternativeFilesOperation = AddAlternativeFileOperation(resourceId: self.resourceId!, item: altFile, remoteFiles: self.remoteFileLocations)
+                addAlternativeFilesOperation.networkManager = self
+                addAlternativeFilesOperation.onDidUpload = { (uploadResult) in
+                    let result = String(bytes: uploadResult, encoding: .utf8)!
+                    print(result)
+                }
+                if let lastOp = self.queue.operations.last {
+                    addAlternativeFilesOperation.addDependency(lastOp)
+                }
+                self.queue.addOperation(addAlternativeFilesOperation)
+            }
+            
+            let finishOperation = BlockOperation { [unowned self] in
+                self.delegate?.popToRootController()
+            }
+            if let lastOp = self.queue.operations.last {
+                finishOperation.addDependency(lastOp)
+            }
+            self.queue.addOperation(finishOperation)
         }
         if let lastOp = self.queue.operations.last {
             createResourceOperation.addDependency(lastOp)
         }
         queue.addOperation(createResourceOperation)
-        
-        let finishOperation = BlockOperation { [unowned self] in
-            self.delegate?.popToRootController()
-        }
-        if let lastOp = queue.operations.last {
-            finishOperation.addDependency(lastOp)
-        }
-        queue.addOperation(finishOperation)
-        
+
         queue.isSuspended = false
     }
     
@@ -175,30 +189,46 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         sendGetRequest(url: url, completionBlock: completionBlock)
     }
     
-    struct MetaThing: Codable {
-        let name: String
-        let description: String
-        let notes: String
-    }
+//    struct MetaThing: Codable {
+//        let name: String
+//        let description: String
+//        let notes: String
+//    }
+//
+//    struct MetaName: Codable {
+//        let name: String
+//    }
+//
+//    struct MetaDescription: Codable {
+//        let description: String
+//    }
+//
+//    struct MetaNotes: Codable {
+//        let notes: String
+//    }
     
-    struct MetaName: Codable {
-        let name: String
-    }
-    
-    struct MetaDescription: Codable {
-        let description: String
-    }
-    
-    struct MetaNotes: Codable {
-        let notes: String
-    }
-    
-    func addAlternativeFile(resourceId: Int, name: String, description: String, fileName: String, fileExtension: String, fileSize: Int, fileURL: String) {
+    func addAlternativeFile(resourceId: Int, name: String, description: String, fileName: String, fileExtension: String, fileSize: Int, fileURL: String, completionBlock: @escaping (_ httpResult: Data) -> Void) {
+        delegate?.updateProgress(with: "Adding alternative files to remote resource...")
+        let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
+        let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
         
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=add_alternative_file" + "&param1=" + String(resourceId) + "&param2=" + name + "&param3=" + description + "&param4=" + fileName + "&param5=" + fileExtension + "&param6=" + String(fileSize) + "&param7=" + "&param8=" + fileURL
+        let signature = "&sign=" + (privateKey + queryString).sha256()!
+        let completeURL = urlString + queryString + signature
+        guard let url = URL(string: completeURL) else { return }
+        sendGetRequest(url: url, completionBlock: completionBlock)
     }
     
-    func addResourceToCollection(resourceId: Int, collectionId: Int) {
+    func addResourceToCollection(resourceId: Int, collectionId: Int, completionBlock: @escaping (_ httpResult: Data) -> Void) {
+        delegate?.updateProgress(with: "Adding resource to collection...")
+        let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
+        let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
         
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=add_resource_to_collection" + "&param1=" + String(resourceId) + "&param2=" + String(collectionId)
+        let signature = "&sign=" + (privateKey + queryString).sha256()!
+        let completeURL = urlString + queryString + signature
+        guard let url = URL(string: completeURL) else { return }
+        sendGetRequest(url: url, completionBlock: completionBlock)
     }
     
     func sendGetRequest(url: URL, completionBlock: @escaping(_ httpResult: Data) -> Void) {

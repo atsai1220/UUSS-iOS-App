@@ -587,11 +587,21 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                         let image = createVideoThumbnail(from: videoURL.absoluteString)
                         let videoName = saveExistingImageAtDocumentDirectory(image: image)
                         let fileNameWithoutExtension = NSURL(fileURLWithPath: videoName).deletingPathExtension?.lastPathComponent ?? ""
-                        let altFile = AltFile.init(name: fileNameWithoutExtension, url: videoURL.path, type: FileType.VIDEO.rawValue)
-                        self.altFiles.append(altFile)
-                        self.tableView.beginUpdates()
-                        self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
-                        self.tableView.endUpdates()
+                        let fileExtension = videoURL.pathExtension
+                        // renaming video file
+                        do {
+                            let newVideoURL = getDocumentsURL().appendingPathComponent(fileNameWithoutExtension + "." + fileExtension.lowercased())
+                            try FileManager.default.copyItem(at: videoURL, to: newVideoURL)
+                            let altFile = AltFile.init(name: fileNameWithoutExtension, url: newVideoURL.path, type: FileType.VIDEO.rawValue)
+                            self.altFiles.append(altFile)
+                            self.tableView.beginUpdates()
+                            self.tableView.reloadSections(IndexSet([3]), with: UITableViewRowAnimation.fade)
+                            self.tableView.endUpdates()
+                        } catch {
+                            print(error)
+                        }
+                        
+                        
                     }
                     picker.dismiss(animated: true, completion: nil)
                 }
@@ -693,12 +703,13 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         createLocalEntryDirectory()
         
         // Copy image to local entries directory
-        var savedImageName = ""
-        if let possibleImageURL = self.imageURL {
-            savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
-        } else {
-            savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
-        }
+//        var savedImageName = ""
+//        if let possibleImageURL = self.imageURL {
+//            savedImageName = saveImageAtDocumentDirectory(url: possibleImageURL)
+//        } else {
+//
+//        }
+        var savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
         let savedImageURL = getDocumentsURL().appendingPathComponent(savedImageName)
         let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(savedImageName)
         do {
@@ -714,7 +725,8 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(name)
             
             do {
-                let url = URL(fileURLWithPath: altFile.url)
+//                let url = URL(string: altFile.url)
+                let url = URL(fileURLWithPath: altFile.url, isDirectory: false)
                 try FileManager.default.moveItem(at: url, to: localEntryURL)
                 newAltFiles[index].url = localEntryURL.path
             } catch {
