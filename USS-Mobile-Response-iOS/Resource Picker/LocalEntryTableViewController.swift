@@ -1032,23 +1032,43 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             
         }
     }
-    
+
     @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= keyboardSize.height
-            }
+        let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)!.cgRectValue
+        let contentInsets: UIEdgeInsets
+        if UIInterfaceOrientationIsPortrait(.portrait) {
+            contentInsets = UIEdgeInsetsMake(0, 0, keyboardSize.height, 0)
+        } else {
+            contentInsets = UIEdgeInsetsMake(0, 0, keyboardSize.width, 0)
         }
+        
+        UIView.animate(withDuration: 0.3) {
+            self.tableView.contentInset = contentInsets
+            self.tableView.scrollIndicatorInsets = contentInsets
+        }
+        
+        self.tableView.scrollToRow(at: IndexPath(row: 1, section: 0), at: .top, animated: true)
+//        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+//            if self.view.frame.origin.y == 0 {
+//                self.view.frame.origin.y -= keyboardSize.height
+//            }
+//        }
     }
-    
+
     @objc func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y != 0{
-                self.view.frame.origin.y += keyboardSize.height
-            }
+        UIView.animate(withDuration: 0.3) {
+            self.tableView.contentInset = UIEdgeInsets.zero
+            self.tableView.scrollIndicatorInsets = UIEdgeInsets.zero
+            
         }
+        
+//        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+//            if self.view.frame.origin.y != 0{
+//                self.view.frame.origin.y += keyboardSize.height
+//            }
+//        }
     }
-    
+
     
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
@@ -1138,6 +1158,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             tableView?.endUpdates()
             UIView.setAnimationsEnabled(true)
         }
+        
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -1325,7 +1346,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             if loaded {
                 cell.isUserInteractionEnabled = false
             }
-            var altFile = self.altFiles[indexPath.row]
+            let altFile = self.altFiles[indexPath.row]
             cell.separatorInset = .zero
             if !loaded {
                 cell.isUserInteractionEnabled = false
