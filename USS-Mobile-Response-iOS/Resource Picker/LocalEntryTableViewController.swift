@@ -703,20 +703,24 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         }
         
         // Copy each alt file to local entry directory
-        for var altFile in self.altFiles {
-            let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(URL(fileURLWithPath: altFile.url).lastPathComponent)
+        var newAltFiles: [AltFile] = self.altFiles
+        for (index, altFile) in self.altFiles.enumerated() {
+            let name = URL(fileURLWithPath: altFile.url).lastPathComponent
+            let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(name)
             
             do {
-                try FileManager.default.copyItem(at: URL(fileURLWithPath: altFile.url), to: localEntryURL)
+                let url = URL(fileURLWithPath: altFile.url)
+                try FileManager.default.moveItem(at: url, to: localEntryURL)
+                newAltFiles[index].url = localEntryURL.path
             } catch {
                 print(error.localizedDescription)
             }
-            altFile.url = localEntryURL.path
+            
         }
         newEntry.localFileName = savedImageName
         newEntry.fileType = FileType.PHOTO.rawValue
         newEntry.submissionStatus = SubmissionStatus.LocalOnly.rawValue
-        newEntry.altFiles = self.altFiles
+        newEntry.altFiles = newAltFiles
         updateLocalEntries(with: newEntry)
         return newEntry.localFileName!
     }
@@ -1273,11 +1277,11 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             cell.fileLabel.text = altFile.type
 
             if altFile.type == FileType.PHOTO.rawValue || altFile.type == FileType.VIDEO.rawValue {
-                cell.altImageView.image = getImageFromDocumentDirectory(imageName: altFile.name + ".jpeg")
+                cell.altImageView.image = getImageFromLocalEntriesDirectory(imageName: altFile.name + ".jpeg")
             } else if altFile.type == FileType.AUDIO.rawValue {
                 cell.altImageView.image = UIImage(named: "audio")
             } else {
-                let pdfImage = getImageFromDocumentDirectory(imageName: altFile.name + ".jpeg")
+                let pdfImage = getImageFromLocalEntriesDirectory(imageName: altFile.name + ".jpeg")
                 cell.altImageView.image = pdfImage
             }
             

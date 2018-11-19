@@ -296,7 +296,7 @@ class PhotoPickerViewController: UIViewController, UIImagePickerControllerDelega
     func createResourceSpaceEntry(imageName: String) {
         let urlString = "https://geodata.geology.utah.gov/api/?"
         let privateKey = "7d510414a826c1af09d864e70c3656964839664786b8e774bafb7c10adc5fea1"
-        let imageURL = getImageFromDocumentDirectory(imageName: imageName)
+        let imageURL = getImageFromLocalEntriesDirectory(imageName: imageName)
         print("URL GOES HERE??")
         print(imageURL!)
         let queryString = "user=atsai-uuss&function=create_resource&param1=1&param2=0&param3=\(imageURL!)&param4=&param5=&param6=&param7="
