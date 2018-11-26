@@ -698,6 +698,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         newEntry.collectionRef = self.entryReference
         newEntry.dataLat = locationManager.location!.coordinate.latitude
         newEntry.dataLong = locationManager.location!.coordinate.longitude
+        newEntry.hazardName = self.selectedHazard
+        newEntry.subcategoryName = self.selectedSubcategory
+        newEntry.collectionName = self.selectedCollection
         
         // Create/check for local resource entry folder
         createLocalEntryDirectory()
@@ -709,7 +712,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
 //        } else {
 //
 //        }
-        var savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
+        let savedImageName = saveExistingImageAtDocumentDirectory(image: self.previewImage!)
         let savedImageURL = getDocumentsURL().appendingPathComponent(savedImageName)
         let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(savedImageName)
         do {
@@ -725,7 +728,6 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             let localEntryURL = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(name)
             
             do {
-//                let url = URL(string: altFile.url)
                 let url = URL(fileURLWithPath: altFile.url, isDirectory: false)
                 try FileManager.default.moveItem(at: url, to: localEntryURL)
                 newAltFiles[index].url = localEntryURL.path
@@ -1038,6 +1040,22 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
             notesCell.textView.insertText(localEntry.notes!)
             self.altFiles = localEntry.altFiles!
             
+            self.hazardSelected = true
+            self.subcategorySelected = true
+            self.collectionSelected = true
+            
+            if let hazardName = localEntry.hazardName {
+                self.selectedHazard = hazardName
+            }
+            if let subcategoryName = localEntry.subcategoryName {
+                self.selectedSubcategory = subcategoryName
+            } else {
+                self.selectedSubcategory = "..."
+            }
+            if let collectionName = localEntry.collectionName {
+                self.selectedCollection = collectionName
+            }
+            
             self.loaded = true
             self.tableView.layoutSubviews()
             self.tableView.reloadData()
@@ -1087,6 +1105,19 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
         if self.loaded == false {
             loadOldLocalEntry()
+        }
+        
+        let saveBarButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(localSaveCheck))
+        let uploadBarButton = UIBarButtonItem(title: "Upload", style: .done, target: self, action: #selector(saveCheckAndUpload))
+        
+        if !loaded {
+            navigationItem.setRightBarButtonItems([uploadBarButton, saveBarButton], animated: true)
+        } else {
+            if localEntry?.submissionStatus != SubmissionStatus.SuccessfulUpload.rawValue {
+                navigationItem.setRightBarButtonItems([uploadBarButton], animated: true)
+            } else {
+                navigationItem.setRightBarButtonItems([], animated: true)
+            }
         }
         
     }
@@ -1145,17 +1176,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: additionalButtonCellId)
         self.tableView.register(AlternativeTableViewCell.self, forCellReuseIdentifier: alternativeFileCellId)
         self.tableView.tableFooterView = UIView(frame: .zero)
-        
-        let saveBarButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(localSaveCheck))
-        let uploadBarButton = UIBarButtonItem(title: "Upload", style: .done, target: self, action: #selector(saveCheckAndUpload))
-        
-        if !loaded {
-            navigationItem.setRightBarButtonItems([uploadBarButton, saveBarButton], animated: true)
-        } else {
-            if localEntry?.submissionStatus != SubmissionStatus.SuccessfulUpload.rawValue {
-                navigationItem.setRightBarButtonItems([uploadBarButton], animated: true)
-            }
-        }
+    
     }
     
 

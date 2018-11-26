@@ -87,6 +87,8 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         let mainOperation = UploadMainFileOperation(file: item)
         mainOperation.networkManager = self
         mainOperation.onDidUpload = { (uploadResult) in
+            let outputStr  = String(data: uploadResult, encoding: String.Encoding.utf8) as String!
+            print(outputStr)
             self.parseHttpResponse(result: uploadResult)
         }
         if let lastOp = queue.operations.last {
@@ -144,7 +146,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     }
     
     // TODO: add JSON metadata
-    func createResource(item: LocalEntry, resourceType: Int = 1, archivalState: Int = 0, completionBlock: @escaping (_ httpResult: Data) -> Void) {
+    func createResource(item: LocalEntry, resourceType: Int = 1, archivalState: Int = 4, completionBlock: @escaping (_ httpResult: Data) -> Void) {
 //        let fileName = self.remoteFileLocations[0].0
 //        let remoteLocation = self.remoteFileLocations[0].1
 //        item.collectionRef
@@ -153,12 +155,17 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
 //        let metaName = MetaName(name: fileName)
 //        let metaDescription = MetaDescription(description: item.description!)
 //        let metaNotes = MetaNotes(notes: item.notes!)
-//        
-//        let metaJSON = MetaThing(name: item.name!, description: item.description!, notes: item.notes!)
+        
+        let metaJSON = MetaThing(name: item.name!, description: item.description!, notes: item.notes!)
 //        guard let jsonData = try? JSONEncoder().encode(metaJSON) else { return }
 //        guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
+//        metaJSON.encode(to: JSONEncoder)
 //        print(jsonString)
-        
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let data = try! encoder.encode(metaJSON)
+        let jsonString = String(data: data, encoding: .utf8)!
+        print(jsonString)
         
 //        metaArray.append(metaName)
 //        metaArray.append(metaDescription)
@@ -189,11 +196,11 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         sendGetRequest(url: url, completionBlock: completionBlock)
     }
     
-//    struct MetaThing: Codable {
-//        let name: String
-//        let description: String
-//        let notes: String
-//    }
+    struct MetaThing: Codable {
+        let name: String
+        let description: String
+        let notes: String
+    }
 //
 //    struct MetaName: Codable {
 //        let name: String
