@@ -486,6 +486,10 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
         self.navigationController?.popToRootViewController(animated: true)
     }
     
+    func popAndDisplayError(message: String) {
+        self.displayErrorMessage(title: "Error", message: message)
+    }
+    
     // MARK: - Photo/Video functions
     
     func videoFormatIsAvailable(for sourceType: UIImagePickerControllerSourceType ) -> Bool

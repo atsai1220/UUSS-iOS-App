@@ -10,6 +10,7 @@ import UIKit
 
 protocol NetworkViewControllerDelegate {
     func popToRootController()
+    func popAndDisplayError(message: String)
 }
 
 class NetworkViewController: UIViewController, NetWorkManagerDelegate {
@@ -30,7 +31,17 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     }
     
     func dismissProgressBar() {
-        progressBar.removeFromSuperview()
+//        progressBar.removeFromSuperview()
+        self.dismiss(animated: true, completion: nil)
+        
+    }
+    
+    func dismissAndDisplayError(message: String) {
+        DispatchQueue.main.async {
+            self.dismiss(animated: false, completion: {
+                self.delegate?.popAndDisplayError(message: message)
+            })
+        }
     }
     
     func showProgressBar() {
@@ -39,6 +50,7 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     
     func dismissProgressController() {
 //        self.dismiss(animated: true, completion: nil)
+        
     }
     
     func popToRootController() {
@@ -110,6 +122,16 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
             progressText.topAnchor.constraint(equalTo: progressBar.bottomAnchor, constant: 5),
             progressText.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             ])
+    }
+    
+    func displayErrorMessage(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let dismissAction = UIAlertAction(title: "Okay", style: .default, handler: {
+            (action) in alert.dismiss(animated: true, completion: nil)
+        })
+        alert.addAction(dismissAction)
+        let topController = UIApplication.shared.keyWindow?.rootViewController
+        topController!.present(alert, animated: true, completion: nil)
     }
     
 }

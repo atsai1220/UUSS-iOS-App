@@ -16,6 +16,7 @@ protocol NetWorkManagerDelegate {
     func dismissProgressController()
     func popToRootController()
     func updateProgress(with text: String)
+    func dismissAndDisplayError(message: String)
 }
 
 class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
@@ -52,34 +53,47 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
     func uploadMainFile(item: LocalEntry, completionBlock: @escaping (_ httpResult: Data) -> Void) {
         // handle main image
-        let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(item.localFileName!).path
-        let image = UIImage(contentsOfFile: imagePath)
-        let imageData = UIImageJPEGRepresentation(image!, 0.9)
-        if (imageData == nil) { return }
-        let boundary = generateBoundaryString()
-        delegate?.updateProgress(with: "Uploading main file...")
-        let fullFormData = resourceDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
-        sendPostRequestWith(body: fullFormData, boundary: boundary) {
-            (httpResult) in
-            completionBlock(httpResult)
-        }
-    }
-    
-    func uploadAltFile(altFile: AltFile, completionBlock: @escaping (_ httpResult: Data) -> Void) {
-        do {
-            let path = URL(fileURLWithPath: altFile.url, isDirectory: false)
-            let fileData = try Data(contentsOf: path)
+        let internetTestObject = Reachability()
+        if internetTestObject.hasInternet() {
+            let imagePath = getDocumentsURL().appendingPathComponent("local-entries").appendingPathComponent(item.localFileName!).path
+            let image = UIImage(contentsOfFile: imagePath)
+            let imageData = UIImageJPEGRepresentation(image!, 0.9)
+            if (imageData == nil) { return }
             let boundary = generateBoundaryString()
-            let fileExtension = URL(fileURLWithPath: altFile.url).pathExtension
-            delegate?.updateProgress(with: "Uploading alternative files...")
-            let fullFormData = resourceDataToFormData(data: fileData as NSData, boundary: boundary, fileName: altFile.name + "." + fileExtension, type: altFile.type)
+            delegate?.updateProgress(with: "Uploading main file...")
+            let fullFormData = resourceDataToFormData(data: imageData! as NSData, boundary: boundary, fileName: item.localFileName!, type: item.fileType!)
             sendPostRequestWith(body: fullFormData, boundary: boundary) {
                 (httpResult) in
                 completionBlock(httpResult)
             }
-        } catch {
-            dismissProgressController()
-            displayErrorMessage(title: "Error", message: "Upload error.")
+        } else {
+            delegate?.popToRootController()
+            self.displayErrorMessage(title: "No network connection", message: "Please check your network connection")
+        }
+
+    }
+    
+    func uploadAltFile(altFile: AltFile, completionBlock: @escaping (_ httpResult: Data) -> Void) {
+        let internetTestObject = Reachability()
+        if internetTestObject.hasInternet() {
+            do {
+                let path = URL(fileURLWithPath: altFile.url, isDirectory: false)
+                let fileData = try Data(contentsOf: path)
+                let boundary = generateBoundaryString()
+                let fileExtension = URL(fileURLWithPath: altFile.url).pathExtension
+                delegate?.updateProgress(with: "Uploading alternative files...")
+                let fullFormData = resourceDataToFormData(data: fileData as NSData, boundary: boundary, fileName: altFile.name + "." + fileExtension, type: altFile.type)
+                sendPostRequestWith(body: fullFormData, boundary: boundary) {
+                    (httpResult) in
+                    completionBlock(httpResult)
+                }
+            } catch {
+                dismissProgressController()
+                displayErrorMessage(title: "Error", message: "Upload error.")
+            }
+        } else {
+            delegate?.popToRootController()
+            self.displayErrorMessage(title: "No network connection", message: "Please check your network connection")
         }
     }
     
@@ -88,7 +102,9 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         mainOperation.networkManager = self
         mainOperation.onDidUpload = { (uploadResult) in
             let outputStr  = String(data: uploadResult, encoding: String.Encoding.utf8) as String!
-            print(outputStr)
+            if outputStr == "" {
+                self.delegate?.dismissAndDisplayError(message: "500 Errorrrrrrrrr")
+            }
             self.parseHttpResponse(result: uploadResult)
         }
         if let lastOp = queue.operations.last {
@@ -186,6 +202,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         // Hazard Type
         // Description
         // Notes
+        
         delegate?.updateProgress(with: "Creating remote resource...")
         let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
         let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
@@ -264,7 +281,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         request.httpShouldHandleCookies = false
         
         let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 10.0
+        configuration.timeoutIntervalForRequest = 5.0
    
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         
@@ -280,6 +297,18 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                         self.displayErrorMessage(title: "Connection error", message: "Connection to server timed out.")
                         return
                     }
+                }
+            }
+            if let response = response as? HTTPURLResponse {
+                switch response.statusCode {
+                case 500...599:
+                    DispatchQueue.main.async {
+                        self.queue.isSuspended = true
+                        self.delegate?.dismissAndDisplayError(message: "500 internal server")
+                        return
+                    }
+                default:
+                    print("not a 500")
                 }
             }
             DispatchQueue.main.async {
