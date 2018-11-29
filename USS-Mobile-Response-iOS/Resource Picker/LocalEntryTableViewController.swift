@@ -488,6 +488,12 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     
     func popAndDisplayError(message: String) {
         self.displayErrorMessage(title: "Error", message: message)
+        var localEntries = getLocalEntriesFromDisk()
+        var lastEntry = localEntries.last
+        lastEntry?.submissionStatus = SubmissionStatus.ErrorUpload.rawValue
+        localEntries.removeLast()
+        localEntries.append(lastEntry!)
+        saveLocalEntriesToDisk(entries: localEntries)
     }
     
     // MARK: - Photo/Video functions
@@ -659,7 +665,7 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
     }
     
     @objc func saveCheckAndUpload() {
-        if saveCheck() {
+//        if saveCheck() {
             if !loaded {
                 let savedName = createLocalEntry()
                 // Upload via to remote server and create entries
@@ -668,9 +674,9 @@ class LocalEntryTableViewController: UITableViewController, UITextViewDelegate, 
                     httpUpload(localEntryName: (localEntry?.localFileName)!)
                 
             }
-        } else {
-            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
-        }
+//        } else {
+//            displayErrorMessage(title: "Empty fields.", message: "Please complete form.")
+//        }
     }
     
     func createLocalEntryDirectory() {

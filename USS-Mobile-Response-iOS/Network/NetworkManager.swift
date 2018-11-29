@@ -132,6 +132,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             let resourceId = String(data: httpData, encoding: .utf8)!
             self.resourceId = Int(resourceId)!
             
+            // add_alternative_files
             for altFile in item.altFiles ?? [] {
                 let addAlternativeFilesOperation = AddAlternativeFileOperation(resourceId: self.resourceId!, item: altFile, remoteFiles: self.remoteFileLocations)
                 addAlternativeFilesOperation.networkManager = self
@@ -144,6 +145,21 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                 }
                 self.queue.addOperation(addAlternativeFilesOperation)
             }
+            
+            // add_resource_to_collection
+            let addResourceToCollectionOperation = AddResourceToCollectionOperation(resourceId: self.resourceId!, collectionId: Int(item.collectionRef!)!)
+            addResourceToCollectionOperation.networkManager = self
+            addResourceToCollectionOperation.onDidUpload = { (uploadResult) in
+                let result = String(bytes: uploadResult, encoding: .utf8)!
+                // true or false depending on success
+                print(result)
+            }
+            
+            if let lastOp = self.queue.operations.last {
+                addResourceToCollectionOperation.addDependency(lastOp)
+            }
+            
+            self.queue.addOperation(addResourceToCollectionOperation)
             
             let finishOperation = BlockOperation { [unowned self] in
                 self.delegate?.popToRootController()
