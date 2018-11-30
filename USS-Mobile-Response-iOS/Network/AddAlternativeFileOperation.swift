@@ -31,13 +31,13 @@ class AddAlternativeFileOperation: NetworkOperation {
         if item.type == "PHOTO" {
             item.name.append(".jpeg")
             fileType = ".jpeg"
-        } else if item.type == ".mp3" {
+        } else if item.type == "AUDIO" {
             item.name.append(".mp3")
             fileType = ".mp3"
-        } else if item.type == ".pdf" {
+        } else if item.type == "DOCUMENT" {
             item.name.append("pdf")
             fileType = ".pdf"
-        } else if item.type == ".mp4" {
+        } else if item.type == "VIDEO" {
             item.name.append(".mp4")
             fileType = ".mp4"
         } else {
@@ -63,6 +63,7 @@ class AddAlternativeFileOperation: NetworkOperation {
                 self.finished(error: "add alt file to resource")
             }
         } catch {
+            print(error.localizedDescription)
             print("error while grabbing alt file size")
         }
         

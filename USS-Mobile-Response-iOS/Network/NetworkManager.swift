@@ -147,7 +147,8 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             }
             
             // add_resource_to_collection
-            let addResourceToCollectionOperation = AddResourceToCollectionOperation(resourceId: self.resourceId!, collectionId: Int(item.collectionRef!)!)
+            // TODO: remove this for the real deal (UGS ResourceSpace)
+            let addResourceToCollectionOperation = AddResourceToCollectionOperation(resourceId: self.resourceId!, collectionId: 1)
             addResourceToCollectionOperation.networkManager = self
             addResourceToCollectionOperation.onDidUpload = { (uploadResult) in
                 let result = String(bytes: uploadResult, encoding: .utf8)!
@@ -274,6 +275,21 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     func sendGetRequest(url: URL, completionBlock: @escaping(_ httpResult: Data) -> Void) {
         let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
             guard let data = data else { return }
+            let outputStr  = String(data: data, encoding: String.Encoding.utf8) as String!
+            if let response = response as? HTTPURLResponse {
+                switch response.statusCode {
+                case 500...599:
+                    DispatchQueue.main.async {
+                        self.queue.isSuspended = true
+                        self.delegate?.dismissAndDisplayError(message: "500 internal server")
+                        return
+                    }
+                default:
+                    print(response)
+                    print(response.statusCode)
+                    print("not a 500")
+                }
+            }
             completionBlock(data)
         }
         task.resume()
