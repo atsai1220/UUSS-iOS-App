@@ -5,7 +5,9 @@
 //  Created by Andrew Tsai on 10/9/18.
 //  Copyright © 2018 Andrew Tsai. All rights reserved.
 //
-
+/*
+ The cell that represents hazard selection options in creating a local entry.
+ */
 import UIKit
 
 class CollectionTableViewCell: UITableViewCell {

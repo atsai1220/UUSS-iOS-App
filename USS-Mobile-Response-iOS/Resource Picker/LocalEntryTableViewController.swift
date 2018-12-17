@@ -5,6 +5,10 @@
 //  Created by Andrew Tsai on 10/5/18.
 //  Copyright © 2018 Andrew Tsai. All rights reserved.
 //
+/*
+ Handles creating a new local entry and initiating upload to remote server.
+ Should separate the API functions and HTTP functions into a separate class/file in future.
+ */
 
 import UIKit
 import Photos

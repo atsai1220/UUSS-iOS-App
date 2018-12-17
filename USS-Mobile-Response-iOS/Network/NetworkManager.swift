@@ -5,7 +5,11 @@
 //  Created by Andrew Tsai on 10/15/18.
 //  Copyright © 2018 Andrew Tsai. All rights reserved.
 //
-
+/*
+ Uses queued operations to create sequential network calls.
+ This is necessary because the app will need to wait on ResourceSpace to receive files
+ and create new resources in data base.
+ */
 import Foundation
 import UIKit
 
@@ -204,50 +208,18 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
     
     // TODO: add JSON metadata
     func createResource(item: LocalEntry, resourceType: Int = 1, archivalState: Int = 4, completionBlock: @escaping (_ httpResult: Data) -> Void) {
-//        let fileName = self.remoteFileLocations[0].0
-//        let remoteLocation = self.remoteFileLocations[0].1
-//        item.collectionRef
-//        // METADATA
-//        var metaArray = [Codable]()
-//        let metaName = MetaName(name: fileName)
-//        let metaDescription = MetaDescription(description: item.description!)
-//        let metaNotes = MetaNotes(notes: item.notes!)
-        
         let metaJSON = MetaThing(name: item.name!, description: item.description!, notes: item.notes!)
-//        guard let jsonData = try? JSONEncoder().encode(metaJSON) else { return }
-//        guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
-//        metaJSON.encode(to: JSONEncoder)
-//        print(jsonString)
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         let data = try! encoder.encode(metaJSON)
         let jsonString = String(data: data, encoding: .utf8)!
-        print("createResource: ", jsonString)
-        
-//        metaArray.append(metaName)
-//        metaArray.append(metaDescription)
-//        metaArray.append(metaNotes)
-//
-//
-//        if let jsonData = try? JSONEncoder().encode(metaArray),
-//            guard let jsonString = String(data: jsonData, encoding: .utf8) { return }
-//        print(jsonString)
-        
-//        guard let data = try? JSONSerialization.data(withJSONObject: metaData, options: []) else { return }
-       
-//        let jsonString = String(data: data, encoding: String.Encoding.utf8)!
-//        let jsonString = String(data: data, encoding: .utf8)?.replacingOccurrences(of: "\\/", with: "/")
-//        print(jsonString!)
-        
-        // Title
-        // Hazard Type
-        // Description
-        // Notes
+        let urlEncoadedJson = jsonString.addingPercentEncoding(withAllowedCharacters:
+            .urlFragmentAllowed)
         
         delegate?.updateProgress(with: "Creating remote resource...")
         let urlString = UserDefaults.standard.string(forKey: "selectedURL")! + "/api/?"
         let privateKey = UserDefaults.standard.string(forKey: "userPassword")!
-        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=create_resource" + "&param1=" + String(resourceType) + "&param2=" + String(archivalState) + "&param3=" + self.remoteFileLocations[0].1 + "&param4=" + "&param5=" + "&param6=1" + "&param7="
+        let queryString = "user=" + UserDefaults.standard.string(forKey: "userName")! + "&function=create_resource" + "&param1=" + String(resourceType) + "&param2=" + String(archivalState) + "&param3=" + self.remoteFileLocations[0].1 + "&param4=" + "&param5=" + "&param6=1" + "&param7=" + urlEncoadedJson!
         let signature = "&sign=" + (privateKey + queryString).sha256()!
         let completeURL = urlString + queryString + signature
         guard let url = URL(string: completeURL) else { return }
@@ -259,18 +231,6 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         let description: String
         let notes: String
     }
-//
-//    struct MetaName: Codable {
-//        let name: String
-//    }
-//
-//    struct MetaDescription: Codable {
-//        let description: String
-//    }
-//
-//    struct MetaNotes: Codable {
-//        let notes: String
-//    }
     
     func addAlternativeFile(resourceId: Int, name: String, description: String, fileName: String, fileExtension: String, fileSize: Int, fileURL: String, completionBlock: @escaping (_ httpResult: Data) -> Void) {
         delegate?.updateProgress(with: "Adding alternative files to remote resource...")

@@ -205,12 +205,12 @@
 		1C57E4FF20BF8387004E1270 /* USS-Mobile-Response-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				1CA7E76E21C7D302008E55F3 /* Deprecated */,
 				1C946C2E2181652F00B19EF3 /* Resource Picker */,
 				1C98E8A021759607008565E9 /* Network */,
 				F64F8F312166AE140045A8E5 /* PDF */,
 				F6D2785B214C6DBC00490350 /* Video */,
 				F60773652135F36A009F6962 /* Audio */,
-				1C601BB3210D1EAD00629D6F /* HazardsTableViewController */,
 				F6A9278D217A860100797EC2 /* Presentation */,
 				F60C9F11217938AB00281DB9 /* Map */,
 				9C5E159720EF69BD00BFD0F3 /* Main Page */,
@@ -256,7 +256,6 @@
 			children = (
 				1C946C2F2181652F00B19EF3 /* LocalEntryTableViewController.swift */,
 				1C946C302181652F00B19EF3 /* CollectionTableViewCell.swift */,
-				1C946C312181652F00B19EF3 /* PhotoPickerViewController.swift */,
 				1C946C322181652F00B19EF3 /* HazardTableViewCell.swift */,
 				1C946C332181652F00B19EF3 /* LocalResourceTableViewCell.swift */,
 				1C946C342181652F00B19EF3 /* AlternativeTableViewCell.swift */,
@@ -282,6 +281,23 @@
 				1CD43E222198DD3B00C749B7 /* AddResourceToCollectionOperation.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		1CA7E76E21C7D302008E55F3 /* Deprecated */ = {
+			isa = PBXGroup;
+			children = (
+				1CA7E76F21C7D31F008E55F3 /* Resource Picker */,
+				1C601BB3210D1EAD00629D6F /* HazardsTableViewController */,
+			);
+			path = Deprecated;
+			sourceTree = "<group>";
+		};
+		1CA7E76F21C7D31F008E55F3 /* Resource Picker */ = {
+			isa = PBXGroup;
+			children = (
+				1C946C312181652F00B19EF3 /* PhotoPickerViewController.swift */,
+			);
+			path = "Resource Picker";
 			sourceTree = "<group>";
 		};
 		9C5E159720EF69BD00BFD0F3 /* Main Page */ = {
