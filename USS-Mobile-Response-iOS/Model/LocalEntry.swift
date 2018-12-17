@@ -54,6 +54,9 @@ struct LocalEntry: Codable {
     var altFiles: [AltFile]?
     var dataLat: Double?
     var dataLong: Double?
+    var hazardName: String?
+    var subcategoryName: String?
+    var collectionName: String?
 }
 
 // field ID to value string pairs.

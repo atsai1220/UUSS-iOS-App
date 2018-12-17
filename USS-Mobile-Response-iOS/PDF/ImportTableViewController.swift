@@ -20,7 +20,8 @@ class ImportTableViewController: UITableViewController, DoneWithImportDelegate, 
         for i in 0..<tableData.count
         {
             let file: Data = fileManager.contents(atPath: tableData[i].relativePath)!
-            let fileName: String = tableData[i].lastPathComponent
+            var fileName: String = tableData[i].lastPathComponent
+            fileName = fileName.replacingOccurrences(of: " ", with: "-")
             let fileExtension: String = tableData[i].pathExtension
             if fileExtension == "pdf" {
                 fileManager.createFile(atPath: (getDocumentsURL().appendingPathComponent("pdf-import").appendingPathComponent(fileName)).relativePath, contents: file, attributes: nil)

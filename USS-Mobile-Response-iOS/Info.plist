@@ -49,6 +49,10 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSAllowArbitraryLoads</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict/>
 	<key>NSCameraUsageDescription</key>
 	<string>Need to access Camera to take photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -75,10 +79,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSAppTransportSecurity</key>
-	<dict/>
-	<key>NSAllowArbitraryLoads</key>
-	<true/>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

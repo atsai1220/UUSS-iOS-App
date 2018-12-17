@@ -13,37 +13,25 @@ private let reuseIdentifier = "Cell"
 
 class MainLocalCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, ImportModalDoneDelegate, MainCellDelegate
 {
-    func deleteThis(cellIndexPath: IndexPath)
+    func deleteThis(sender: UIButton)
     {
-        let localEntry: LocalEntry = localEntries[cellIndexPath.row]
-        
-        if cellIndexPath.row == 1 && self.localEntries.count == 1
+        if self.localEntries.count > 0
         {
-            var trashEntries = getTrashEntriesFromDisk()
-            trashEntries.append(self.localEntries[0])
-            saveTrashEntriesToDisk(entries: trashEntries)
-            self.localEntries.remove(at: 0)
-            collectionView?.deleteItems(at: [IndexPath(row: 0, section: 0)])
-            saveLocalEntriesToDisk(entries: self.localEntries)
-            self.collectionView?.reloadData()
-        }
-        else if self.localEntries.count > 0
-        {
-            var trashEntries = getTrashEntriesFromDisk()
-            trashEntries.append(self.localEntries[cellIndexPath.row])
-            saveTrashEntriesToDisk(entries: trashEntries)
-            self.localEntries.remove(at: cellIndexPath.row)
-            collectionView?.deleteItems(at: [cellIndexPath])
-            saveLocalEntriesToDisk(entries: self.localEntries)
-            self.collectionView?.reloadData()
+            let point = collectionView?.convert(sender.center, from: sender.superview!)
+            if let indexPath = collectionView?.indexPathForItem(at: point!) {
+                var trashEntries = getTrashEntriesFromDisk()
+                trashEntries.append(self.localEntries[indexPath.row])
+                saveTrashEntriesToDisk(entries: trashEntries)
+                NotificationCenter.default.post(name: Notification.Name("Local Entry Deleted"), object: nil, userInfo: [AnyHashable(self.localEntries[indexPath.row].name): [self.localEntries[indexPath.row].dataLat, self.localEntries[indexPath.row].dataLong]])
+                self.localEntries.remove(at: indexPath.row)
+                saveLocalEntriesToDisk(entries: self.localEntries)
+                collectionView?.deleteItems(at: [indexPath])
+            }
         }
         if self.localEntries.count == 0
         {
             self.editMode = false
         }
-        
-        NotificationCenter.default.post(name: Notification.Name("Local Entry Deleted"), object: nil, userInfo: [AnyHashable(localEntry.name): [localEntry.dataLat, localEntry.dataLong]])
-
     }
     
     
@@ -277,7 +265,6 @@ class MainLocalCollectionViewController: UICollectionViewController, UICollectio
 
     @objc func cellPressedAndHeld(gesture: UILongPressGestureRecognizer)
     {
-        print("viewdidload gesture")
         if(gesture.state != .began)
         {
             return

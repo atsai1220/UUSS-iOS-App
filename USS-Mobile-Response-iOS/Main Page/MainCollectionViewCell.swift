@@ -29,7 +29,7 @@ class MainCellSetting: NSObject
 }
 
 protocol MainCellDelegate {
-    func deleteThis(cellIndexPath: IndexPath)
+    func deleteThis(sender: UIButton)
 }
 
 class MainCollectionViewCell: UICollectionViewCell {
@@ -81,7 +81,7 @@ class MainCollectionViewCell: UICollectionViewCell {
        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.clipsToBounds = true
-        button.layer.cornerRadius = 15
+        button.layer.cornerRadius = 20
         button.alpha = 0.0
         button.backgroundColor = UIColor.red
         button.setImage(UIImage(named: "minus"), for: .normal)
@@ -180,13 +180,13 @@ class MainCollectionViewCell: UICollectionViewCell {
             if !deleteViewButton.isDescendant(of: superView) {
                 
                 addSubview(deleteViewButton)
-                UIView.animate(withDuration: 0.3) {
+                UIView.animate(withDuration: 0.15) {
                     self.deleteViewButton.alpha = 1.0
                 }
                 deleteViewButton.topAnchor.constraint(equalTo: topAnchor, constant: -10.0).isActive = true
                 deleteViewButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10.0).isActive = true
-                deleteViewButton.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
-                deleteViewButton.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
+                deleteViewButton.heightAnchor.constraint(equalToConstant: 45.0).isActive = true
+                deleteViewButton.widthAnchor.constraint(equalToConstant: 45.0).isActive = true
                 deleteViewButton.addTarget(self, action: #selector(deleteThis), for: .touchUpInside)
             }
         }
@@ -196,7 +196,7 @@ class MainCollectionViewCell: UICollectionViewCell {
     func hideDeleteButton() {
         if let superView = self.superview {
             if deleteViewButton.isDescendant(of: superView) {
-                UIView.animate(withDuration: 0.3, animations: { self.deleteViewButton.alpha = 0.0 })
+                UIView.animate(withDuration: 0.15, animations: { self.deleteViewButton.alpha = 0.0 })
                 deleteViewButton.removeFromSuperview()
             }
         }
@@ -205,16 +205,16 @@ class MainCollectionViewCell: UICollectionViewCell {
     func toggleDeleteButtion() {
         if !deleteViewButton.isDescendant(of: self.superview!) {
             addSubview(deleteViewButton)
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.15) {
                 self.deleteViewButton.alpha = 1.0
             }
             deleteViewButton.topAnchor.constraint(equalTo: topAnchor, constant: -10.0).isActive = true
             deleteViewButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10.0).isActive = true
-            deleteViewButton.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
-            deleteViewButton.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
+            deleteViewButton.heightAnchor.constraint(equalToConstant: 50.0).isActive = true
+            deleteViewButton.widthAnchor.constraint(equalToConstant: 50.0).isActive = true
             deleteViewButton.addTarget(self, action: #selector(deleteThis), for: .touchUpInside)
         } else {
-            UIView.animate(withDuration: 0.3, animations: {
+            UIView.animate(withDuration: 0.15, animations: {
                 self.deleteViewButton.alpha = 0.0
             }) { (done) in
                 if done {
@@ -224,7 +224,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    @objc func deleteThis() {
-        delegate?.deleteThis(cellIndexPath: self.cellIndexPath!)
+    @objc func deleteThis(sender: UIButton) {
+        delegate?.deleteThis(sender: sender)
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 
 protocol NetworkViewControllerDelegate {
     func popToRootController()
+    func popAndDisplayError(message: String)
 }
 
 class NetworkViewController: UIViewController, NetWorkManagerDelegate {
@@ -20,6 +21,8 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     
     var progressBackground = UIView()
     
+    var progressText: UITextView = UITextView()
+    
     var progressBar = UIProgressView()
     
     func uploadProgressWith(progress: Float) {
@@ -28,7 +31,17 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     }
     
     func dismissProgressBar() {
-        progressBar.removeFromSuperview()
+//        progressBar.removeFromSuperview()
+        self.dismiss(animated: true, completion: nil)
+        
+    }
+    
+    func dismissAndDisplayError(message: String) {
+        DispatchQueue.main.async {
+            self.dismiss(animated: false, completion: {
+                self.delegate?.popAndDisplayError(message: message)
+            })
+        }
     }
     
     func showProgressBar() {
@@ -37,6 +50,7 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
     
     func dismissProgressController() {
 //        self.dismiss(animated: true, completion: nil)
+        
     }
     
     func popToRootController() {
@@ -44,6 +58,13 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
             self.dismiss(animated: false, completion: {
                 self.delegate?.popToRootController()
             })
+        }
+    }
+    
+    func updateProgress(with text: String) {
+        DispatchQueue.main.async {
+            self.progressText.text = text
+            self.view.layoutSubviews()
         }
     }
     
@@ -73,14 +94,19 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
         progressBar.progress = 0
         progressBar.translatesAutoresizingMaskIntoConstraints = false
         
+        progressText.text = ""
+        progressText.textColor = UIColor.black
+        progressText.translatesAutoresizingMaskIntoConstraints = false
+        
         view.addSubview(progressBackground)
         progressBackground.addSubview(progressBar)
+        progressBackground.addSubview(progressText)
         
         NSLayoutConstraint.activate([
             progressBackground.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.15),
             progressBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.85),
             progressBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            progressBackground.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            progressBackground.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             ])
         
         NSLayoutConstraint.activate([
@@ -89,6 +115,23 @@ class NetworkViewController: UIViewController, NetWorkManagerDelegate {
             progressBar.centerYAnchor.constraint(equalTo: progressBackground.centerYAnchor),
             progressBar.centerXAnchor.constraint(equalTo: progressBackground.centerXAnchor)
             ])
+        
+        NSLayoutConstraint.activate([
+            progressText.heightAnchor.constraint(equalTo: progressBackground.heightAnchor, multiplier: 0.2),
+            progressText.widthAnchor.constraint(equalTo: progressBackground.widthAnchor, multiplier: 0.85),
+            progressText.topAnchor.constraint(equalTo: progressBar.bottomAnchor, constant: 5),
+            progressText.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            ])
+    }
+    
+    func displayErrorMessage(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let dismissAction = UIAlertAction(title: "Okay", style: .default, handler: {
+            (action) in alert.dismiss(animated: true, completion: nil)
+        })
+        alert.addAction(dismissAction)
+        let topController = UIApplication.shared.keyWindow?.rootViewController
+        topController!.present(alert, animated: true, completion: nil)
     }
     
 }
