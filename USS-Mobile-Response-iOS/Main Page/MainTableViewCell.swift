@@ -39,7 +39,7 @@ class MainTableViewCell: UITableViewCell {
             switch setting?.fileType
             {
                 case FileType.PHOTO.rawValue:
-                    let localImage = getImageFromDocumentDirectory(imageName: (setting?.imageName)!)
+                    let localImage = getImageFromLocalEntriesDirectory(imageName: (setting?.imageName)!)
                     self.iconImageView.image = localImage
                     self.nameLabel.text = setting?.name
                 case FileType.AUDIO.rawValue:

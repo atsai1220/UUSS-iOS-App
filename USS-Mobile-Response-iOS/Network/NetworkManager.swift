@@ -47,7 +47,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                 self.remoteFileLocations.append((fileName, location))
             }
         } catch {
-            print(error.localizedDescription)
+            print("parseHttpResponse: ", error.localizedDescription)
         }
     }
     
@@ -138,7 +138,19 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                 addAlternativeFilesOperation.networkManager = self
                 addAlternativeFilesOperation.onDidUpload = { (uploadResult) in
                     let result = String(bytes: uploadResult, encoding: .utf8)!
-                    print(result)
+                    if result == "false" {
+                        var localEntries = getLocalEntriesFromDisk()
+                        var lastEntry = localEntries.removeLast()
+                        lastEntry.submissionStatus = SubmissionStatus.ErrorUpload.rawValue
+                        localEntries.append(lastEntry)
+                        saveLocalEntriesToDisk(entries: localEntries)
+                    } else {
+                        var localEntries = getLocalEntriesFromDisk()
+                        var lastEntry = localEntries.removeLast()
+                        lastEntry.submissionStatus = SubmissionStatus.SuccessfulUpload.rawValue
+                        localEntries.append(lastEntry)
+                        saveLocalEntriesToDisk(entries: localEntries)
+                    }
                 }
                 if let lastOp = self.queue.operations.last {
                     addAlternativeFilesOperation.addDependency(lastOp)
@@ -148,12 +160,24 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
             
             // add_resource_to_collection
             // TODO: remove this for the real deal (UGS ResourceSpace)
-            let addResourceToCollectionOperation = AddResourceToCollectionOperation(resourceId: self.resourceId!, collectionId: 1)
+            let addResourceToCollectionOperation = AddResourceToCollectionOperation(resourceId: self.resourceId!, collectionId: (item.collectionRef != nil ? Int(item.collectionRef!)! : 1 ))
             addResourceToCollectionOperation.networkManager = self
             addResourceToCollectionOperation.onDidUpload = { (uploadResult) in
                 let result = String(bytes: uploadResult, encoding: .utf8)!
                 // true or false depending on success
-                print(result)
+                if result == "true" {
+                    var localEntries = getLocalEntriesFromDisk()
+                    var lastEntry = localEntries.removeLast()
+                    lastEntry.submissionStatus = SubmissionStatus.SuccessfulUpload.rawValue
+                    localEntries.append(lastEntry)
+                    saveLocalEntriesToDisk(entries: localEntries)
+                } else {
+                    var localEntries = getLocalEntriesFromDisk()
+                    var lastEntry = localEntries.removeLast()
+                    lastEntry.submissionStatus = SubmissionStatus.ErrorUpload.rawValue
+                    localEntries.append(lastEntry)
+                    saveLocalEntriesToDisk(entries: localEntries)
+                }
             }
             
             if let lastOp = self.queue.operations.last {
@@ -198,7 +222,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         encoder.outputFormatting = .prettyPrinted
         let data = try! encoder.encode(metaJSON)
         let jsonString = String(data: data, encoding: .utf8)!
-        print(jsonString)
+        print("createResource: ", jsonString)
         
 //        metaArray.append(metaName)
 //        metaArray.append(metaDescription)
@@ -285,9 +309,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                         return
                     }
                 default:
-                    print(response)
-                    print(response.statusCode)
-                    print("not a 500")
+                    print("sendGetRequest: ", response.statusCode)
                 }
             }
             completionBlock(data)
@@ -340,7 +362,7 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
                         return
                     }
                 default:
-                    print("not a 500")
+                    print("sendPostRequest: ", response.statusCode)
                 }
             }
             DispatchQueue.main.async {
@@ -415,7 +437,6 @@ class NetworkManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLS
         }
     }
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
-//        print(response)
     }
     
     func displayErrorMessage(title: String, message: String) {

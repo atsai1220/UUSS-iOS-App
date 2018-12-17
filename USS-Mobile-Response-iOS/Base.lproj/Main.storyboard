@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wqY-gt-h7Y">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wqY-gt-h7Y">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -200,13 +200,34 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Z4z-r5-Dcd">
+                                <rect key="frame" x="43.333333333333343" y="535.33333333333337" width="327.33333333333326" height="50.666666666666629"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Format: &lt;Protocol&gt;://&lt;URL&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ovz-wS-4Xk">
+                                        <rect key="frame" x="0.0" y="0.0" width="327.33333333333331" height="20.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Example: https://geodata.geology.utah.gov" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yJ9-ql-iFU">
+                                        <rect key="frame" x="0.0" y="30.333333333333258" width="327.33333333333331" height="20.333333333333329"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="lJ3-Jd-ye8" firstAttribute="trailing" secondItem="YP9-yz-rOT" secondAttribute="trailing" id="1k1-h2-hvX"/>
+                            <constraint firstItem="YP9-yz-rOT" firstAttribute="bottom" secondItem="Z4z-r5-Dcd" secondAttribute="bottom" constant="150" id="715-jd-NtM"/>
                             <constraint firstItem="2SZ-sB-5DN" firstAttribute="centerY" secondItem="eb3-jM-lCf" secondAttribute="centerY" id="8e3-j7-yG1"/>
+                            <constraint firstItem="Z4z-r5-Dcd" firstAttribute="leading" secondItem="YP9-yz-rOT" secondAttribute="leading" constant="43.329999999999998" id="CiE-p2-ses"/>
                             <constraint firstItem="lJ3-Jd-ye8" firstAttribute="top" secondItem="YP9-yz-rOT" secondAttribute="top" id="OKV-VH-IFR"/>
+                            <constraint firstItem="YP9-yz-rOT" firstAttribute="trailing" secondItem="Z4z-r5-Dcd" secondAttribute="trailing" constant="43.329999999999998" id="XbB-DX-DMO"/>
                             <constraint firstItem="lJ3-Jd-ye8" firstAttribute="leading" secondItem="YP9-yz-rOT" secondAttribute="leading" id="eZh-nS-r70"/>
+                            <constraint firstItem="Z4z-r5-Dcd" firstAttribute="centerX" secondItem="eb3-jM-lCf" secondAttribute="centerX" id="kO3-up-r0M"/>
                             <constraint firstItem="2SZ-sB-5DN" firstAttribute="centerX" secondItem="eb3-jM-lCf" secondAttribute="centerX" id="xFT-2r-apf"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="YP9-yz-rOT"/>
@@ -218,7 +239,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XzZ-Ep-Fdf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="204" y="990"/>
+            <point key="canvasLocation" x="202.89855072463769" y="989.67391304347836"/>
         </scene>
         <!--Server List-->
         <scene sceneID="qw5-oM-Tpq">
