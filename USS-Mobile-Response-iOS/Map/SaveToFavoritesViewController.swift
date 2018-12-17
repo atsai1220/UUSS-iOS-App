@@ -122,10 +122,10 @@ class SaveToFavoritesViewController: UIViewController
         view.addSubview(addressLabel)
         view.addSubview(cityLabel)
         view.addSubview(countryLabel)
-        
+        view.addSubview(streetLabel)
+
         if streetLabel.text != ""
         {
-            view.addSubview(streetLabel)
             NSLayoutConstraint.activate([
                 streetLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 2.0),
                 streetLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 100.0),

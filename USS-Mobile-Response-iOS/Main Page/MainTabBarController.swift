@@ -153,8 +153,8 @@ class MainTabBarController: UITabBarController
         let trashViewController: MainTrashTableViewController = MainTrashTableViewController()
         
         let mapViewController: MapViewController = MapViewController()
+//        let altVC = AltFilesViewController()
         
-//        let tableVC = MapTableViewController()
         
         localViewController.tabBarItem = UITabBarItem(title: "Local", image: UIImage(named: "baggage"), tag: 0)
         mapViewController.tabBarItem = UITabBarItem(title: "Maps", image: UIImage(named: "map"), tag: 1)

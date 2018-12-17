@@ -44,7 +44,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     var videoAnnotationId: String = "video"
     var audioAnnotationId: String = "audio"
     var documentationAnnotationId: String = "document"
-    var searchAnnotation: MapAnnotation?
+    var searchAnnotation: SearchAnnotation?
     var segmentedControl: UISegmentedControl?
     var currentLocation: CLLocation?
     var compass: MKCompassButton?
@@ -107,7 +107,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.lightGray
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(deleteAnnotation), name: Notification.Name("Local Entry Deleted"), object: nil)
         
         swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
@@ -127,6 +127,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         mapView!.showsCompass = false
         mapView!.showsScale = true
         view.addSubview(mapView!)
+        mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: photoAnnotationId)
+        mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: videoAnnotationId)
+        mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: audioAnnotationId)
+        mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: documentationAnnotationId)
+        mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: searchId)
         loadAnnotations()
         
         
@@ -279,13 +284,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
    
     func moveToSelectedPlace(with name: String, and coordinates: CLLocationCoordinate2D)
     {
+        if(self.searchAnnotation != nil)
+        {
+            mapView!.removeAnnotation(self.searchAnnotation!)
+        }
         if tablePosition == "top"
         {
             animateSearchTableToStartPosition()
         }
-        mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
-        searchAnnotation = MapAnnotation(coordinate: coordinates, title: name, subTitle: "", type: "search")
-        mapView!.addAnnotation(self.searchAnnotation!)
+        searchAnnotation = SearchAnnotation(coordinate: coordinates, title: name, subTitle: "")
+        mapView!.addAnnotation(searchAnnotation!)
         let region = MKCoordinateRegionMakeWithDistance(coordinates, self.regionRadius, self.regionRadius)
         mapView!.setRegion(region, animated: true)
     }
@@ -338,6 +346,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         {
             if(!(annotation is MKUserLocation))
             {
+                print("title is \(annotation.title)")
                 if(key == annotation.title)
                 {
                     mapView!.removeAnnotation(annotation)
@@ -355,44 +364,30 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         
         for entry in localEntries
         {
-            switch entry.fileType
-            {
-                case FileType.PHOTO.rawValue:
-                    mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: photoAnnotationId)
-                    let photoAnnotation: MapAnnotation = MapAnnotation(
-                        coordinate: CLLocationCoordinate2D(latitude: entry.dataLat!, longitude: entry.dataLong!),
-                        title: entry.name!,
-                        subTitle: "", type: entry.fileType)
-                    mapView!.addAnnotation(photoAnnotation)
-                
-                case FileType.VIDEO.rawValue:
-                    mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: videoAnnotationId)
-                    let videoAnnotation: MapAnnotation = MapAnnotation(
-                        coordinate: CLLocationCoordinate2D(latitude: entry.dataLat!, longitude: entry.dataLong!),
-                        title: entry.name!,
-                        subTitle: "", type: entry.fileType)
-                    mapView!.addAnnotation(videoAnnotation)
-                case FileType.AUDIO.rawValue:
-                    mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: audioAnnotationId)
-                    let audioAnnotation: MapAnnotation = MapAnnotation(
-                        coordinate: CLLocationCoordinate2D(latitude: entry.dataLat!, longitude: entry.dataLong!),
-                        title: entry.name!,
-                        subTitle: "", type: entry.fileType)
-                    mapView!.addAnnotation(audioAnnotation)
-                case FileType.DOCUMENT.rawValue:
-                    mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: documentationAnnotationId)
-                    let documentAnnotation: MapAnnotation = MapAnnotation(
-                        coordinate: CLLocationCoordinate2D(latitude: entry.dataLat!, longitude: entry.dataLong!),
-                        title: entry.name!,
-                        subTitle: "", type: entry.fileType)
-                    mapView!.addAnnotation(documentAnnotation)
-                default:
-                    break
-            }
+            let photoAnnotation: MapAnnotation = MapAnnotation(
+                coordinate: CLLocationCoordinate2D(latitude: entry.dataLat!, longitude: entry.dataLong!),
+                title: entry.name!,
+                subTitle: "", altFileArray: entry.altFiles ?? [])
+            
+            // if entry.altFiles!.count > 0
+//            {
+//                photoAnnotation.animateW
+//            }
+//
+////            for altFile in entry.altFiles!
+////            {[
+//////                let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+//////                layout.scrollDirection = .vertical
+//////                layout.sectionInset = UIEdgeInsets(top: 25.0, left: 10.0, bottom: 2.0, right: 10.0)
+//////                let pdfCollectionVC = PdfCollectionViewController(collectionViewLayout: layout)
+////                //collection view = CollectionView()
+////                //collectionView.append(altFile)
+////            }
+            
+            mapView!.addAnnotation(photoAnnotation)
         }
     }
-    
-    
+
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar)
     {
         mapTableViewController!.tableView.isScrollEnabled = true
@@ -534,6 +529,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     
     func moveToFavoriteSelected(with name: String, and point: CLLocationCoordinate2D)
     {
+        if(self.searchAnnotation != nil)
+        {
+            mapView!.removeAnnotation(self.searchAnnotation!)
+        }
+        
         animateSearchTableToStartPosition()
         searchBarAnchorToMapTable!.isActive = true
         searchBarAnchorToFavoriteTable!.isActive = false
@@ -544,8 +544,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         textfield.tintColor = .black
         searchBar!.setImage(searchImage, for: .search, state: .normal)
         mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
-        searchAnnotation = MapAnnotation(coordinate: point, title: name, subTitle: "", type: "search")
-        mapView!.addAnnotation(self.searchAnnotation!)
+        searchAnnotation = SearchAnnotation(coordinate: point, title: name, subTitle: "")
+        mapView!.addAnnotation(searchAnnotation!)
         let region = MKCoordinateRegionMakeWithDistance(point, self.regionRadius, self.regionRadius)
         mapView!.setRegion(region, animated: true)
         
@@ -689,15 +689,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
                     
                     if (self.searchAnnotation == nil)
                     {
-                        self.mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
-                        self.searchAnnotation = MapAnnotation(coordinate: coord, title: self.placemark!.name!, subTitle: "", type: "search")
+                        self.searchAnnotation = SearchAnnotation(coordinate: coord, title: self.placemark!.name!, subTitle: "")
                         self.mapView!.addAnnotation(self.searchAnnotation!)
                     }
                     else
                     {
                         self.mapView!.removeAnnotation(self.searchAnnotation!)
-                        self.mapView!.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: self.searchId)
-                        self.searchAnnotation = MapAnnotation(coordinate: coord, title: self.placemark!.name!, subTitle: "", type: "search")
+                        self.searchAnnotation = SearchAnnotation(coordinate: coord, title: self.placemark!.name!, subTitle: "")
                         self.mapView!.addAnnotation(self.searchAnnotation!)
                     }
                     
@@ -727,24 +725,47 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         }
         else
         {
-            var annotationView: AnnotationView? = AnnotationView()
-            print((annotation as! MapAnnotation).fileType!)
-            switch (annotation as! MapAnnotation).fileType!
+            if annotation is MapAnnotation
             {
+                let annotationView: MKMarkerAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: photoAnnotationId) as! MKMarkerAnnotationView
+                annotationView.animatesWhenAdded = true
+                annotationView.canShowCallout = true
+                let altFilesViewController: AltFilesViewController = AltFilesViewController()
+                annotationView.detailCalloutAccessoryView = altFilesViewController.view
 
-                case "PHOTO":
-                    annotationView = (mapView.dequeueReusableAnnotationView(withIdentifier: photoAnnotationId) as! AnnotationView)
-                case "VIDEO":
-                    annotationView = (mapView.dequeueReusableAnnotationView(withIdentifier: videoAnnotationId) as! AnnotationView)
-                case "AUDIO":
-                    annotationView = (mapView.dequeueReusableAnnotationView(withIdentifier: audioAnnotationId) as! AnnotationView)
-                case "DOCUMENT":
-                    annotationView = (mapView.dequeueReusableAnnotationView(withIdentifier: documentationAnnotationId) as! AnnotationView)
-                default:
-                    print("Should not happen")
+                
+               if (annotation as! MapAnnotation).altFiles!.count > 0
+               {
+                
+                    let altFilesArray: [AltFile] = (annotation as! MapAnnotation).altFiles!
+
+
+                    for altFile in altFilesArray
+                    {
+                        switch altFile.type
+                        {
+                            case "PHOTO":
+                                altFilesViewController.photoView.backgroundColor = UIColor.blue.withAlphaComponent(1.0)
+                            case "VIDEO":
+                                altFilesViewController.videoView.backgroundColor = UIColor.red.withAlphaComponent(1.0)
+                            case "AUDIO":
+                                altFilesViewController.audioView.backgroundColor = UIColor.orange.withAlphaComponent(1.0)
+                            case "DOCUMENT":
+                                altFilesViewController.docView.backgroundColor = UIColor.green.withAlphaComponent(1.0)
+                            default:
+                                break
+                        }
+                    }
+                
+               }
+        
+                return annotationView
             }
-            
-            return annotationView
+            else
+            {
+                return mapView.dequeueReusableAnnotationView(withIdentifier: searchId) as! AnnotationView
+            }
+                
         }
     }
     

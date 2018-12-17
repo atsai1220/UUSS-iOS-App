@@ -107,9 +107,11 @@
 		F62217D3217F86C200DE68D3 /* HazardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217CA217F86C200DE68D3 /* HazardTableViewCell.swift */; };
 		F62217D4217F86C200DE68D3 /* PhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62217CB217F86C200DE68D3 /* PhotoPickerViewController.swift */; };
 		F628AB442161772F00E7C561 /* VideoPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */; };
+		F62CCEF921A37381000A0960 /* AltFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62CCEF821A37381000A0960 /* AltFilesViewController.swift */; };
 		F62F1E8B213885ED00A48E57 /* AudioPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */; };
 		F6340E7821658C8900A3168E /* RoundedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6340E7721658C8900A3168E /* RoundedImageView.swift */; };
 		F66E5E4E218A3F5B00F70AC4 /* MapFavoritesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66E5E4D218A3F5B00F70AC4 /* MapFavoritesTableViewController.swift */; };
+		F679178B21A21FFD00272821 /* SearchAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F679178A21A21FFD00272821 /* SearchAnnotation.swift */; };
 		F692EBF32190D4BE0052AE1F /* SaveToFavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F692EBF22190D4BE0052AE1F /* SaveToFavoritesViewController.swift */; };
 		F6A9278A217A732900797EC2 /* PresentationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A92789217A732900797EC2 /* PresentationViewController.swift */; };
 		F6A9278C217A7D4100797EC2 /* MapSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */; };
@@ -194,9 +196,11 @@
 		F62217CA217F86C200DE68D3 /* HazardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HazardTableViewCell.swift; path = "USS-Mobile-Response-iOS/Resource Picker/HazardTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		F62217CB217F86C200DE68D3 /* PhotoPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotoPickerViewController.swift; path = "USS-Mobile-Response-iOS/Resource Picker/PhotoPickerViewController.swift"; sourceTree = SOURCE_ROOT; };
 		F628AB432161772F00E7C561 /* VideoPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackViewController.swift; sourceTree = "<group>"; };
+		F62CCEF821A37381000A0960 /* AltFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AltFilesViewController.swift; sourceTree = "<group>"; };
 		F62F1E8A213885ED00A48E57 /* AudioPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackViewController.swift; sourceTree = "<group>"; };
 		F6340E7721658C8900A3168E /* RoundedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedImageView.swift; sourceTree = "<group>"; };
 		F66E5E4D218A3F5B00F70AC4 /* MapFavoritesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapFavoritesTableViewController.swift; sourceTree = "<group>"; };
+		F679178A21A21FFD00272821 /* SearchAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAnnotation.swift; sourceTree = "<group>"; };
 		F692EBF22190D4BE0052AE1F /* SaveToFavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToFavoritesViewController.swift; sourceTree = "<group>"; };
 		F6A92789217A732900797EC2 /* PresentationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationViewController.swift; sourceTree = "<group>"; };
 		F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsViewController.swift; sourceTree = "<group>"; };
@@ -416,7 +420,9 @@
 			isa = PBXGroup;
 			children = (
 				F6CDB5B42134BCB90016C036 /* MapAnnotation.swift */,
+				F679178A21A21FFD00272821 /* SearchAnnotation.swift */,
 				F6028FEC2143303700429805 /* AnnotationView.swift */,
+				F62CCEF821A37381000A0960 /* AltFilesViewController.swift */,
 				1C76A8B52124DEA900EE51A8 /* MapTableViewController.swift */,
 				1C0DD397212768F900D656F7 /* MapViewController.swift */,
 				F6A9278B217A7D4100797EC2 /* MapSettingsViewController.swift */,
@@ -533,6 +539,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F679178B21A21FFD00272821 /* SearchAnnotation.swift in Sources */,
 				F60C9F0B2175221000281DB9 /* PdfCollectionViewController.swift in Sources */,
 				1C76A8B82124EA5300EE51A8 /* LocalEntry.swift in Sources */,
 				1CB03734217A8B980085191C /* HazardManager.swift in Sources */,
@@ -588,6 +595,7 @@
 				1C497F42217FC7CB006E273F /* ResourceSpaceModel.swift in Sources */,
 				1C497F41217FC7C7006E273F /* AppDelegate.swift in Sources */,
 				1C497F40217FC7C4006E273F /* LoginViewController.swift in Sources */,
+				F62CCEF921A37381000A0960 /* AltFilesViewController.swift in Sources */,
 				1C497F3F217FC7C1006E273F /* ServerTableNavigationController.swift in Sources */,
 				1C497F3E217FC7BD006E273F /* ServerTableViewController.swift in Sources */,
 				1C47BE7B2186BAD50004A76E /* UploadAltFileOperation.swift in Sources */,
